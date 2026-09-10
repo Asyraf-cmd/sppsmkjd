@@ -87,6 +87,13 @@
         }
         #dash-sync-dot.sync-dot-pulse { animation: syncDotPulse 1.6s ease-in-out infinite; }
 
+        /* Banner amaran "Data belum disegerak" -- nadi lebih ketara (latar & bayang)
+           supaya sukar diabaikan, konsisten dgn semangat syncDotPulse di atas. */
+        @keyframes syncBannerPulse {
+            0%, 100% { background-color: #f59e0b; }
+            50% { background-color: #d97706; }
+        }
+
         /* --- TRANSISI UCAPAN PEMBUKAAN: dipaparkan sekejap selepas log masuk berjaya
            (logo + Selamat Pagi/Tengahari/Petang/Malam + nama & jawatan pengguna), sebelum
            pudar keluar dengan lembut menuju paparan sistem utama (nama yang sama kekal
@@ -328,6 +335,25 @@
     <style id="dynamic-print-orientation">@page { size: A4 portrait; margin: 20mm; }</style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-screen flex overflow-hidden font-sans">
+
+    <!-- =====================================================================
+         PENAMBAHAN: BANNER "DATA BELUM DISEGERAK" -- lapisan amaran TAMBAHAN
+         (bukan gantian) kpd kotak dialog "beforeunload" pelayar. Kotak dialog
+         pelayar TIDAK BOLEH dipercayai sepenuhnya kerana sistem ini dijalankan
+         sbg Google Apps Script Web App (dibungkus dlm iframe oleh Google) --
+         banyak pelayar/webview (terutama mudah alih) SUPRESS/abaikan dialog
+         "beforeunload" dlm konteks iframe atas sebab keselamatan/UX dalaman
+         pelayar itu sendiri -- BUKAN pepijat dlm kod sistem ini, & tidak boleh
+         "dibetulkan" sepenuhnya drpd JavaScript sahaja. Banner ini kekal
+         KELIHATAN (fixed, atas skrin, tak boleh ditutup) SELAGI data belum
+         disegerak -- supaya pengguna nampak amaran walaupun dialog pelayar
+         gagal/tak dipaparkan. Lihat tetapkanBannerBelumDisegerak_() di JS.
+         ===================================================================== -->
+    <div id="banner-belum-disegerak" class="hidden fixed top-0 inset-x-0 z-[9999] bg-amber-500 text-amber-950 text-xs sm:text-sm font-bold px-3 py-2 flex flex-wrap items-center justify-center gap-2 shadow-lg" style="animation: syncBannerPulse 1.8s ease-in-out infinite;">
+        <i class="fas fa-triangle-exclamation"></i>
+        <span>Data baharu belum disegerak sepenuhnya ke Google Sheets -- JANGAN tutup atau muat semula halaman ini sehingga proses selesai.</span>
+        <button onclick="performSyncPush(state.settings && state.settings.scriptUrl)" class="bg-amber-950 text-amber-50 px-3 py-1 rounded-lg text-xs hover:bg-amber-900 transition"><i class="fas fa-rotate mr-1"></i>Push Sekarang</button>
+    </div>
 
     <!-- Login View -->
     <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -5166,10 +5192,20 @@
             }, 60000); // semak setiap 60 saat
         }
 
+        // Papar/sembunyi banner "Data belum disegerak" (lihat #banner-belum-disegerak di HTML).
+        // Dipanggil sebaik status hasUnsyncedChanges berubah (markUnsynced(), selepas push
+        // berjaya/gagal, & semasa pemulihan sesi drpd localStorage).
+        function tetapkanBannerBelumDisegerak_() {
+            const el = document.getElementById('banner-belum-disegerak');
+            if (!el) return;
+            el.classList.toggle('hidden', !state.hasUnsyncedChanges);
+        }
+
         // Helper to mark unsynced changes
         function markUnsynced() {
             state.hasUnsyncedChanges = true;
             saveStateToLocal();
+            tetapkanBannerBelumDisegerak_();
             // Segerakkan ikon titik status Dashboard (dash-sync-dot) SERTA-MERTA supaya ia
             // terus bertukar kuning sebaik sahaja apa-apa perubahan (termasuk tetapan) belum
             // di-push -- tanpa ini, ikon kekal hijau sehingga updateDashboard() dipanggil oleh
@@ -5582,6 +5618,15 @@
                 const data = await res.json();
                 if (data.status === 'success' && data.peta) {
                     state._petaKataLaluanAdmin = data.peta; // memori sahaja -- SENGAJA tidak disimpan ke saveStateToLocal()
+                    // PEMBETULAN (race condition): jadual Pendaftaran Guru & Akses Pengawas
+                    // sudah pun di-render LEBIH AWAL (sebaik log masuk), iaitu SEBELUM fetch()
+                    // di atas ini sempat selesai (rangkaian ambil masa) -- jadi jadual tsb
+                    // "terkunci" papar placeholder drpd render pertama tadi, walaupun peta
+                    // kata laluan sebenar kini sudah pun tersedia dlm memori. Bina semula
+                    // KEDUA-DUA jadual di sini (jika sedang wujud dlm DOM) supaya kata laluan
+                    // sebenar terus dipaparkan tanpa perlu pengguna tukar tab/refresh manual.
+                    if (typeof renderTableAksesPengawas === 'function') renderTableAksesPengawas();
+                    if (typeof renderTablePendaftaranGuru === 'function') renderTablePendaftaranGuru();
                 }
             } catch (e) { /* senyap -- paparan kata laluan hanya "best effort", bukan fungsi kritikal */ }
         }
@@ -5726,6 +5771,7 @@
                     state.currentPrefectUsername = parsed.currentPrefectUsername || null;
                     state.sessionToken = parsed.sessionToken || null;
                     state.hasUnsyncedChanges = parsed.hasUnsyncedChanges || false;
+                    tetapkanBannerBelumDisegerak_();
                     
                     if (parsed.settings) {
                         // Gabungkan SEMUA medan tetapan yang disimpan (bukan hanya senarai tetap/cherry-picked)
@@ -6170,6 +6216,7 @@
                         state.pendingDeltas = [];
                         state.needsFullSync = false;
                         state.hasUnsyncedChanges = false;
+                        tetapkanBannerBelumDisegerak_();
                         state.settings.lastSync = new Date().toLocaleString('ms-MY');
                         state.settings.lastKnownServerTimestamp = new Date().toISOString();
                         catatStatusSync('push', true);
@@ -6210,6 +6257,7 @@
                         }
                     }
                     state.hasUnsyncedChanges = false;
+                    tetapkanBannerBelumDisegerak_();
                     state.settings.lastSync = new Date().toLocaleString('ms-MY');
                     state.settings.lastKnownServerTimestamp = new Date().toISOString();
                     catatStatusSync('push', true);
@@ -6273,6 +6321,7 @@
                 if (data.status === 'success' && data.state) {
                     applySyncedState(data.state);
                     state.hasUnsyncedChanges = false;
+                    tetapkanBannerBelumDisegerak_();
                     state.pendingDeltas = [];
                     state.needsFullSync = false;
                     state.settings.lastSync = new Date().toLocaleString('ms-MY');
@@ -13433,6 +13482,7 @@
                     if (result.state) {
                         applySyncedState(result.state);
                         state.hasUnsyncedChanges = false;
+                        tetapkanBannerBelumDisegerak_();
                         state.pendingDeltas = [];
                         state.needsFullSync = false;
                         state.settings.lastSync = new Date().toLocaleString('ms-MY');
