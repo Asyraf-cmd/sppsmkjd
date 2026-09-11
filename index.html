@@ -3697,7 +3697,15 @@
     </div>
 
     <!-- Custom Alert Notification -->
-    <div id="modal-alert" class="fixed top-4 right-4 z-50 transform translate-y-[-20px] opacity-0 transition-all duration-300 pointer-events-none">
+    <!-- PEMBETULAN (SUSUN ATUR): "top-4" tetap (16px dari atas) menyebabkan toast ini
+         tertutup/tersembunyi di BELAKANG banner "Data belum disegerak" (z-[9999], lebih
+         tinggi drpd z-50 toast ini) apabila banner tsb sedang dipaparkan -- kedua-duanya
+         "fixed" & bertindih di zon skrin yg sama. `top` di sini kini guna calc() dgn
+         pemboleh ubah CSS --tinggi-banner-sync (ditetapkan oleh tetapkanBannerBelumDisegerak_()
+         di JS, sama nilai dgn padding-top <body>) supaya toast sentiasa muncul TEPAT DI
+         BAWAH banner (bila ia aktif), bukan tertutup olehnya. Nilai lalai 0px (banner
+         tersembunyi) -- kekal di kedudukan asal (top-4 = 1rem). -->
+    <div id="modal-alert" class="fixed right-4 z-50 transform translate-y-[-20px] opacity-0 transition-all duration-300 pointer-events-none" style="top: calc(1rem + var(--tinggi-banner-sync, 0px));">
         <div class="bg-white border-l-4 border-brand-blue shadow-xl rounded-r-2xl p-4 flex items-center gap-3.5 max-w-md">
             <div id="alert-icon" class="text-brand-blue flex-shrink-0"><i class="fas fa-info-circle text-xl"></i></div>
             <div>
@@ -5199,28 +5207,37 @@
         // PEMBETULAN (SUSUN ATUR): banner ini sengaja "fixed" (supaya kekal kelihatan walau
         // pengguna scroll) -- tetapi ini bermakna ia TIDAK mengambil ruang dlm aliran dokumen
         // secara semula jadi, jadi ia akan MENUTUP/bertindih bahagian atas kandungan (sidebar
-        // & main-content) berbanding menolaknya ke bawah. Untuk elak pertindihan, tambah
-        // padding-top pada <body> menyamai TINGGI SEBENAR banner (diukur runtime -- teks
-        // banner boleh "wrap" jadi 1 atau 2 baris bergantung lebar skrin/peranti, jadi
-        // tingginya tidak tetap) sebaik banner dipaparkan, & buang semula bila disembunyikan.
-        // <body> guna box-sizing: border-box (preflight Tailwind), jadi padding-top ini TIDAK
-        // menambah jumlah tinggi melebihi 100vh (h-screen) -- ia hanya mengecut/menolak
-        // kandungan flex di dalamnya ke bawah, bukan menyebabkan overflow/scroll tambahan.
+        // & main-content) DAN elemen "fixed" lain (cth. toast #modal-alert) berbanding
+        // menolaknya ke bawah. Untuk elak pertindihan, tambah padding-top pada <body>
+        // menyamai TINGGI SEBENAR banner (diukur runtime -- teks banner boleh "wrap" jadi 1
+        // atau 2 baris bergantung lebar skrin/peranti, jadi tingginya tidak tetap) sebaik
+        // banner dipaparkan, & buang semula bila disembunyikan. <body> guna box-sizing:
+        // border-box (preflight Tailwind), jadi padding-top ini TIDAK menambah jumlah tinggi
+        // melebihi 100vh (h-screen) -- ia hanya mengecut/menolak kandungan flex di dalamnya
+        // ke bawah, bukan menyebabkan overflow/scroll tambahan. Nilai yg sama turut disimpan
+        // dlm pemboleh ubah CSS --tinggi-banner-sync (di <html>) supaya elemen "fixed" LAIN
+        // yg tidak terjejas oleh padding <body> (cth. toast #modal-alert) boleh turut
+        // melaraskan kedudukan sendiri berbanding banner ini -- lihat penggunaannya di HTML.
         function tetapkanBannerBelumDisegerak_() {
             const el = document.getElementById('banner-belum-disegerak');
             if (!el) return;
             const patutPapar = !!state.hasUnsyncedChanges;
             el.classList.toggle('hidden', !patutPapar);
-            document.body.style.paddingTop = patutPapar ? el.offsetHeight + 'px' : '';
+            const tinggiBanner = patutPapar ? el.offsetHeight + 'px' : '0px';
+            document.body.style.paddingTop = patutPapar ? tinggiBanner : '';
+            document.documentElement.style.setProperty('--tinggi-banner-sync', tinggiBanner);
         }
 
         // Tinggi banner boleh berubah bila saiz tetingkap ditukar (teks "wrap" lain --
-        // cth. putar peranti mudah alih) -- ukur & laraskan semula padding-top setiap kali
-        // ini berlaku, HANYA jika banner sedang dipaparkan (elak kerja sia-sia bila tersembunyi).
+        // cth. putar peranti mudah alih) -- ukur & laraskan semula padding-top & pemboleh
+        // ubah CSS setiap kali ini berlaku, HANYA jika banner sedang dipaparkan (elak kerja
+        // sia-sia bila tersembunyi).
         window.addEventListener('resize', function() {
             const el = document.getElementById('banner-belum-disegerak');
             if (el && !el.classList.contains('hidden')) {
-                document.body.style.paddingTop = el.offsetHeight + 'px';
+                const tinggiBanner = el.offsetHeight + 'px';
+                document.body.style.paddingTop = tinggiBanner;
+                document.documentElement.style.setProperty('--tinggi-banner-sync', tinggiBanner);
             }
         });
 
