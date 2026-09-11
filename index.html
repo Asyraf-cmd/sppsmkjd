@@ -87,13 +87,6 @@
         }
         #dash-sync-dot.sync-dot-pulse { animation: syncDotPulse 1.6s ease-in-out infinite; }
 
-        /* Banner amaran "Data belum disegerak" -- nadi lebih ketara (latar & bayang)
-           supaya sukar diabaikan, konsisten dgn semangat syncDotPulse di atas. */
-        @keyframes syncBannerPulse {
-            0%, 100% { background-color: #f59e0b; }
-            50% { background-color: #d97706; }
-        }
-
         /* --- TRANSISI UCAPAN PEMBUKAAN: dipaparkan sekejap selepas log masuk berjaya
            (logo + Selamat Pagi/Tengahari/Petang/Malam + nama & jawatan pengguna), sebelum
            pudar keluar dengan lembut menuju paparan sistem utama (nama yang sama kekal
@@ -335,25 +328,6 @@
     <style id="dynamic-print-orientation">@page { size: A4 portrait; margin: 20mm; }</style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-screen flex overflow-hidden font-sans">
-
-    <!-- =====================================================================
-         PENAMBAHAN: BANNER "DATA BELUM DISEGERAK" -- lapisan amaran TAMBAHAN
-         (bukan gantian) kpd kotak dialog "beforeunload" pelayar. Kotak dialog
-         pelayar TIDAK BOLEH dipercayai sepenuhnya kerana sistem ini dijalankan
-         sbg Google Apps Script Web App (dibungkus dlm iframe oleh Google) --
-         banyak pelayar/webview (terutama mudah alih) SUPRESS/abaikan dialog
-         "beforeunload" dlm konteks iframe atas sebab keselamatan/UX dalaman
-         pelayar itu sendiri -- BUKAN pepijat dlm kod sistem ini, & tidak boleh
-         "dibetulkan" sepenuhnya drpd JavaScript sahaja. Banner ini kekal
-         KELIHATAN (fixed, atas skrin, tak boleh ditutup) SELAGI data belum
-         disegerak -- supaya pengguna nampak amaran walaupun dialog pelayar
-         gagal/tak dipaparkan. Lihat tetapkanBannerBelumDisegerak_() di JS.
-         ===================================================================== -->
-    <div id="banner-belum-disegerak" class="hidden fixed top-0 inset-x-0 z-[9999] bg-amber-500 text-amber-950 text-xs sm:text-sm font-bold px-3 py-2 flex flex-wrap items-center justify-center gap-2 shadow-lg" style="animation: syncBannerPulse 1.8s ease-in-out infinite;">
-        <i class="fas fa-triangle-exclamation"></i>
-        <span>Data baharu belum disegerak sepenuhnya ke Google Sheets -- JANGAN tutup atau muat semula halaman ini sehingga proses selesai.</span>
-        <button onclick="performSyncPush(state.settings && state.settings.scriptUrl)" class="bg-amber-950 text-amber-50 px-3 py-1 rounded-lg text-xs hover:bg-amber-900 transition"><i class="fas fa-rotate mr-1"></i>Push Sekarang</button>
-    </div>
 
     <!-- Login View -->
     <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -5654,7 +5628,17 @@
             const scriptUrl = state.settings.scriptUrl;
             if (!scriptUrl) return;
             try {
-                const res = await fetch(`${scriptUrl}?action=senaraiKataLaluanAdmin&token=${encodeURIComponent(state.sessionToken)}`);
+                // PEMBETULAN (CACHE PELAYAR): URL ini (token sama) TEPAT SAMA setiap kali
+                // dipanggil dlm satu sesi (semasa log masuk, & semula bila refresh) --
+                // sesetengah pelayar/webview boleh CACHE respons GET pertama (lapuk, dari
+                // SEBELUM akaun/kata laluan baharu dicipta & di-push) & hidangkan semula
+                // salinan cache itu selepas refresh, tanpa benar2 hubungi pelayan semula --
+                // menyebabkan kata laluan baharu "tidak kelihatan" walaupun sudah betul
+                // tersimpan di pelayan. Paksa rangkaian SENTIASA hubungi pelayan (bukan
+                // cache) dgn { cache: 'no-store' } DAN parameter unik (cap masa) pada URL --
+                // dua lapisan kerana sesetengah pelayar mudah alih tidak hormati
+                // cache:'no-store' sepenuhnya bagi permintaan silang-asal (cross-origin).
+                const res = await fetch(`${scriptUrl}?action=senaraiKataLaluanAdmin&token=${encodeURIComponent(state.sessionToken)}&_=${Date.now()}`, { cache: 'no-store' });
                 const data = await res.json();
                 if (data.status === 'success' && data.peta) {
                     state._petaKataLaluanAdmin = data.peta; // memori sahaja -- SENGAJA tidak disimpan ke saveStateToLocal()
