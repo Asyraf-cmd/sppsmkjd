@@ -5195,11 +5195,34 @@
         // Papar/sembunyi banner "Data belum disegerak" (lihat #banner-belum-disegerak di HTML).
         // Dipanggil sebaik status hasUnsyncedChanges berubah (markUnsynced(), selepas push
         // berjaya/gagal, & semasa pemulihan sesi drpd localStorage).
+        //
+        // PEMBETULAN (SUSUN ATUR): banner ini sengaja "fixed" (supaya kekal kelihatan walau
+        // pengguna scroll) -- tetapi ini bermakna ia TIDAK mengambil ruang dlm aliran dokumen
+        // secara semula jadi, jadi ia akan MENUTUP/bertindih bahagian atas kandungan (sidebar
+        // & main-content) berbanding menolaknya ke bawah. Untuk elak pertindihan, tambah
+        // padding-top pada <body> menyamai TINGGI SEBENAR banner (diukur runtime -- teks
+        // banner boleh "wrap" jadi 1 atau 2 baris bergantung lebar skrin/peranti, jadi
+        // tingginya tidak tetap) sebaik banner dipaparkan, & buang semula bila disembunyikan.
+        // <body> guna box-sizing: border-box (preflight Tailwind), jadi padding-top ini TIDAK
+        // menambah jumlah tinggi melebihi 100vh (h-screen) -- ia hanya mengecut/menolak
+        // kandungan flex di dalamnya ke bawah, bukan menyebabkan overflow/scroll tambahan.
         function tetapkanBannerBelumDisegerak_() {
             const el = document.getElementById('banner-belum-disegerak');
             if (!el) return;
-            el.classList.toggle('hidden', !state.hasUnsyncedChanges);
+            const patutPapar = !!state.hasUnsyncedChanges;
+            el.classList.toggle('hidden', !patutPapar);
+            document.body.style.paddingTop = patutPapar ? el.offsetHeight + 'px' : '';
         }
+
+        // Tinggi banner boleh berubah bila saiz tetingkap ditukar (teks "wrap" lain --
+        // cth. putar peranti mudah alih) -- ukur & laraskan semula padding-top setiap kali
+        // ini berlaku, HANYA jika banner sedang dipaparkan (elak kerja sia-sia bila tersembunyi).
+        window.addEventListener('resize', function() {
+            const el = document.getElementById('banner-belum-disegerak');
+            if (el && !el.classList.contains('hidden')) {
+                document.body.style.paddingTop = el.offsetHeight + 'px';
+            }
+        });
 
         // Helper to mark unsynced changes
         function markUnsynced() {
