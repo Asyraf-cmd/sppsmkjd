@@ -10257,6 +10257,22 @@
                 queueDelta('addTeacher', tData);
             }
 
+            // PEMBETULAN (PAPARAN KATA LALUAN ADMIN): sebelum ini, `kataLaluanAsalBaharu`
+            // (plaintext yang admin baru taip) dikira tetapi TIDAK PERNAH digunakan --
+            // peta paparan (state._petaKataLaluanAdmin) hanya dimuatkan SEKALI semasa log
+            // masuk (muatkanSenaraiKataLaluanAdmin()), jadi jadual/cetakan terus rujuk
+            // peta LAMA & papar "(tidak tersedia -- kata laluan perlu ditetapkan semula)"
+            // walaupun kata laluan baharu baru sahaja disimpan. Kemas kini peta SEGERA
+            // di sini (memori sahaja, sama macam peta asal) supaya paparan terus tepat
+            // tanpa perlu tunggu log keluar/masuk semula.
+            if (!state._petaKataLaluanAdmin) state._petaKataLaluanAdmin = {};
+            if (usernameLamaUntukPw && usernameLamaUntukPw.toLowerCase() !== username.toLowerCase()) {
+                delete state._petaKataLaluanAdmin[usernameLamaUntukPw.toLowerCase()];
+            }
+            if (kataLaluanAsalBaharu !== null) {
+                state._petaKataLaluanAdmin[username.toLowerCase()] = kataLaluanAsalBaharu;
+            }
+
             saveStateToLocal();
             markUnsynced();
             renderAll();
@@ -10370,6 +10386,19 @@
             } else {
                 state.studentAccounts.push(accData);
                 queueDelta('addStudentAccount', accData);
+            }
+
+            // PEMBETULAN (PAPARAN KATA LALUAN ADMIN): lihat komen sepadan di saveTeacher()
+            // -- `kataLaluanAsalBaharuPengawas` (plaintext baru ditaip) sebelum ini dikira
+            // tetapi tidak pernah digunakan utk kemas kini state._petaKataLaluanAdmin,
+            // jadi jadual/cetakan terus papar "(tidak tersedia -- kata laluan perlu
+            // ditetapkan semula)" walaupun kata laluan baharu baru sahaja disimpan.
+            if (!state._petaKataLaluanAdmin) state._petaKataLaluanAdmin = {};
+            if (usernameLamaUntukPwPengawas && usernameLamaUntukPwPengawas.toLowerCase() !== username.toLowerCase()) {
+                delete state._petaKataLaluanAdmin[usernameLamaUntukPwPengawas.toLowerCase()];
+            }
+            if (kataLaluanAsalBaharuPengawas !== null) {
+                state._petaKataLaluanAdmin[username.toLowerCase()] = kataLaluanAsalBaharuPengawas;
             }
 
             saveStateToLocal();
