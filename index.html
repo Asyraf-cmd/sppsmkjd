@@ -6275,6 +6275,14 @@
         // Fungsi teras dikongsi oleh (1) butang "Muat Turun Data Akaun" pada skrin log masuk, dan
         // (2) log masuk automatik (dipanggil secara senyap setiap kali cuba log masuk, tanpa perlu
         // pengguna tekan butang muat turun secara berasingan dahulu).
+        // KESELAMATAN (PEMBETULAN): pelayan (Code.gs handlePull) kini memulangkan state
+        // yang DIBERSIHKAN (tanpa kata laluan/hash & tanpa No.IC/telefon/emel guru) bagi
+        // permintaan TANPA token sesi sah -- lihat _bersihkanStateUntukPullTanpaSesi_() di
+        // Code_GS.txt. Sertakan "state.sessionToken" di sini (jika pengguna SUDAH log
+        // masuk & token sedia ada dlm memori) supaya pull SELEPAS log masuk terus dapat
+        // state PENUH seperti sedia ada -- pull SEBELUM log masuk (cth. butang "Muat
+        // Turun Data Akaun" di skrin log masuk) kekal menerima versi terhad, memandangkan
+        // pengguna belum disahkan pada ketika itu.
         async function pullDataForLogin(tunjukMesej, mesejBerjaya) {
             const scriptUrl = state.settings.scriptUrl;
             if (!scriptUrl || scriptUrl.trim() === '') {
@@ -6282,7 +6290,8 @@
                 return false;
             }
             try {
-                const res = await fetch(`${scriptUrl}?action=pull`);
+                const tokenQS = state.sessionToken ? `&token=${encodeURIComponent(state.sessionToken)}` : '';
+                const res = await fetch(`${scriptUrl}?action=pull${tokenQS}`);
                 const data = await res.json();
                 if (data.status === 'success' && data.state) {
                     applySyncedState(data.state);
@@ -6729,6 +6738,12 @@
             // sebenarnya berjaya, dan bukan senyap sepenuhnya sekiranya ia gagal.
             let pullLoginBerjaya = false;
             if (hasil.status === 'success') {
+                // PEMBETULAN: tetapkan token sesi DAHULU (sebelum pull) supaya pull selepas
+                // log masuk ini menyertakan token & menerima state PENUH drpd pelayan (lihat
+                // nota keselamatan di pullDataForLogin() & _bersihkanStateUntukPullTanpaSesi_()
+                // di Code_GS.txt) -- brg jika token TIDAK ditetapkan di sini dahulu, pull ini
+                // akan dianggap "tanpa sesi" & menerima state terhad (tanpa IC/tel/emel guru).
+                state.sessionToken = hasil.token || null;
                 pullLoginBerjaya = await pullDataForLogin(true, "Data akaun & sistem berjaya disegerakkan.");
             }
 
