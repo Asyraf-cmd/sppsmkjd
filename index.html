@@ -445,6 +445,7 @@
                 </li>
 
                 <li id="nav-li-pendaftaran" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('pendaftaran')" id="nav-pendaftaran" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-users w-6"></i> Pendaftaran Pengawas</div></li>
+                <li id="nav-li-permohonan-pengawas" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('permohonan-pengawas')" id="nav-permohonan-pengawas" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-inbox w-6 opacity-85 text-brand-yellow"></i> Permohonan Pengawas</div></li>
                 <li id="nav-li-perjanjian" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('perjanjian')" id="nav-perjanjian" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-file-signature w-6 opacity-85 text-brand-yellow"></i> Perjanjian &amp; Aku Janji</div></li>
                 <li id="nav-li-akses-pengawas" class="super-admin-only sidebar-group-pendaftaran-akaun"><div onclick="switchTab('akses-pengawas')" id="nav-akses-pengawas" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-6 opacity-85 text-brand-yellow"></i> Akses Pengawas</div></li>
                 <li id="nav-li-arkib" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('arkib')" id="nav-arkib" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-archive w-6 opacity-85 text-brand-yellow"></i> Arkib Pengawas</div></li>
@@ -794,6 +795,66 @@
                             <tbody id="table-pengawas" class="divide-y divide-slate-100"></tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            <!-- TAB: Permohonan Pengawas (Google Form -- mohon sendiri / cadangan guru) -->
+            <div id="tab-permohonan-pengawas" class="tab-content hidden">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Permohonan Pengawas</h2>
+                        <p class="text-xs text-slate-500 mt-1"><i class="fas fa-lock mr-1"></i> Hanya boleh diakses oleh Guru & Admin. Permohonan drpd Google Form (mohon sendiri / cadangan guru kelas) masuk terus ke sini.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 mb-4 flex-wrap">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Papar Status:</span>
+                    <button onclick="tukarPermohonanStatusFilter('Menunggu')" id="permohonan-filter-Menunggu" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-brand-blue text-white border-brand-blue"><i class="fas fa-hourglass-half mr-1"></i>Menunggu</button>
+                    <button onclick="tukarPermohonanStatusFilter('Diterima')" id="permohonan-filter-Diterima" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100"><i class="fas fa-user-check mr-1"></i>Diterima</button>
+                    <button onclick="tukarPermohonanStatusFilter('Ditolak')" id="permohonan-filter-Ditolak" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100"><i class="fas fa-user-times mr-1"></i>Ditolak</button>
+                    <button onclick="tukarPermohonanStatusFilter('Semua')" id="permohonan-filter-Semua" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100"><i class="fas fa-users mr-1"></i>Semua</button>
+                </div>
+
+                <div id="bulk-permohonan-bar" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-sm font-medium">
+                    <span class="text-brand-blue flex items-center gap-1.5"><i class="fas fa-info-circle"></i> <span id="bulk-permohonan-count" class="font-bold">0</span> permohonan dipilih</span>
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button onclick="bulkActionPermohonan('print')" class="flex-1 sm:flex-initial bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all"><i class="fas fa-print mr-1"></i> Cetak Senarai Temu Duga (Terpilih)</button>
+                        <button onclick="bulkActionPermohonan('delete')" class="flex-1 sm:flex-initial bg-red-600 hover:bg-red-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all"><i class="fas fa-trash mr-1"></i> Padam Terpilih</button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-slate-450">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                        <h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="fas fa-inbox text-slate-500"></i>Senarai Permohonan</h3>
+                        <button onclick="printSenaraiTemudugaPermohonan('landscape', null)" class="bg-brand-blue hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Senarai Temu Duga (Semua Ditapis)</button>
+                    </div>
+                    <div class="overflow-x-auto rounded-xl border border-slate-100">
+                        <table class="w-full text-sm text-left border-collapse">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b">
+                                <tr>
+                                    <th class="px-4 py-4 w-10 text-center"><input type="checkbox" id="permohonan-select-all" onchange="toggleSelectAll('permohonan')"></th>
+                                    <th class="px-4 py-4 font-bold">Nama</th>
+                                    <th class="px-4 py-4 font-bold">Tingkatan/Kelas</th>
+                                    <th class="px-4 py-4 font-bold">Sumber</th>
+                                    <th class="px-4 py-4 font-bold">Tarikh Mohon</th>
+                                    <th class="px-4 py-4 font-bold">Status</th>
+                                    <th class="px-4 py-4 text-right font-bold">Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-permohonan-pengawas" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: Lihat Butiran Permohonan Pengawas -->
+            <div id="modal-lihat-permohonan" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs hidden no-print p-4 modal-transition">
+                <div class="bg-white p-6 rounded-2xl shadow-2xl border-t-8 border-brand-blue w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center border-b pb-2 mb-4">
+                        <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i class="fas fa-user text-brand-blue"></i>Butiran Permohonan</h4>
+                        <button onclick="closeModalT('modal-lihat-permohonan')" class="text-slate-400 hover:text-red-600 text-sm px-2" title="Tutup"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div id="lihat-permohonan-body" class="text-sm text-slate-700 space-y-3"></div>
                 </div>
             </div>
 
@@ -3729,6 +3790,7 @@
             perhimpunanLog: [], // Pengurusan Perhimpunan (Tugasan Barisan Kelas) - disegerakkan ke Google Sheets
             bilikDisiplinLog: [], // Pengurusan Bilik Disiplin (Jadual Bertugas) - disegerakkan ke Google Sheets
             auditLog: [], // Log Aktiviti Sistem (siapa buat apa bila) - disegerakkan ke Google Sheets
+            permohonanPengawas: [], // Permohonan Pengawas (mohon sendiri / cadangan guru) - disegerakkan ke Google Sheets
             // --- DELTA SYNC QUEUE ---
             // pendingDeltas: senarai rekod BAHARU (tambah sahaja) yang belum di-push ke Google Sheets.
             // Setiap item: { subAction: 'addX', data: {...} }. Dihantar SATU-SATU semasa Push (cekap, tidak hantar seluruh pangkalan data).
@@ -4638,7 +4700,7 @@
                 'Pengawas Percubaan': baseline.slice()
             };
             const hasil = {
-                guru: ['dashboard', 'pendaftaran', 'perjanjian', 'kesalahan', 'surat', 'tunjuk-sebab', 'profil-disiplin', 'kemenjadian', 'penilaian-prestasi', 'bilik-disiplin', 'arkib', 'tetapan-lokasi', 'carta-organisasi-lengkap', 'tetapan-bidang-tugas']
+                guru: ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kesalahan', 'surat', 'tunjuk-sebab', 'profil-disiplin', 'kemenjadian', 'penilaian-prestasi', 'bilik-disiplin', 'arkib', 'tetapan-lokasi', 'carta-organisasi-lengkap', 'tetapan-bidang-tugas']
             };
             // Setiap jawatan lalai digandakan untuk KEDUA-DUA sesi (cth "Ketua Pengawas (Sesi
             // Pagi)" & "Ketua Pengawas (Sesi Petang)") -- ini SATU peranan berasingan yang
@@ -5847,6 +5909,7 @@
                 perhimpunanLog: state.perhimpunanLog || [],
                 bilikDisiplinLog: state.bilikDisiplinLog || [],
                 auditLog: state.auditLog || [],
+                permohonanPengawas: state.permohonanPengawas || [],
                 // Tetapan yang dikongsi merentasi SEMUA peranti (bukan tetapan sulit/setempat seperti
                 // kata laluan atau URL Apps Script -- itu kekal tempatan pada setiap peranti sahaja)
                 sharedSettings: buildSharedSettingsPayload()
@@ -5874,6 +5937,7 @@
             state.perhimpunanLog = remoteState.perhimpunanLog || [];
             state.bilikDisiplinLog = remoteState.bilikDisiplinLog || [];
             state.auditLog = remoteState.auditLog || [];
+            state.permohonanPengawas = remoteState.permohonanPengawas || [];
 
             // Tetapan kongsi merentasi peranti (ambang amaran, logo) -- gabung sahaja medan ini,
             // JANGAN sentuh tetapan sulit/setempat (scriptUrl, kata laluan, log sync tempatan)
@@ -7193,7 +7257,7 @@
             let jawatan = '';
 
             // Hide all tab elements in sidebar first
-            const navTabs = ['dashboard', 'pendaftaran', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'log-aktiviti'];
+            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'log-aktiviti'];
             navTabs.forEach(nav => {
                 const el = document.getElementById(`nav-li-${nav}`);
                 if (el) el.style.display = 'none';
@@ -7381,6 +7445,9 @@
             if (tabId === 'penilaian-prestasi') {
                 const tahunInput = document.getElementById('pp-tahun');
                 if (tahunInput && !tahunInput.value) tahunInput.value = new Date().getFullYear();
+            }
+            if (tabId === 'permohonan-pengawas') {
+                renderPermohonanPengawas();
             }
             if (tabId === 'tetapan') {
                 refreshHealthCheck();
@@ -9125,8 +9192,16 @@
         // Borang ini kini paparan MODAL berasingan (sama corak dgn modal-profil-disiplin) --
         // tidak lagi terbenam di bahagian atas tab Pendaftaran, supaya jadual senarai
         // pengawas kekal kelihatan/boleh diakses tanpa perlu tutup borang dahulu.
+        // Rujukan permohonan (drpd modul Permohonan Pengawas) yang SEDANG dilantik --
+        // diset oleh lantikPermohonanPengawas() sahaja, dikosongkan semula di sini
+        // (openDaftarModal) supaya alur pendaftaran BIASA (bukan drpd permohonan)
+        // tidak terjejas. Dibaca semula oleh savePengawas() selepas rekod baharu
+        // berjaya disimpan, utk auto-kemaskini status permohonan berkaitan.
+        let _permohonanIdSedangDilantik = null;
+
         function openDaftarModal() {
             document.getElementById('pengawasForm').reset();
+            _permohonanIdSedangDilantik = null;
             document.getElementById('daftar-id').value = '';
             document.getElementById('daftar-status').value = 'Aktif';
             toggleDaftarArkibFields();
@@ -9207,6 +9282,12 @@
             } else {
                 state.pengawas.push(p);
                 queueDelta('addPrefect', p);
+                // Jika pendaftaran ini berasal drpd "Lantik" pada modul Permohonan Pengawas,
+                // tandakan permohonan berkaitan sbg "Diterima" & pautkan ID pengawas baharu.
+                if (_permohonanIdSedangDilantik) {
+                    _tandaPermohonanDiterima_(_permohonanIdSedangDilantik, p.id);
+                    _permohonanIdSedangDilantik = null;
+                }
             }
             
             saveStateToLocal();
@@ -9246,6 +9327,238 @@
             toggleDaftarArkibFields();
             document.getElementById('daftar-form-title').innerText = "Kemaskini Data Pengawas";
             document.getElementById('modal-daftar').classList.remove('hidden');
+        }
+
+        // =========================================================================
+        //  MODUL: PERMOHONAN PENGAWAS (Google Form -- mohon sendiri / cadangan guru)
+        //  Rekod masuk secara automatik drpd pencetus onFormSubmitPermohonanPengawas()
+        //  di Code_GS.txt (terus ke pangkalan data, dibaca semula di sini semasa pull).
+        // =========================================================================
+        let _permohonanStatusFilter = 'Menunggu';
+
+        function tukarPermohonanStatusFilter(status) {
+            _permohonanStatusFilter = status;
+            ['Menunggu', 'Diterima', 'Ditolak', 'Semua'].forEach(s => {
+                const btn = document.getElementById(`permohonan-filter-${s}`);
+                if (!btn) return;
+                if (s === status) {
+                    btn.classList.add('bg-brand-blue', 'text-white', 'border-brand-blue');
+                    btn.classList.remove('bg-white', 'text-slate-500', 'border-slate-200');
+                } else {
+                    btn.classList.remove('bg-brand-blue', 'text-white', 'border-brand-blue');
+                    btn.classList.add('bg-white', 'text-slate-500', 'border-slate-200');
+                }
+            });
+            renderPermohonanPengawas();
+        }
+
+        function _senaraiPermohonanDitapis_() {
+            let senarai = [...(state.permohonanPengawas || [])];
+            if (_permohonanStatusFilter !== 'Semua') {
+                senarai = senarai.filter(m => (m.status || 'Menunggu') === _permohonanStatusFilter);
+            }
+            senarai.sort((a, b) => new Date(b.tarikhMohon || 0) - new Date(a.tarikhMohon || 0));
+            return senarai;
+        }
+
+        function renderPermohonanPengawas() {
+            const tbody = document.getElementById('table-permohonan-pengawas');
+            if (!tbody) return;
+            const senarai = _senaraiPermohonanDitapis_();
+
+            if (senarai.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 text-sm">Tiada permohonan${_permohonanStatusFilter === 'Semua' ? '' : ` berstatus "${escapeHtml(_permohonanStatusFilter)}"`} buat masa ini.</td></tr>`;
+                return;
+            }
+
+            const badgeStatus = { 'Menunggu': 'bg-amber-100 text-amber-700', 'Diterima': 'bg-green-100 text-green-700', 'Ditolak': 'bg-red-100 text-red-700' };
+            tbody.innerHTML = senarai.map(m => {
+                const status = m.status || 'Menunggu';
+                const sumberBadge = m.sumber === 'Cadangan Guru' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700';
+                const tarikhPaparan = m.tarikhMohon ? new Date(m.tarikhMohon).toLocaleDateString('ms-MY') : '-';
+                const tindakan = status === 'Menunggu'
+                    ? `<button onclick="lantikPermohonanPengawas('${m.id}')" class="text-green-600 hover:text-green-800 mr-3" title="Lantik sebagai Pengawas"><i class="fas fa-user-check"></i></button>
+                       <button onclick="tolakPermohonanPengawas('${m.id}')" class="text-red-600 hover:text-red-800 mr-3" title="Tolak"><i class="fas fa-user-times"></i></button>`
+                    : `<span class="text-xs text-slate-400 italic mr-3">${status === 'Diterima' ? 'Sudah Dilantik' : 'Ditolak'}</span>`;
+                return `<tr class="hover:bg-slate-50">
+                    <td class="px-4 py-3 text-center"><input type="checkbox" name="permohonan-select" value="${m.id}" onchange="updateBulkBar('permohonan')"></td>
+                    <td class="px-4 py-3 font-semibold text-brand-blue hover:underline cursor-pointer" onclick="lihatButiranPermohonan('${m.id}')">${escapeHtml(m.nama || '-')}</td>
+                    <td class="px-4 py-3">${escapeHtml(m.tingkatan || '')} ${escapeHtml(m.kelas || '')}</td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs font-bold ${sumberBadge}">${escapeHtml(m.sumber || 'Sendiri')}</span></td>
+                    <td class="px-4 py-3 text-xs">${tarikhPaparan}</td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs font-bold ${badgeStatus[status] || 'bg-slate-100 text-slate-600'}">${escapeHtml(status)}</span></td>
+                    <td class="px-4 py-3 text-right">${tindakan}<button onclick="padamPermohonanPengawas('${m.id}')" class="text-slate-400 hover:text-red-600 ml-2" title="Padam Rekod"><i class="fas fa-trash-alt"></i></button></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function lihatButiranPermohonan(id) {
+            const m = (state.permohonanPengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!m) return;
+            const baris = (label, nilai) => `<div><span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">${escapeHtml(label)}</span><span class="text-slate-800">${nilai ? escapeHtml(nilai) : '-'}</span></div>`;
+            let html = `<div class="grid grid-cols-2 gap-3">
+                ${baris('Nama', m.nama)}${baris('No. IC', m.ic)}
+                ${baris('Jantina', m.jantina)}${baris('Tingkatan/Kelas', `${m.tingkatan || ''} ${m.kelas || ''}`.trim())}
+                ${baris('No. Tel Pelajar', m.tel)}${baris('Sumber', m.sumber || 'Sendiri')}
+                ${baris('Nama Ibu Bapa/Penjaga', m.ibubapa)}${baris('No. Tel Ibu Bapa/Penjaga', m.telibubapa)}
+            </div>`;
+            if (m.sumber === 'Cadangan Guru') {
+                html += `<div class="border-t pt-3 grid grid-cols-2 gap-3">
+                    ${baris('Nama Guru Pencadang', m.namaGuruPencadang)}${baris('Jawatan Guru Pencadang', m.jawatanGuruPencadang)}
+                    ${baris('No. Tel Guru Pencadang', m.telGuruPencadang)}
+                </div>`;
+            }
+            html += `<div class="border-t pt-3">${baris('Sebab Memohon/Dicadangkan', m.sebabMemohon)}</div>`;
+            html += `<div>${baris('Pencapaian/Sahsiah', m.pencapaian)}</div>`;
+            document.getElementById('lihat-permohonan-body').innerHTML = html;
+            openModalT('modal-lihat-permohonan');
+        }
+
+        function lantikPermohonanPengawas(id) {
+            const m = (state.permohonanPengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!m) return;
+            openDaftarModal(); // ini set _permohonanIdSedangDilantik = null dahulu -- kekalkan urutan ini
+            _permohonanIdSedangDilantik = id;
+            document.getElementById('daftar-nama').value = (m.nama || '').toUpperCase();
+            document.getElementById('daftar-ic').value = m.ic || '';
+            document.getElementById('daftar-jantina').value = m.jantina || '';
+            document.getElementById('daftar-tingkatan').value = m.tingkatan || '';
+            populateNamaKelasSelect();
+            document.getElementById('daftar-namakelas').value = m.kelas || '';
+            updateDaftarSesiIndicator();
+            populateDaftarJawatanSelect();
+            document.getElementById('daftar-tel').value = m.tel || '';
+            document.getElementById('daftar-ibubapa').value = (m.ibubapa || '').toUpperCase();
+            document.getElementById('daftar-telibubapa').value = m.telibubapa || '';
+            document.getElementById('daftar-form-title').innerText = 'Lantik sebagai Pengawas (drpd Permohonan)';
+        }
+
+        function _tandaPermohonanDiterima_(permohonanId, pengawasIdBaharu) {
+            const idx = (state.permohonanPengawas || []).findIndex(x => normalizeId(x.id) === normalizeId(permohonanId));
+            if (idx === -1) return;
+            state.permohonanPengawas[idx].status = 'Diterima';
+            state.permohonanPengawas[idx].pengawasIdLantikan = pengawasIdBaharu;
+            queueUpdateRecord('permohonanPengawas', state.permohonanPengawas[idx], 'Lantik pengawas drpd permohonan');
+            renderPermohonanPengawas();
+        }
+
+        function tolakPermohonanPengawas(id) {
+            const m = (state.permohonanPengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!m) return;
+            showCustomConfirm("Tolak Permohonan", `Adakah anda pasti untuk menolak permohonan "${m.nama}"? Rekod akan kekal disimpan (status: Ditolak) sbg sejarah.`, function() {
+                m.status = 'Ditolak';
+                queueUpdateRecord('permohonanPengawas', m, 'Tolak permohonan pengawas');
+                saveStateToLocal();
+                markUnsynced();
+                renderPermohonanPengawas();
+                showCustomAlert("Permohonan ditolak.", "success");
+            });
+        }
+
+        function padamPermohonanPengawas(id) {
+            const m = (state.permohonanPengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!m) return;
+            showCustomConfirm("Padam Rekod Permohonan", `Adakah anda pasti untuk memadam rekod permohonan "${m.nama}" secara kekal?`, function() {
+                state.permohonanPengawas = (state.permohonanPengawas || []).filter(x => normalizeId(x.id) !== normalizeId(id));
+                queueDeleteRecord('permohonanPengawas', id, 'Padam rekod permohonan pengawas');
+                saveStateToLocal();
+                markUnsynced();
+                renderPermohonanPengawas();
+                showCustomAlert("Rekod permohonan berjaya dipadam.", "success");
+            });
+        }
+
+        function bulkActionPermohonan(action) {
+            const checkedBoxes = document.querySelectorAll('input[name="permohonan-select"]:checked');
+            const ids = Array.from(checkedBoxes).map(b => b.value);
+            if (ids.length === 0) return;
+
+            if (action === 'print') {
+                printSenaraiTemudugaPermohonan('landscape', ids);
+            } else if (action === 'delete') {
+                showCustomConfirm("Padam Permohonan Pukal", `Adakah anda pasti untuk memadam ${ids.length} rekod permohonan terpilih?`, function() {
+                    state.permohonanPengawas = (state.permohonanPengawas || []).filter(m => !ids.map(normalizeId).includes(normalizeId(m.id)));
+                    ids.forEach(id => queueDeleteRecord('permohonanPengawas', id, 'Padam pukal permohonan pengawas'));
+                    saveStateToLocal();
+                    markUnsynced();
+                    renderPermohonanPengawas();
+                    showCustomAlert("Permohonan terpilih berjaya dipadam.", "success");
+                });
+            }
+        }
+
+        // Cetakan PUKAL (landskap) -- senarai temu duga permohonan pengawas, dikumpul
+        // ikut Tingkatan (sama corak dgn printSenaraiPengawasIkutTingkatan). Nama Panel
+        // Temu Duga 1 & 2 ditulis SEKALI di atas jadual (bukan setiap baris) kerana panel
+        // yg sama biasanya jalankan sesi utk semua calon dlm satu sesi. `ids` == null
+        // bermakna cetak SEMUA rekod yg sedang ditapis (ikut _permohonanStatusFilter).
+        function printSenaraiTemudugaPermohonan(orientation, ids) {
+            let senarai = ids
+                ? (state.permohonanPengawas || []).filter(m => ids.map(normalizeId).includes(normalizeId(m.id)))
+                : _senaraiPermohonanDitapis_();
+
+            if (senarai.length === 0) {
+                showCustomAlert("Tiada permohonan untuk dicetak.", "error");
+                return;
+            }
+
+            // Kumpulkan ikut Tingkatan (sama corak dgn senarai pengawas)
+            const kumpulan = {};
+            senarai.forEach(m => {
+                const kod = (m.tingkatan || 'Tidak Diketahui').trim();
+                if (!kumpulan[kod]) kumpulan[kod] = [];
+                kumpulan[kod].push(m);
+            });
+            const kunciDikenali = TINGKATAN_URUTAN_CETAK.filter(k => kumpulan[k]);
+            const kunciLain = Object.keys(kumpulan).filter(k => TINGKATAN_URUTAN_CETAK.indexOf(k) === -1).sort();
+            const susunanKumpulan = kunciDikenali.concat(kunciLain);
+
+            let html = getPrintHeader();
+            html += `<h3 style="text-align:center; text-transform:uppercase; margin-bottom:8px; font-weight:bold;">Senarai Temu Duga Permohonan Pengawas</h3>`;
+            html += `<table style="margin-bottom:20px;"><tbody>
+                <tr>
+                    <td style="width:50%; border:1px solid #333; padding:10px; font-weight:bold;">Panel Temu Duga 1 &nbsp; Nama: <span style="display:inline-block; min-width:220px; border-bottom:1px solid #333;">&nbsp;</span></td>
+                    <td style="width:50%; border:1px solid #333; padding:10px; font-weight:bold;">Panel Temu Duga 2 &nbsp; Nama: <span style="display:inline-block; min-width:220px; border-bottom:1px solid #333;">&nbsp;</span></td>
+                </tr>
+            </tbody></table>`;
+
+            susunanKumpulan.forEach(kod => {
+                const kumpulanSenarai = [...kumpulan[kod]].sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+                html += `<h4 style="margin:14px 0 6px 0; font-weight:bold;">${escapeHtml(labelTingkatanCetak_ ? labelTingkatanCetak_(kod) : ('Tingkatan ' + kod))}</h4>`;
+                html += `<table>
+                    <thead>
+                        <tr>
+                            <th style="width:26px;">Bil</th>
+                            <th>Nama Penuh</th>
+                            <th style="width:110px;">No. IC</th>
+                            <th style="width:70px;">Kelas</th>
+                            <th style="width:90px;">Sumber</th>
+                            <th style="width:110px;">Jumlah Demerit Terkumpul</th>
+                            <th>Catatan Panel 1</th>
+                            <th>Catatan Panel 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                kumpulanSenarai.forEach((m, idx) => {
+                    html += `<tr>
+                        <td>${idx + 1}</td>
+                        <td>${escapeHtml(m.nama)}</td>
+                        <td>${escapeHtml(m.ic) || '-'}</td>
+                        <td>${escapeHtml(m.kelas) || '-'}</td>
+                        <td>${escapeHtml(m.sumber || 'Sendiri')}</td>
+                        <td style="height:55px;">&nbsp;</td>
+                        <td style="height:55px; min-width:140px;">&nbsp;</td>
+                        <td style="height:55px; min-width:140px;">&nbsp;</td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+            });
+
+            html += `<div class="signature-box">
+                <div><div class="sig-line">Disediakan Oleh<br>(Guru Penyelaras)</div></div>
+                <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
+            </div>`;
+            executePrint(html, orientation);
         }
 
         // =========================================================================
