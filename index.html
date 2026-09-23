@@ -6275,6 +6275,36 @@
         // Fungsi teras dikongsi oleh (1) butang "Muat Turun Data Akaun" pada skrin log masuk, dan
         // (2) log masuk automatik (dipanggil secara senyap setiap kali cuba log masuk, tanpa perlu
         // pengguna tekan butang muat turun secara berasingan dahulu).
+        // Terapkan `state` + `masaKemaskiniPelayan` yang diterima drpd pelayan (sama ada
+        // hasil panggilan `pull`, ATAU kini terus drpd respons `login` -- lihat nota di
+        // terapkanStateDariLogin() di bawah) ke dalam memori & storan tempatan. Dikongsi
+        // supaya logiknya SATU sahaja, elak dua salinan tersasar (state.js drift).
+        function _terapkanDataDaripadaPelayan_(stateBaharu, masaKemaskiniPelayan, tunjukMesej, mesejBerjaya) {
+            applySyncedState(stateBaharu);
+            state.hasUnsyncedChanges = false;
+            state.pendingDeltas = [];
+            state.needsFullSync = false;
+            state.settings.lastSync = new Date().toLocaleString('ms-MY');
+            // Rekod timestamp pelayan semasa pull ini -- rujukan utk kesan konflik sync
+            // (jika peranti LAIN push selepas ini, timestamp pelayan akan berubah).
+            if (masaKemaskiniPelayan) state.settings.lastKnownServerTimestamp = masaKemaskiniPelayan;
+            catatStatusSync('pull', true);
+            saveStateToLocal();
+            if (tunjukMesej) showCustomAlert(mesejBerjaya || "Data berjaya dimuat turun daripada Google Sheets.", "success");
+            return true;
+        }
+
+        // PRESTASI (PEMBETULAN): respons `login` (handleLogin di Code_GS.txt) kini turut
+        // menyertakan `state` PENUH terus (data yg SUDAH dibaca drpd Drive semasa pelayan
+        // sahkan kata laluan) -- jadi TIDAK PERLU lagi buat panggilan `pull` BERASINGAN
+        // (yg akan baca SEMULA fail Drive yang SAMA dari awal) sejurus selepas log masuk
+        // berjaya. Ini kurangkan bacaan Drive+JSON.parse drpd 2x kpd 1x setiap log masuk
+        // -- punca utama log masuk terasa sangat perlahan sebelum ini.
+        function terapkanStateDariLogin(hasilLogin, tunjukMesej, mesejBerjaya) {
+            if (!hasilLogin || !hasilLogin.state) return false;
+            return _terapkanDataDaripadaPelayan_(hasilLogin.state, hasilLogin.masaKemaskiniPelayan, tunjukMesej, mesejBerjaya);
+        }
+
         // KESELAMATAN (PEMBETULAN): pelayan (Code.gs handlePull) kini memulangkan state
         // yang DIBERSIHKAN (tanpa kata laluan/hash & tanpa No.IC/telefon/emel guru) bagi
         // permintaan TANPA token sesi sah -- lihat _bersihkanStateUntukPullTanpaSesi_() di
@@ -6282,7 +6312,10 @@
         // masuk & token sedia ada dlm memori) supaya pull SELEPAS log masuk terus dapat
         // state PENUH seperti sedia ada -- pull SEBELUM log masuk (cth. butang "Muat
         // Turun Data Akaun" di skrin log masuk) kekal menerima versi terhad, memandangkan
-        // pengguna belum disahkan pada ketika itu.
+        // pengguna belum disahkan pada ketika itu. NOTA: selepas pembetulan prestasi di
+        // atas, laluan ini (fetch `pull` berasingan) TIDAK LAGI dipanggil serta-merta
+        // selepas log masuk berjaya -- ia kekal digunakan utk pull SEBELUM log masuk & pull
+        // manual lain (Tetapan & Segerak, selepas Restore Sandaran, jaring keselamatan).
         async function pullDataForLogin(tunjukMesej, mesejBerjaya) {
             const scriptUrl = state.settings.scriptUrl;
             if (!scriptUrl || scriptUrl.trim() === '') {
@@ -6294,18 +6327,7 @@
                 const res = await fetch(`${scriptUrl}?action=pull${tokenQS}`);
                 const data = await res.json();
                 if (data.status === 'success' && data.state) {
-                    applySyncedState(data.state);
-                    state.hasUnsyncedChanges = false;
-                    state.pendingDeltas = [];
-                    state.needsFullSync = false;
-                    state.settings.lastSync = new Date().toLocaleString('ms-MY');
-                    // Rekod timestamp pelayan semasa pull ini -- rujukan utk kesan konflik sync
-                    // (jika peranti LAIN push selepas ini, timestamp pelayan akan berubah).
-                    if (data.masaKemaskiniPelayan) state.settings.lastKnownServerTimestamp = data.masaKemaskiniPelayan;
-                    catatStatusSync('pull', true);
-                    saveStateToLocal();
-                    if (tunjukMesej) showCustomAlert(mesejBerjaya || "Data berjaya dimuat turun daripada Google Sheets.", "success");
-                    return true;
+                    return _terapkanDataDaripadaPelayan_(data.state, data.masaKemaskiniPelayan, tunjukMesej, mesejBerjaya);
                 } else {
                     catatStatusSync('pull', false, data.message || 'Gagal memuat turun data.');
                     if (tunjukMesej) showCustomAlert(data.message || "Gagal memuat turun data akaun daripada Google Sheets.", "error");
@@ -6738,13 +6760,19 @@
             // sebenarnya berjaya, dan bukan senyap sepenuhnya sekiranya ia gagal.
             let pullLoginBerjaya = false;
             if (hasil.status === 'success') {
-                // PEMBETULAN: tetapkan token sesi DAHULU (sebelum pull) supaya pull selepas
-                // log masuk ini menyertakan token & menerima state PENUH drpd pelayan (lihat
-                // nota keselamatan di pullDataForLogin() & _bersihkanStateUntukPullTanpaSesi_()
-                // di Code_GS.txt) -- brg jika token TIDAK ditetapkan di sini dahulu, pull ini
-                // akan dianggap "tanpa sesi" & menerima state terhad (tanpa IC/tel/emel guru).
+                // PEMBETULAN: tetapkan token sesi DAHULU supaya sebarang panggilan `push`/dsb.
+                // seterusnya (& fallback `pull` di bawah, jika terpakai) menyertakan token sah.
                 state.sessionToken = hasil.token || null;
-                pullLoginBerjaya = await pullDataForLogin(true, "Data akaun & sistem berjaya disegerakkan.");
+                // PRESTASI (PEMBETULAN): respons log masuk kini SUDAH sertakan `state` PENUH
+                // terus (lihat terapkanStateDariLogin() & nota prestasi di Code_GS.txt) -- guna
+                // itu terus & ELAKKAN panggilan `pull` BERASINGAN yg baca SEMULA Drive dari awal
+                // (punca log masuk terasa sangat perlahan sebelumnya). Fallback ke pull lama
+                // hanya jika deployment pelayan masih versi lama yg tiada `state` dlm respons.
+                if (hasil.state) {
+                    pullLoginBerjaya = terapkanStateDariLogin(hasil, true, "Data akaun & sistem berjaya disegerakkan.");
+                } else {
+                    pullLoginBerjaya = await pullDataForLogin(true, "Data akaun & sistem berjaya disegerakkan.");
+                }
             }
 
             if (submitBtn) {
