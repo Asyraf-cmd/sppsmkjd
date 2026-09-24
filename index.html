@@ -826,7 +826,11 @@
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-slate-450">
                     <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
                         <h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="fas fa-inbox text-slate-500"></i>Senarai Permohonan</h3>
-                        <button onclick="printSenaraiTemudugaPermohonan('landscape', null)" class="bg-brand-blue hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Senarai Temu Duga (Semua Ditapis)</button>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="printSenaraiPermohonanIkutStatus('Menunggu')" class="bg-amber-500 hover:bg-amber-600 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Menunggu</button>
+                            <button onclick="printSenaraiPermohonanIkutStatus('Diterima')" class="bg-green-600 hover:bg-green-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Diterima</button>
+                            <button onclick="printSenaraiPermohonanIkutStatus('Ditolak')" class="bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Ditolak</button>
+                        </div>
                     </div>
                     <div class="overflow-x-auto rounded-xl border border-slate-100">
                         <table class="w-full text-sm text-left border-collapse">
@@ -6685,15 +6689,38 @@
         // Isi semua dropdown pilihan minggu (Laporan Mingguan & Laporan Disiplin Mingguan) dari state.mingguSettings
         function populateMingguSelects() {
             const senarai = (state.mingguSettings || []).slice().sort((a, b) => new Date(a.tarikhMula) - new Date(b.tarikhMula));
-            const optionsHtml = '<option value="">-- Pilih Minggu --</option>' +
-                senarai.map(m => `<option value="${m.minggu}" data-tarikh-mula="${m.tarikhMula}" data-tarikh-akhir="${m.tarikhAkhir}">${m.minggu} (${formatTarikhSuratPanjang(m.tarikhMula)} - ${formatTarikhSuratPanjang(m.tarikhAkhir)})</option>`).join('');
 
-            ['lm-minggu', 'ld-minggu'].forEach(selectId => {
+            // Laporan yg SEDANG disunting (jika ada) -- minggu laporan ini perlu KEKAL
+            // dipaparkan dlm dropdown borang berkenaan walaupun minggu tsb "sudah ada
+            // laporan" (ia laporan yg SAMA sedang disunting), supaya borang Kemaskini
+            // tidak "kehilangan" nilai minggu asal & gagal disimpan semula.
+            const laporanSedangDisunting = state.editingLaporanId
+                ? (state.laporanLog || []).find(x => normalizeId(x.id) === normalizeId(state.editingLaporanId))
+                : null;
+
+            // KEPERLUAN: minggu yg SUDAH ADA laporan (bagi jenis 'mingguan'/'disiplin'
+            // masing-masing) tidak lagi dipaparkan dlm dropdown -- elak laporan minggu
+            // yg sama dijana dua kali. Setiap jenis laporan disemak BERASINGAN (minggu
+            // yg sudah ada Laporan Disiplin masih boleh dipilih utk Laporan Mingguan,
+            // & sebaliknya). "spotcheck" tiada dropdown minggu -- tidak terjejas.
+            [{ selectId: 'lm-minggu', jenisLaporan: 'mingguan' }, { selectId: 'ld-minggu', jenisLaporan: 'disiplin' }].forEach(({ selectId, jenisLaporan }) => {
                 const el = document.getElementById(selectId);
                 if (!el) return;
+
+                const minggUsedSet = new Set(
+                    (state.laporanLog || [])
+                        .filter(l => l.jenis === jenisLaporan && l.data && l.data.minggu)
+                        .filter(l => !(laporanSedangDisunting && normalizeId(l.id) === normalizeId(laporanSedangDisunting.id)))
+                        .map(l => l.data.minggu)
+                );
+                const senaraiTersedia = senarai.filter(m => !minggUsedSet.has(m.minggu));
+
+                const optionsHtml = '<option value="">-- Pilih Minggu --</option>' +
+                    senaraiTersedia.map(m => `<option value="${m.minggu}" data-tarikh-mula="${m.tarikhMula}" data-tarikh-akhir="${m.tarikhAkhir}">${m.minggu} (${formatTarikhSuratPanjang(m.tarikhMula)} - ${formatTarikhSuratPanjang(m.tarikhAkhir)})</option>`).join('');
+
                 const currentVal = el.value;
                 el.innerHTML = optionsHtml;
-                if (currentVal && senarai.some(m => m.minggu === currentVal)) el.value = currentVal;
+                if (currentVal && senaraiTersedia.some(m => m.minggu === currentVal)) el.value = currentVal;
             });
         }
 
@@ -9559,6 +9586,78 @@
                 <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
             </div>`;
             executePrint(html, orientation);
+        }
+
+        // Cetakan bagi SATU bahagian status sahaja (Menunggu/Diterima/Ditolak) --
+        // TIDAK bergantung pd penapis semasa yg dipilih Admin/Guru di skrin (elak
+        // kekeliruan "papar Menunggu tapi tekan Cetak Diterima keluar kosong").
+        // "Menunggu" guna reka bentuk slip temu duga sedia ada (demerit + 2 panel);
+        // "Diterima"/"Ditolak" guna senarai ringkas (keputusan sudah dibuat, tiada
+        // gunanya kotak kosong temu duga lagi).
+        function printSenaraiPermohonanIkutStatus(status) {
+            const senarai = (state.permohonanPengawas || []).filter(m => (m.status || 'Menunggu') === status);
+            if (senarai.length === 0) {
+                showCustomAlert(`Tiada permohonan berstatus "${status}" untuk dicetak.`, "error");
+                return;
+            }
+            if (status === 'Menunggu') {
+                printSenaraiTemudugaPermohonan('landscape', senarai.map(m => m.id));
+                return;
+            }
+
+            const kumpulan = {};
+            senarai.forEach(m => {
+                const kod = (m.tingkatan || 'Tidak Diketahui').trim();
+                if (!kumpulan[kod]) kumpulan[kod] = [];
+                kumpulan[kod].push(m);
+            });
+            const kunciDikenali = TINGKATAN_URUTAN_CETAK.filter(k => kumpulan[k]);
+            const kunciLain = Object.keys(kumpulan).filter(k => TINGKATAN_URUTAN_CETAK.indexOf(k) === -1).sort();
+            const susunanKumpulan = kunciDikenali.concat(kunciLain);
+
+            let html = getPrintHeader();
+            const tajuk = status === 'Diterima' ? 'Senarai Permohonan Diterima (Dilantik sebagai Pengawas)' : 'Senarai Permohonan Ditolak';
+            html += `<h3 style="text-align:center; text-transform:uppercase; margin-bottom:14px; font-weight:bold;">${escapeHtml(tajuk)}</h3>`;
+
+            susunanKumpulan.forEach(kod => {
+                const kumpulanSenarai = [...kumpulan[kod]].sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+                html += `<h4 style="margin:14px 0 6px 0; font-weight:bold;">${escapeHtml(labelTingkatanCetak_(kod))}</h4>`;
+                html += `<table>
+                    <thead>
+                        <tr>
+                            <th style="width:26px;">Bil</th>
+                            <th>Nama Penuh</th>
+                            <th style="width:110px;">No. IC</th>
+                            <th style="width:70px;">Kelas</th>
+                            <th style="width:90px;">Sumber</th>
+                            <th style="width:85px;">Tarikh Mohon</th>
+                            ${status === 'Diterima' ? '<th style="width:110px;">ID Pengawas Dilantik</th>' : '<th>Sebab Memohon/Dicadangkan</th>'}
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                kumpulanSenarai.forEach((m, idx) => {
+                    const tarikhPaparan = m.tarikhMohon ? new Date(m.tarikhMohon).toLocaleDateString('ms-MY') : '-';
+                    const lajurAkhir = status === 'Diterima'
+                        ? (escapeHtml(m.pengawasIdLantikan) || '-')
+                        : (escapeHtml((m.sebabMemohon || '').substring(0, 150)) || '-');
+                    html += `<tr>
+                        <td>${idx + 1}</td>
+                        <td>${escapeHtml(m.nama)}</td>
+                        <td>${escapeHtml(m.ic) || '-'}</td>
+                        <td>${escapeHtml(m.kelas) || '-'}</td>
+                        <td>${escapeHtml(m.sumber || 'Sendiri')}</td>
+                        <td>${tarikhPaparan}</td>
+                        <td>${lajurAkhir}</td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+            });
+
+            html += `<div class="signature-box">
+                <div><div class="sig-line">Disediakan Oleh<br>(Guru Penyelaras)</div></div>
+                <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
+            </div>`;
+            executePrint(html, 'landscape');
         }
 
         // =========================================================================
@@ -15431,6 +15530,10 @@
         // (tutup modal tanpa simpan) supaya borang asal di tab "Laporan" tidak tertinggal
         // terisi dengan data laporan yang baru sahaja disunting/dibatalkan.
         function resetLaporanForm(jenis) {
+            // Segarkan semula dropdown minggu -- minggu yg baru sahaja disimpan (atau
+            // dibebaskan semula selepas batal edit) perlu terus mencerminkan senarai
+            // TERKINI (lihat nota keselamatan/logik di populateMingguSelects()).
+            populateMingguSelects();
             if (jenis === 'mingguan') {
                 document.getElementById('lm-minggu').value = '';
                 document.getElementById('lm-tarikh-mula').value = '';
@@ -15499,6 +15602,13 @@
             if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
             document.body.style.overflow = '';
 
+            // PEMBETULAN: kosongkan editingLaporanId DAHULU (sebelum resetLaporanForm)
+            // supaya populateMingguSelects() di dalam resetLaporanForm() tidak lagi
+            // mengecualikan minggu laporan yg baru sahaja DIBATALKAN penyuntingannya --
+            // minggu tsb PERLU kembali disekat (sebab laporan sedia ada bagi minggu itu
+            // masih wujud & tidak berubah).
+            if (batalkanEdit) state.editingLaporanId = null;
+
             if (laporanModalOrigin) {
                 const subtabId = laporanModalOrigin.subtabId;
                 const subtabEl = document.getElementById(subtabId);
@@ -15520,7 +15630,6 @@
                 }
                 laporanModalOrigin = null;
             }
-            if (batalkanEdit) state.editingLaporanId = null;
         }
 
         function editLaporan(id) {
@@ -15528,6 +15637,11 @@
             if(!l) return;
             
             state.editingLaporanId = l.id;
+            // Segarkan semula dropdown minggu SEKARANG (selepas editingLaporanId diset)
+            // supaya minggu laporan yg SEDANG disunting ini dikecualikan drpd penapisan
+            // "minggu sudah ada laporan" -- jika tidak, .value di bawah akan gagal
+            // dipadankan (dropdown akan nampak kosong walaupun laporan sudah ada minggu).
+            populateMingguSelects();
             // Borang edit dipaparkan sebagai MODAL sahaja -- kekal di tab semasa (Sejarah
             // Laporan), TIDAK bertukar ke tab "Laporan" lagi.
             openLaporanEditModal(l.jenis);
@@ -15626,6 +15740,9 @@
                 markUnsynced();
                 renderLaporanHistory();
                 updateDashboard();
+                // Minggu laporan yg baru dipadam kini tiada laporan lagi -- kembalikan ke
+                // dropdown (lihat nota di populateMingguSelects()).
+                populateMingguSelects();
                 showCustomAlert("Laporan berjaya dipadam.", "success");
             });
         }
