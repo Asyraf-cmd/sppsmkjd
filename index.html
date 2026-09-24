@@ -826,11 +826,7 @@
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-slate-450">
                     <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
                         <h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="fas fa-inbox text-slate-500"></i>Senarai Permohonan</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="printSenaraiPermohonanIkutStatus('Menunggu')" class="bg-amber-500 hover:bg-amber-600 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Menunggu</button>
-                            <button onclick="printSenaraiPermohonanIkutStatus('Diterima')" class="bg-green-600 hover:bg-green-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Diterima</button>
-                            <button onclick="printSenaraiPermohonanIkutStatus('Ditolak')" class="bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Ditolak</button>
-                        </div>
+                        <div id="permohonan-print-btn-container" class="flex flex-wrap gap-2"></div>
                     </div>
                     <div class="overflow-x-auto rounded-xl border border-slate-100">
                         <table class="w-full text-sm text-left border-collapse">
@@ -7474,6 +7470,7 @@
                 if (tahunInput && !tahunInput.value) tahunInput.value = new Date().getFullYear();
             }
             if (tabId === 'permohonan-pengawas') {
+                renderPermohonanPrintButton(_permohonanStatusFilter);
                 renderPermohonanPengawas();
             }
             if (tabId === 'tetapan') {
@@ -9376,7 +9373,26 @@
                     btn.classList.add('bg-white', 'text-slate-500', 'border-slate-200');
                 }
             });
+            renderPermohonanPrintButton(status);
             renderPermohonanPengawas();
+        }
+
+        // Papar HANYA SATU butang cetak yg sepadan dgn bahagian status yg sedang aktif
+        // (bukan papar semua 4 butang serentak) -- elak Guru/Admin tertekan butang salah
+        // bahagian secara tidak sengaja. Bahagian "Semua" guna balik format cetakan ASAL
+        // (slip temu duga -- demerit + 2 kotak panel), merangkumi SEMUA permohonan tanpa
+        // mengira status, supaya panel temu duga mudah cetak senarai penuh sekali gus.
+        function renderPermohonanPrintButton(status) {
+            const cont = document.getElementById('permohonan-print-btn-container');
+            if (!cont) return;
+            const konfig = {
+                'Menunggu': { warna: 'bg-amber-500 hover:bg-amber-600', label: 'Cetak Senarai Menunggu' },
+                'Diterima': { warna: 'bg-green-600 hover:bg-green-700', label: 'Cetak Senarai Diterima' },
+                'Ditolak': { warna: 'bg-red-600 hover:bg-red-700', label: 'Cetak Senarai Ditolak' },
+                'Semua': { warna: 'bg-brand-blue hover:bg-blue-800', label: 'Cetak Semua (Format Temu Duga)' }
+            }[status];
+            if (!konfig) { cont.innerHTML = ''; return; }
+            cont.innerHTML = `<button onclick="printSenaraiPermohonanIkutStatus('${status}')" class="${konfig.warna} text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> ${konfig.label}</button>`;
         }
 
         function _senaraiPermohonanDitapis_() {
@@ -9588,19 +9604,22 @@
             executePrint(html, orientation);
         }
 
-        // Cetakan bagi SATU bahagian status sahaja (Menunggu/Diterima/Ditolak) --
-        // TIDAK bergantung pd penapis semasa yg dipilih Admin/Guru di skrin (elak
-        // kekeliruan "papar Menunggu tapi tekan Cetak Diterima keluar kosong").
-        // "Menunggu" guna reka bentuk slip temu duga sedia ada (demerit + 2 panel);
-        // "Diterima"/"Ditolak" guna senarai ringkas (keputusan sudah dibuat, tiada
-        // gunanya kotak kosong temu duga lagi).
+        // Cetakan bagi SATU bahagian sahaja (Menunggu/Diterima/Ditolak/Semua) -- TIDAK
+        // bergantung pd penapis semasa yg dipilih Admin/Guru di skrin (elak kekeliruan
+        // "papar Menunggu tapi tekan Cetak Diterima keluar kosong"). "Menunggu" & "Semua"
+        // guna reka bentuk slip temu duga ASAL (demerit + 2 panel) -- "Semua" merangkumi
+        // SEMUA permohonan tanpa mengira status, supaya panel temu duga senang cetak
+        // senarai PENUH sekali gus. "Diterima"/"Ditolak" guna senarai ringkas (keputusan
+        // sudah dibuat, tiada gunanya kotak kosong temu duga lagi).
         function printSenaraiPermohonanIkutStatus(status) {
-            const senarai = (state.permohonanPengawas || []).filter(m => (m.status || 'Menunggu') === status);
+            const senarai = status === 'Semua'
+                ? [...(state.permohonanPengawas || [])]
+                : (state.permohonanPengawas || []).filter(m => (m.status || 'Menunggu') === status);
             if (senarai.length === 0) {
-                showCustomAlert(`Tiada permohonan berstatus "${status}" untuk dicetak.`, "error");
+                showCustomAlert(status === 'Semua' ? "Tiada permohonan untuk dicetak." : `Tiada permohonan berstatus "${status}" untuk dicetak.`, "error");
                 return;
             }
-            if (status === 'Menunggu') {
+            if (status === 'Menunggu' || status === 'Semua') {
                 printSenaraiTemudugaPermohonan('landscape', senarai.map(m => m.id));
                 return;
             }
