@@ -2340,7 +2340,7 @@
                             <div id="la-gambar-container" class="bg-slate-50 border border-slate-200 rounded-xl p-3"></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-semibold mb-1 text-slate-700">Nama Guru Penasihat (Pengesahan)</label><input type="text" id="la-guru-penasihat" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="Nama guru penasihat yang mengesahkan laporan ini"></div>
+                            <div><label class="block text-sm font-semibold mb-1 text-slate-700">Nama Guru Penasihat (Pengesahan)</label><select id="la-guru-penasihat" class="w-full border border-slate-200 p-2.5 rounded-xl bg-white text-sm"></select></div>
                         </div>
                     </div>
 
@@ -8415,6 +8415,7 @@
             renderTablePendaftaranGuru();
             populateGuruPdSelect();
             populatePerjanjianGuruSelect();
+            populateLaGuruPenasihatSelect();
             renderTableAksesPengawas();
             renderTableArkib();
             renderTetapanMinggu();
@@ -11051,6 +11052,19 @@
             sel.innerHTML = '<option value="">-- Tiada / Isi Semasa Cetak --</option>' +
                 list.sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).map(g =>
                     `<option value="${g.id}" data-nama="${escapeHtml(g.nama||'')}" data-jawatan-cetak="${escapeHtml(getJawatanCetakGuru(g))}">${escapeHtml(g.nama) || '-'} (${escapeHtml(g.peranan) || '-'})</option>`
+                ).join('');
+            if (prevVal && list.some(g => String(g.id) === prevVal)) sel.value = prevVal;
+        }
+
+        // --- SELECT GURU PENASIHAT (PENGESAHAN) UNTUK LAPORAN AKTIVITI PENGAWAS ---
+        function populateLaGuruPenasihatSelect() {
+            const sel = document.getElementById('la-guru-penasihat');
+            if (!sel) return;
+            const list = state.pendaftaranGuru || [];
+            const prevVal = sel.value;
+            sel.innerHTML = '<option value="">-- Pilih Guru Penasihat --</option>' +
+                list.slice().sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).map(g =>
+                    `<option value="${g.id}">${escapeHtml(g.nama) || '-'} (${escapeHtml(g.peranan) || '-'})</option>`
                 ).join('');
             if (prevVal && list.some(g => String(g.id) === prevVal)) sel.value = prevVal;
         }
@@ -15718,7 +15732,7 @@
                     pelaksanaan: document.getElementById('la-pelaksanaan').value.trim(),
                     cadangan: document.getElementById('la-cadangan').value.trim(),
                     gambarList: laGambarEntries.filter(e => (e.pautan && e.pautan.trim()) || (e.catatan && e.catatan.trim())),
-                    guruPenasihat: document.getElementById('la-guru-penasihat').value.trim(),
+                    guruPenasihatId: document.getElementById('la-guru-penasihat').value,
                 };
             }
 
@@ -15810,6 +15824,7 @@
                 laGambarEntries = [];
                 renderLaGambar();
                 populatePenyediaSelects();
+                populateLaGuruPenasihatSelect();
             }
         }
 
@@ -15986,7 +16001,8 @@
                 document.getElementById('la-objektif').value = l.data.objektif || '';
                 document.getElementById('la-pelaksanaan').value = l.data.pelaksanaan || '';
                 document.getElementById('la-cadangan').value = l.data.cadangan || '';
-                document.getElementById('la-guru-penasihat').value = l.data.guruPenasihat || '';
+                populateLaGuruPenasihatSelect();
+                document.getElementById('la-guru-penasihat').value = l.data.guruPenasihatId || '';
                 laAturcaraEntries = Array.isArray(l.data.aturcaraList)
                     ? l.data.aturcaraList.map(e => ({ masa: e.masa || '', aktiviti: e.aktiviti || '' }))
                     : [];
@@ -16699,7 +16715,8 @@
             } else if (l.jenis === 'aktiviti') {
                 const aturcaraList = Array.isArray(l.data.aturcaraList) ? l.data.aturcaraList : [];
                 const gambarList = Array.isArray(l.data.gambarList) ? l.data.gambarList : [];
-                const namaGuruPenasihat = (l.data.guruPenasihat && l.data.guruPenasihat.trim()) ? l.data.guruPenasihat.trim() : "_______________________";
+                const guruPenasihatRekod = (state.pendaftaranGuru || []).find(g => normalizeId(g.id) === normalizeId(l.data.guruPenasihatId));
+                const namaGuruPenasihat = guruPenasihatRekod ? guruPenasihatRekod.nama : "_______________________";
 
                 html += `<h3 style="text-align:center; text-transform:uppercase; font-weight:bold; font-size:12.5pt; margin-bottom:4px; text-decoration:underline;">Laporan Aktiviti Pengawas</h3>
                 <p style="text-align:center; font-size:9pt; color:#555; margin:0 0 18px 0; text-decoration:underline;">Lembaga Pengawas Sekolah</p>
