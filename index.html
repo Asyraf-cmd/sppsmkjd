@@ -2045,6 +2045,7 @@
                     <button onclick="switchSubTab('lap-mingguan')" id="btn-lap-mingguan" class="subtab-btn inline-block p-4 text-brand-blue border-b-2 border-brand-blue font-bold rounded-t-lg transition-all">Laporan Mingguan</button>
                     <button onclick="switchSubTab('lap-disiplin')" id="btn-lap-disiplin" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Laporan Disiplin Mingguan</button>
                     <button onclick="switchSubTab('lap-spotcheck')" id="btn-lap-spotcheck" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Laporan Spotcheck</button>
+                    <button onclick="switchSubTab('lap-aktiviti')" id="btn-lap-aktiviti" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Laporan Aktiviti Pengawas</button>
                 </div>
 
                 <!-- Subtab: Mingguan -->
@@ -2275,6 +2276,76 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Subtab: Laporan Aktiviti Pengawas -->
+                <div id="lap-aktiviti" class="subtab-content hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-2 border-brand-blue">
+                    <h3 class="font-bold mb-4 text-slate-800 text-base">Sedia Laporan Aktiviti Pengawas</h3>
+                    <p class="text-xs text-slate-400 mb-4"><i class="fas fa-info-circle mr-1"></i> Laporan ini disediakan oleh Setiausaha (atau AJK yang diberi tanggungjawab) bagi setiap aktiviti/program pengawas yang dijalankan. Butang <b>Cetak</b> hanya tersedia di tab "Sejarah Laporan" selepas laporan disimpan.</p>
+
+                    <div class="border border-slate-200 rounded-2xl p-4 mb-4">
+                        <h4 class="font-bold text-sm mb-3 text-slate-800 flex items-center gap-1.5"><i class="fas fa-info-circle text-brand-blue"></i>1. Butiran Am</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="md:col-span-2"><label class="block text-sm font-semibold mb-1 text-slate-700">Nama Aktiviti <span class="text-red-500">*</span></label><input type="text" id="la-nama" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="Cth: Gotong-Royong Perdana, Kem Kepimpinan Pengawas"></div>
+                            <div><label class="block text-sm font-semibold mb-1 text-slate-700">Tarikh <span class="text-red-500">*</span></label><input type="date" id="la-tarikh" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm"></div>
+                            <div><label class="block text-sm font-semibold mb-1 text-slate-700">Masa</label><input type="time" id="la-masa" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm"></div>
+                            <div class="md:col-span-2"><label class="block text-sm font-semibold mb-1 text-slate-700">Tempat</label><input type="text" id="la-tempat" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="Cth: Dewan Sekolah, Padang"></div>
+                            <div class="md:col-span-2"><label class="block text-sm font-semibold mb-1 text-slate-700">Disediakan Oleh (Setiausaha)</label>
+                                <select id="la-penyedia" class="w-full border border-slate-200 p-2.5 rounded-xl bg-white select-pengawas-filter select-pengawas-lapform font-semibold text-sm"></select>
+                                <div id="la-penyedia-auto" class="hidden w-full border border-slate-200 p-2.5 rounded-xl bg-slate-50 font-semibold text-sm text-slate-700"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-2xl p-4 mb-4">
+                        <h4 class="font-bold text-sm mb-3 text-slate-800 flex items-center gap-1.5"><i class="fas fa-users text-brand-blue"></i>2. Kehadiran</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div><label class="block text-sm font-semibold mb-1 text-slate-700">Jumlah Kehadiran Pengawas</label><input type="number" min="0" id="la-bil-pengawas" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm"></div>
+                            <div><label class="block text-sm font-semibold mb-1 text-slate-700">Jumlah Kehadiran Guru Penasihat</label><input type="number" min="0" id="la-bil-guru" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm"></div>
+                            <div><label class="block text-sm font-semibold mb-1 text-slate-700">Pihak Lain Yang Terlibat</label><input type="text" id="la-pihak-lain" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="Cth: PIBG, Pengawal Keselamatan"></div>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-2xl p-4 mb-4">
+                        <h4 class="font-bold text-sm mb-3 text-slate-800 flex items-center gap-1.5"><i class="fas fa-bullseye text-brand-blue"></i>3. Objektif & Atur Cara</h4>
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold mb-1 text-slate-700">Objektif Aktiviti</label>
+                            <textarea id="la-objektif" rows="3" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="Nyatakan matlamat aktiviti ini diadakan..."></textarea>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl overflow-hidden">
+                            <div class="bg-slate-50 border-b border-slate-200 px-3 py-2 flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5"><i class="fas fa-list-check text-slate-400"></i> Atur Cara / Tentatif Program</span>
+                                <button type="button" onclick="addLaAturcaraEntry()" class="text-xs bg-brand-blue hover:bg-blue-800 text-white font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="fas fa-plus"></i> Tambah Baris</button>
+                            </div>
+                            <div id="la-aturcara-container" class="p-3 bg-white"></div>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-2xl p-4 mb-4">
+                        <h4 class="font-bold text-sm mb-3 text-slate-800 flex items-center gap-1.5"><i class="fas fa-clipboard-list text-brand-blue"></i>4. Laporan Berkenaan Pelaksanaan</h4>
+                        <textarea id="la-pelaksanaan" rows="4" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="Huraian ringkas tentang jalannya aktiviti, kemajuan, atau sebarang masalah yang timbul..."></textarea>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-2xl p-4 mb-4">
+                        <h4 class="font-bold text-sm mb-3 text-slate-800 flex items-center gap-1.5"><i class="fas fa-lightbulb text-brand-blue"></i>5. Cadangan Penambahbaikan</h4>
+                        <textarea id="la-cadangan" rows="3" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="Pandangan atau cadangan untuk membaiki program pada masa hadapan..."></textarea>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-2xl p-4 mb-4">
+                        <h4 class="font-bold text-sm mb-3 text-slate-800 flex items-center gap-1.5"><i class="fas fa-camera text-brand-blue"></i>6. Dokumentasi & Pengesahan</h4>
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-semibold text-slate-700">Pautan Gambar Aktiviti <span class="text-[11px] font-normal text-slate-400">(Google Drive/Photos -- tampal pautan yang "Sesiapa ada pautan boleh lihat")</span></label>
+                                <button type="button" onclick="addLaGambarEntry()" class="bg-brand-blue hover:bg-blue-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5"><i class="fas fa-plus"></i> Tambah Pautan</button>
+                            </div>
+                            <div id="la-gambar-container" class="bg-slate-50 border border-slate-200 rounded-xl p-3"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="block text-sm font-semibold mb-1 text-slate-700">Nama Guru Penasihat (Pengesahan)</label><input type="text" id="la-guru-penasihat" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="Nama guru penasihat yang mengesahkan laporan ini"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="saveAndPrintLaporan('aktiviti')" class="w-full bg-brand-blue hover:bg-blue-800 text-white py-3 rounded-xl font-bold transition shadow-lg shadow-blue-900/10 active:scale-[0.99]"><i class="fas fa-save mr-2"></i>Simpan Laporan Aktiviti Pengawas</button>
+                </div>
             </div>
 
             <!-- TAB: Sejarah Laporan Pengawas dan Minit Mesyuarat (berasingan drpd tab
@@ -2289,6 +2360,7 @@
                     <button onclick="switchSubTab('sl-mingguan')" id="btn-sl-mingguan" class="subtab-btn inline-block p-4 text-brand-blue border-b-2 border-brand-blue font-bold rounded-t-lg transition-all">Laporan Mingguan</button>
                     <button onclick="switchSubTab('sl-disiplin')" id="btn-sl-disiplin" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Laporan Disiplin Mingguan</button>
                     <button onclick="switchSubTab('sl-spotcheck')" id="btn-sl-spotcheck" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Laporan Spotcheck</button>
+                    <button onclick="switchSubTab('sl-aktiviti')" id="btn-sl-aktiviti" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Laporan Aktiviti Pengawas</button>
                     <button onclick="switchSubTab('sl-minit')" id="btn-sl-minit" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Minit Mesyuarat</button>
                 </div>
 
@@ -2312,6 +2384,11 @@
                 <div id="sl-spotcheck" class="subtab-content hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-2 border-brand-blue">
                     <h4 class="font-bold mb-3 text-slate-800 text-sm flex items-center gap-2"><i class="fas fa-list-alt text-slate-400"></i>Sejarah Laporan Spotcheck</h4>
                     <div id="list-lap-spotcheck" class="space-y-2"></div>
+                </div>
+
+                <div id="sl-aktiviti" class="subtab-content hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-2 border-brand-blue">
+                    <h4 class="font-bold mb-3 text-slate-800 text-sm flex items-center gap-2"><i class="fas fa-list-alt text-slate-400"></i>Sejarah Laporan Aktiviti Pengawas</h4>
+                    <div id="list-lap-aktiviti" class="space-y-2"></div>
                 </div>
 
                 <!-- Sejarah Minit Mesyuarat (dipindahkan drpd tab "Minit Mesyuarat" -- borang
@@ -4665,9 +4742,11 @@
             { id: 'laporan-mingguan', label: 'Laporan - Mingguan' },
             { id: 'laporan-spotcheck', label: 'Laporan - Spotcheck' },
             { id: 'laporan-disiplin', label: 'Laporan - Disiplin' },
+            { id: 'laporan-aktiviti', label: 'Laporan - Aktiviti Pengawas' },
             { id: 'sejarah-laporan-mingguan', label: 'Sejarah Laporan - Mingguan' },
             { id: 'sejarah-laporan-spotcheck', label: 'Sejarah Laporan - Spotcheck' },
             { id: 'sejarah-laporan-disiplin', label: 'Sejarah Laporan - Disiplin' },
+            { id: 'sejarah-laporan-aktiviti', label: 'Sejarah Laporan - Aktiviti Pengawas' },
             { id: 'arkib', label: 'Arkib Pengawas' },
             { id: 'carta-organisasi-lengkap', label: 'Carta Organisasi Lengkap' },
             { id: 'tetapan-bidang-tugas', label: 'Tetapan Bidang Tugas Pengawas' }
@@ -4684,12 +4763,12 @@
         // supaya peralihan ke ciri baharu ini tidak mengubah akses sedia ada secara
         // tiba-tiba sehingga Admin sendiri mengemaskini tetapan.
         function getDefaultAksesTab() {
-            const baseline = ['dashboard', 'kesalahan', 'sejarah-laporan-mingguan', 'sejarah-laporan-spotcheck', 'sejarah-laporan-disiplin', 'carta-organisasi-lengkap'];
+            const baseline = ['dashboard', 'kesalahan', 'sejarah-laporan-mingguan', 'sejarah-laporan-spotcheck', 'sejarah-laporan-disiplin', 'sejarah-laporan-aktiviti', 'carta-organisasi-lengkap'];
             const basisPengawas = {
                 'Ketua Pengawas': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan']),
                 'Penolong Ketua Pengawas 1': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan']),
                 'Penolong Ketua Pengawas 2': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan']),
-                'Setiausaha': baseline.concat(['minit']),
+                'Setiausaha': baseline.concat(['minit', 'laporan-aktiviti']),
                 'AJK Disiplin': baseline.concat(['laporan-disiplin']),
                 'AJK Blok': baseline.slice(),
                 'AJK Maklumat': baseline.concat(['minit']),
@@ -7243,10 +7322,10 @@
         //     sejarah -- tanpa baris khas ini, sesiapa yang diberi akses 'minit' sahaja (tanpa
         //     mana-mana Sejarah Laporan lain) tidak dapat sampai ke tab induk "Sejarah Laporan
         //     dan Minit Mesyuarat" walaupun butang subtab dalamannya telah pun ditunjukkan.
-        const LAPORAN_SUBTAB_IDS = ['laporan-mingguan', 'laporan-spotcheck', 'laporan-disiplin'];
-        const SEJARAH_LAPORAN_SUBTAB_IDS = ['sejarah-laporan-mingguan', 'sejarah-laporan-spotcheck', 'sejarah-laporan-disiplin'];
-        const LAP_SUBTAB_BTN_ID = { 'laporan-mingguan': 'btn-lap-mingguan', 'laporan-spotcheck': 'btn-lap-spotcheck', 'laporan-disiplin': 'btn-lap-disiplin' };
-        const SL_SUBTAB_BTN_ID = { 'sejarah-laporan-mingguan': 'btn-sl-mingguan', 'sejarah-laporan-spotcheck': 'btn-sl-spotcheck', 'sejarah-laporan-disiplin': 'btn-sl-disiplin' };
+        const LAPORAN_SUBTAB_IDS = ['laporan-mingguan', 'laporan-spotcheck', 'laporan-disiplin', 'laporan-aktiviti'];
+        const SEJARAH_LAPORAN_SUBTAB_IDS = ['sejarah-laporan-mingguan', 'sejarah-laporan-spotcheck', 'sejarah-laporan-disiplin', 'sejarah-laporan-aktiviti'];
+        const LAP_SUBTAB_BTN_ID = { 'laporan-mingguan': 'btn-lap-mingguan', 'laporan-spotcheck': 'btn-lap-spotcheck', 'laporan-disiplin': 'btn-lap-disiplin', 'laporan-aktiviti': 'btn-lap-aktiviti' };
+        const SL_SUBTAB_BTN_ID = { 'sejarah-laporan-mingguan': 'btn-sl-mingguan', 'sejarah-laporan-spotcheck': 'btn-sl-spotcheck', 'sejarah-laporan-disiplin': 'btn-sl-disiplin', 'sejarah-laporan-aktiviti': 'btn-sl-aktiviti' };
 
         function terapkanSenaraiAksesTabKeUI(senaraiNav) {
             (senaraiNav || []).forEach(nav => {
@@ -7287,7 +7366,7 @@
             });
 
             // Hide all report subtabs first
-            const subtabs = ['mingguan', 'disiplin', 'spotcheck'];
+            const subtabs = ['mingguan', 'disiplin', 'spotcheck', 'aktiviti'];
             subtabs.forEach(sub => {
                 const btn = document.getElementById(`btn-lap-${sub}`);
                 if (btn) btn.style.display = 'none';
@@ -7298,7 +7377,7 @@
             // berasingan melalui "Tetapan Akses Tab"). "sl-minit" (Sejarah Minit Mesyuarat)
             // turut disembunyikan dahulu -- akses kepadanya mengikut kebenaran 'minit' yang
             // sama seperti tab "Minit Mesyuarat" sendiri (bukan kebenaran berasingan).
-            const slSubtabs = ['mingguan', 'disiplin', 'spotcheck', 'minit'];
+            const slSubtabs = ['mingguan', 'disiplin', 'spotcheck', 'aktiviti', 'minit'];
             slSubtabs.forEach(sub => {
                 const btn = document.getElementById(`btn-sl-${sub}`);
                 if (btn) btn.style.display = 'none';
@@ -8276,6 +8355,16 @@
                     ? filtered.map(p => `<option value="${p.id}">${escapeHtml(p.nama)} (${formatJawatanRingkas(p.jawatan)})</option>`).join('')
                     : `<option value="">-- Sila daftarkan AJK Spotcheck --</option>`;
                 terapkanPenyediaAutolock_(lsSel, filtered);
+            }
+
+            const laSel = document.getElementById('la-penyedia');
+            if (laSel) {
+                const jawatanSetiausahaLa = getJawatanSetiausahaLike();
+                const filtered = pList.filter(p => jawatanSetiausahaLa.includes(p.jawatan) && (lapFormSesiFilter === 'Semua' || getSesiPengawas(p) === lapFormSesiFilter));
+                laSel.innerHTML = filtered.length > 0
+                    ? filtered.map(p => `<option value="${p.id}">${escapeHtml(p.nama)} (${formatJawatanRingkas(p.jawatan)})</option>`).join('')
+                    : `<option value="">-- Sila daftarkan ${jawatanSetiausahaLa.join(" / ")} --</option>`;
+                terapkanPenyediaAutolock_(laSel, filtered);
             }
         }
 
@@ -15229,6 +15318,99 @@
             lmAktivitiEntries[idx][field] = value;
         }
 
+        // --- Senarai Atur Cara/Tentatif Program (Laporan Aktiviti Pengawas) ---
+        let laAturcaraEntries = [];
+
+        function renderLaAturcara() {
+            const container = document.getElementById('la-aturcara-container');
+            if (!container) return;
+
+            if (laAturcaraEntries.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic px-1 py-1">Tiada atur cara ditambah. Klik "Tambah Baris" untuk susun atur cara/tentatif program.</p>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="overflow-x-auto">
+                <table class="w-full text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-600">
+                            <th class="border border-slate-200 p-2 text-left" style="width:18%;">Masa</th>
+                            <th class="border border-slate-200 p-2 text-left">Aktiviti / Atur Cara</th>
+                            <th class="border border-slate-200 p-2 text-center" style="width:36px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    ${laAturcaraEntries.map((entry, idx) => `
+                        <tr>
+                            <td class="border border-slate-200 p-1.5"><input type="text" placeholder="Cth: 8:00 pagi" value="${escapeHtml(entry.masa || '')}" oninput="updateLaAturcaraField(${idx}, 'masa', this.value)" class="w-full border border-slate-200 p-1.5 rounded-lg text-xs"></td>
+                            <td class="border border-slate-200 p-1.5"><input type="text" placeholder="Cth: Ketibaan & pendaftaran peserta" value="${escapeHtml(entry.aktiviti || '')}" oninput="updateLaAturcaraField(${idx}, 'aktiviti', this.value)" class="w-full border border-slate-200 p-1.5 rounded-lg text-xs"></td>
+                            <td class="border border-slate-200 p-1.5 text-center"><button type="button" onclick="removeLaAturcaraEntry(${idx})" class="text-red-500 hover:text-red-700 hover:bg-red-50 w-7 h-7 inline-flex items-center justify-center rounded-lg transition" title="Padam Baris Ini"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                    `).join('')}
+                    </tbody>
+                </table>
+                </div>
+            `;
+        }
+
+        function addLaAturcaraEntry() {
+            laAturcaraEntries.push({ masa: '', aktiviti: '' });
+            renderLaAturcara();
+        }
+
+        function removeLaAturcaraEntry(idx) {
+            laAturcaraEntries.splice(idx, 1);
+            renderLaAturcara();
+        }
+
+        function updateLaAturcaraField(idx, field, value) {
+            if (!laAturcaraEntries[idx]) return;
+            laAturcaraEntries[idx][field] = value;
+        }
+
+        // --- Senarai Pautan Gambar/Dokumentasi (Laporan Aktiviti Pengawas) ---
+        // NOTA REKA BENTUK: sistem ini simpan SEMUA data sebagai teks JSON (dibaca/ditulis
+        // SEPENUHNYA pada setiap pull/push) -- membenamkan fail gambar SEBENAR (base64) di
+        // sini akan membesarkan pangkalan data dgn ketara & memperlahankan SEMUA log masuk/
+        // segerak (lihat pembetulan prestasi log masuk sebelum ini). Jadi gambar disimpan
+        // sbg PAUTAN (cth. Google Drive/Photos yg dikongsi "sesiapa ada pautan boleh lihat")
+        // -- bukan fail terus. Klik pautan semasa cetak utk lihat gambar sebenar.
+        let laGambarEntries = [];
+
+        function renderLaGambar() {
+            const container = document.getElementById('la-gambar-container');
+            if (!container) return;
+
+            if (laGambarEntries.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic px-1 py-1">Tiada pautan ditambah.</p>`;
+                return;
+            }
+
+            container.innerHTML = laGambarEntries.map((entry, idx) => `
+                <div class="flex items-center gap-2 mb-2 last:mb-0">
+                    <input type="text" placeholder="Pautan Google Drive/Photos..." value="${escapeHtml(entry.pautan || '')}" oninput="updateLaGambarField(${idx}, 'pautan', this.value)" class="flex-1 border border-slate-200 p-2 rounded-lg text-xs">
+                    <input type="text" placeholder="Catatan ringkas (pilihan)" value="${escapeHtml(entry.catatan || '')}" oninput="updateLaGambarField(${idx}, 'catatan', this.value)" class="flex-1 border border-slate-200 p-2 rounded-lg text-xs">
+                    <button type="button" onclick="removeLaGambarEntry(${idx})" class="text-red-500 hover:text-red-700 hover:bg-red-50 w-8 h-8 flex-shrink-0 inline-flex items-center justify-center rounded-lg transition" title="Padam"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function addLaGambarEntry() {
+            laGambarEntries.push({ pautan: '', catatan: '' });
+            renderLaGambar();
+        }
+
+        function removeLaGambarEntry(idx) {
+            laGambarEntries.splice(idx, 1);
+            renderLaGambar();
+        }
+
+        function updateLaGambarField(idx, field, value) {
+            if (!laGambarEntries[idx]) return;
+            laGambarEntries[idx][field] = value;
+        }
+
         function renderLdTidakLaksana() {
             const container = document.getElementById('ld-tidaklaksana-container');
             if (!container) return;
@@ -15318,6 +15500,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderLdTidakLaksana();
             renderLmAktiviti();
+            renderLaAturcara();
+            renderLaGambar();
         });
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -15511,6 +15695,31 @@
                     sebab: document.getElementById('ls-sebab').value,
                     rampasanRows: rampasanRows,
                 };
+            } else if (jenis === 'aktiviti') {
+                if (!document.getElementById('la-nama').value.trim()) {
+                    showCustomAlert("Sila isi Nama Aktiviti.", "error");
+                    return;
+                }
+                if (!document.getElementById('la-tarikh').value) {
+                    showCustomAlert("Sila isi Tarikh aktiviti.", "error");
+                    return;
+                }
+                data = {
+                    tarikh: document.getElementById('la-tarikh').value,
+                    nama: document.getElementById('la-nama').value.trim(),
+                    masa: document.getElementById('la-masa').value,
+                    tempat: document.getElementById('la-tempat').value.trim(),
+                    penyediaId: document.getElementById('la-penyedia').value,
+                    bilPengawas: document.getElementById('la-bil-pengawas').value,
+                    bilGuru: document.getElementById('la-bil-guru').value,
+                    pihakLain: document.getElementById('la-pihak-lain').value.trim(),
+                    objektif: document.getElementById('la-objektif').value.trim(),
+                    aturcaraList: laAturcaraEntries.filter(e => (e.masa && e.masa.trim()) || (e.aktiviti && e.aktiviti.trim())),
+                    pelaksanaan: document.getElementById('la-pelaksanaan').value.trim(),
+                    cadangan: document.getElementById('la-cadangan').value.trim(),
+                    gambarList: laGambarEntries.filter(e => (e.pautan && e.pautan.trim()) || (e.catatan && e.catatan.trim())),
+                    guruPenasihat: document.getElementById('la-guru-penasihat').value.trim(),
+                };
             }
 
             const laporan = { id, jenis, tarikh: getRealTimeTodayStr(), data };
@@ -15583,6 +15792,23 @@
                 document.getElementById('ls-sebab').value = '';
                 document.getElementById('ls-rampasan-rows').innerHTML = '';
                 addRampasanRow();
+                populatePenyediaSelects();
+            } else if (jenis === 'aktiviti') {
+                document.getElementById('la-nama').value = '';
+                document.getElementById('la-tarikh').value = '';
+                document.getElementById('la-masa').value = '';
+                document.getElementById('la-tempat').value = '';
+                document.getElementById('la-bil-pengawas').value = '';
+                document.getElementById('la-bil-guru').value = '';
+                document.getElementById('la-pihak-lain').value = '';
+                document.getElementById('la-objektif').value = '';
+                document.getElementById('la-pelaksanaan').value = '';
+                document.getElementById('la-cadangan').value = '';
+                document.getElementById('la-guru-penasihat').value = '';
+                laAturcaraEntries = [];
+                renderLaAturcara();
+                laGambarEntries = [];
+                renderLaGambar();
                 populatePenyediaSelects();
             }
         }
@@ -15748,6 +15974,27 @@
                 } else {
                     addRampasanRow();
                 }
+            } else if (l.jenis === 'aktiviti') {
+                document.getElementById('la-nama').value = l.data.nama || '';
+                document.getElementById('la-tarikh').value = l.data.tarikh || '';
+                document.getElementById('la-masa').value = l.data.masa || '';
+                document.getElementById('la-tempat').value = l.data.tempat || '';
+                document.getElementById('la-penyedia').value = l.data.penyediaId || '';
+                document.getElementById('la-bil-pengawas').value = l.data.bilPengawas || '';
+                document.getElementById('la-bil-guru').value = l.data.bilGuru || '';
+                document.getElementById('la-pihak-lain').value = l.data.pihakLain || '';
+                document.getElementById('la-objektif').value = l.data.objektif || '';
+                document.getElementById('la-pelaksanaan').value = l.data.pelaksanaan || '';
+                document.getElementById('la-cadangan').value = l.data.cadangan || '';
+                document.getElementById('la-guru-penasihat').value = l.data.guruPenasihat || '';
+                laAturcaraEntries = Array.isArray(l.data.aturcaraList)
+                    ? l.data.aturcaraList.map(e => ({ masa: e.masa || '', aktiviti: e.aktiviti || '' }))
+                    : [];
+                renderLaAturcara();
+                laGambarEntries = Array.isArray(l.data.gambarList)
+                    ? l.data.gambarList.map(e => ({ pautan: e.pautan || '', catatan: e.catatan || '' }))
+                    : [];
+                renderLaGambar();
             }
         }
 
@@ -15794,10 +16041,12 @@
             const listMingguan = document.getElementById('list-lap-mingguan');
             const listDisiplin = document.getElementById('list-lap-disiplin');
             const listSpotcheck = document.getElementById('list-lap-spotcheck');
+            const listAktiviti = document.getElementById('list-lap-aktiviti');
 
             if (listMingguan) listMingguan.innerHTML = '';
             if (listDisiplin) listDisiplin.innerHTML = '';
             if (listSpotcheck) listSpotcheck.innerHTML = '';
+            if (listAktiviti) listAktiviti.innerHTML = '';
 
             // Diisih mengikut createdAt (cap masa penciptaan, medan berasingan daripada id).
             // Fallback kepada `id` untuk rekod LAMA yang dicipta sebelum kemaskini ini (ketika
@@ -15820,6 +16069,7 @@
                 if(l.jenis === 'mingguan') title = l.data.minggu || l.tarikh;
                 if(l.jenis === 'disiplin') title = (l.data.minggu ? l.data.minggu + " - " : "") + (l.data.tarikh || l.tarikh);
                 if(l.jenis === 'spotcheck') title = `${l.tarikh} - ${l.data.tempat}`;
+                if(l.jenis === 'aktiviti') title = `${l.data.nama || l.tarikh}${l.data.tarikh ? ' - ' + formatTarikhPendek(l.data.tarikh) : ''}`;
                 
                 el.innerHTML = `
                     <div class="flex items-center gap-3">
@@ -15839,6 +16089,7 @@
             updateBulkBar('mingguan');
             updateBulkBar('disiplin');
             updateBulkBar('spotcheck');
+            updateBulkBar('aktiviti');
         }
 
         function bulkActionLaporan(jenis, action) {
@@ -16444,6 +16695,73 @@
                     <div><div class="sig-line" style="border-top:1px solid black; width:220px; padding-top:5px;">Disediakan Oleh<br><br><br><b>${namaPenyedia}</b><br>${jawatanPenyedia}</div></div>
                     <div><div class="sig-line" style="border-top:1px solid black; width:220px; padding-top:5px;">Disemak Oleh<br><br><br><b>${getKetuaPengawasName()}</b><br>Ketua Pengawas</div></div>
                     <div><div class="sig-line" style="border-top:1px solid black; width:220px; padding-top:5px;">Disahkan Oleh<br><br><br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
+                </div>`;
+            } else if (l.jenis === 'aktiviti') {
+                const aturcaraList = Array.isArray(l.data.aturcaraList) ? l.data.aturcaraList : [];
+                const gambarList = Array.isArray(l.data.gambarList) ? l.data.gambarList : [];
+                const namaGuruPenasihat = (l.data.guruPenasihat && l.data.guruPenasihat.trim()) ? l.data.guruPenasihat.trim() : "_______________________";
+
+                html += `<h3 style="text-align:center; text-transform:uppercase; font-weight:bold; font-size:12.5pt; margin-bottom:4px; text-decoration:underline;">Laporan Aktiviti Pengawas</h3>
+                <p style="text-align:center; font-size:9pt; color:#555; margin:0 0 18px 0; text-decoration:underline;">Lembaga Pengawas Sekolah</p>
+
+                <div style="margin-bottom:16px;">
+                    <h4 style="margin:0 0 6px 0; font-weight:bold; font-size:10.5pt; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:3px;">1. Butiran Am</h4>
+                    <table style="width:100%; border-collapse:collapse; font-size:10pt;">
+                        <tr><th style="border:1px solid black; padding:7px; width:22%; text-align:left; background:#f3f4f6;">Nama Aktiviti</th><td style="border:1px solid black; padding:7px;" colspan="3"><b>${escapeHtml(l.data.nama || '-')}</b></td></tr>
+                        <tr>
+                            <th style="border:1px solid black; padding:7px; text-align:left; background:#f3f4f6;">Tarikh</th><td style="border:1px solid black; padding:7px; width:28%;">${l.data.tarikh ? formatTarikhPendek(l.data.tarikh) : '-'}</td>
+                            <th style="border:1px solid black; padding:7px; text-align:left; background:#f3f4f6;">Masa</th><td style="border:1px solid black; padding:7px;">${l.data.masa || '-'}</td>
+                        </tr>
+                        <tr><th style="border:1px solid black; padding:7px; text-align:left; background:#f3f4f6;">Tempat</th><td style="border:1px solid black; padding:7px;" colspan="3">${escapeHtml(l.data.tempat || '-')}</td></tr>
+                        <tr><th style="border:1px solid black; padding:7px; text-align:left; background:#f3f4f6;">Disediakan Oleh</th><td style="border:1px solid black; padding:7px;" colspan="3"><b>${namaPenyedia}</b> &mdash; ${jawatanPenyedia}</td></tr>
+                    </table>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <h4 style="margin:0 0 6px 0; font-weight:bold; font-size:10.5pt; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:3px;">2. Kehadiran</h4>
+                    <table style="width:100%; border-collapse:collapse; font-size:10pt;">
+                        <tr>
+                            <th style="border:1px solid black; padding:7px; width:33%; text-align:left; background:#f3f4f6;">Bil. Kehadiran Pengawas</th><td style="border:1px solid black; padding:7px; width:17%;">${l.data.bilPengawas || '0'}</td>
+                            <th style="border:1px solid black; padding:7px; width:33%; text-align:left; background:#f3f4f6;">Bil. Kehadiran Guru Penasihat</th><td style="border:1px solid black; padding:7px;">${l.data.bilGuru || '0'}</td>
+                        </tr>
+                        <tr><th style="border:1px solid black; padding:7px; text-align:left; background:#f3f4f6;">Pihak Lain Yang Terlibat</th><td style="border:1px solid black; padding:7px;" colspan="3">${escapeHtml(l.data.pihakLain || '-')}</td></tr>
+                    </table>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <h4 style="margin:0 0 6px 0; font-weight:bold; font-size:10.5pt; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:3px;">3. Objektif & Atur Cara</h4>
+                    <p style="font-size:9.5pt; margin:0 0 8px 0;"><b>Objektif:</b> ${l.data.objektif ? escapeHtml(l.data.objektif).replace(/\n/g, '<br>') : '-'}</p>
+                    ${aturcaraList.length === 0
+                        ? `<div style="border:1px solid black; padding:10px; font-size:10pt; background:#fafafa;"><span style="color:#888; font-style:italic;">Tiada atur cara/tentatif program direkodkan.</span></div>`
+                        : `<table style="width:100%; border-collapse:collapse; font-size:9.5pt;">
+                            <tr><th style="border:1px solid black; padding:6px; width:20%; text-align:left; background:#f3f4f6;">Masa</th><th style="border:1px solid black; padding:6px; text-align:left; background:#f3f4f6;">Aktiviti / Atur Cara</th></tr>
+                            ${aturcaraList.map(e => `<tr><td style="border:1px solid black; padding:6px; vertical-align:top;">${escapeHtml(e.masa) || '-'}</td><td style="border:1px solid black; padding:6px; vertical-align:top;">${escapeHtml(e.aktiviti) || '-'}</td></tr>`).join('')}
+                        </table>`}
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <h4 style="margin:0 0 6px 0; font-weight:bold; font-size:10.5pt; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:3px;">4. Laporan Berkenaan Pelaksanaan</h4>
+                    <div style="border:1px solid black; padding:10px; min-height:50px; font-size:9.5pt; line-height:1.5; text-align:justify; background:#fafafa;">${l.data.pelaksanaan ? escapeHtml(l.data.pelaksanaan).replace(/\n/g, '<br>') : '<span style="color:#888; font-style:italic;">Tiada huraian direkodkan.</span>'}</div>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <h4 style="margin:0 0 6px 0; font-weight:bold; font-size:10.5pt; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:3px;">5. Cadangan Penambahbaikan</h4>
+                    <div style="border:1px solid black; padding:10px; min-height:40px; font-size:9.5pt; line-height:1.5; text-align:justify; background:#fafafa;">${l.data.cadangan ? escapeHtml(l.data.cadangan).replace(/\n/g, '<br>') : '<span style="color:#888; font-style:italic;">Tiada cadangan direkodkan.</span>'}</div>
+                </div>
+
+                <div style="margin-bottom:10px;">
+                    <h4 style="margin:0 0 6px 0; font-weight:bold; font-size:10.5pt; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:3px;">6. Dokumentasi & Pengesahan</h4>
+                    ${gambarList.length === 0
+                        ? `<p style="font-size:9.5pt; font-style:italic; color:#555; margin:0 0 10px 0;">Tiada pautan gambar/dokumentasi direkodkan.</p>`
+                        : `<table style="width:100%; border-collapse:collapse; font-size:9.5pt; margin-bottom:10px;">
+                            <tr><th style="border:1px solid black; padding:6px; width:8%; background:#f3f4f6;">Bil.</th><th style="border:1px solid black; padding:6px; text-align:left; background:#f3f4f6;">Pautan Gambar/Dokumentasi</th><th style="border:1px solid black; padding:6px; text-align:left; width:30%; background:#f3f4f6;">Catatan</th></tr>
+                            ${gambarList.map((g, idx) => `<tr><td style="border:1px solid black; padding:6px; text-align:center;">${idx + 1}</td><td style="border:1px solid black; padding:6px; word-break:break-all;">${g.pautan ? escapeHtml(g.pautan) : '-'}</td><td style="border:1px solid black; padding:6px;">${escapeHtml(g.catatan) || '-'}</td></tr>`).join('')}
+                        </table>`}
+                </div>
+
+                <div class="signature-box" style="margin-top:50px; display:flex; justify-content:space-between;">
+                    <div><div class="sig-line" style="border-top:1px solid black; width:220px; text-align:center; padding-top:5px; margin-top:45px; font-size:9.5pt;">Disediakan Oleh<br><br><b>${namaPenyedia}</b><br>${jawatanPenyedia} (Setiausaha)</div></div>
+                    <div><div class="sig-line" style="border-top:1px solid black; width:220px; text-align:center; padding-top:5px; margin-top:45px; font-size:9.5pt;">Disahkan Oleh<br><br><b>${escapeHtml(namaGuruPenasihat)}</b><br>Guru Penasihat</div></div>
                 </div>`;
             }
             return html;
