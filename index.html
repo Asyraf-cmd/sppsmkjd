@@ -6,6 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Pengurusan Pengawas - SMK Jalan Damai</title>
 
+    <!-- =====================================================================
+         PWA (Progressive Web App) -- "Install" ke skrin utama telefon
+         =====================================================================
+         iOS Safari TIDAK baca Web App Manifest langsung -- ia bergantung SEPENUHNYA
+         pada meta tag & <link rel="apple-touch-icon"> di bawah ini utk "Add to Home
+         Screen" (ikon sendiri + buka standalone tanpa bar alamat pelayar). Ini
+         SELALU berfungsi merentasi semua deployment (statik, tiada pergantungan
+         kpd URL Apps Script). Android/Chrome pula guna Web App Manifest (dijana
+         secara DINAMIK via JavaScript -- lihat hujung <body> -- kerana manifest
+         perlukan "start_url" yg SEPADAN dgn URL deployment sebenar, yg hanya
+         diketahui semasa runtime, bukan semasa fail ini ditulis). -->
+    <link rel="apple-touch-icon" href="https://images.seeklogo.com/logo-png/35/1/sekolah-menengah-kebangsaan-jalan-damai-logo-png_seeklogo-359030.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SPP SMKJD">
+    <meta name="theme-color" content="#1e3a8a">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SheetJS: digunakan utk Import Pukal (CSV/Excel) Pendaftaran Pengawas & Eksport
          Excel (Sejarah Kehadiran, Rekod Kesalahan) -- lihat fungsi bertanda "IMPORT/EKSPORT". -->
@@ -7707,7 +7725,12 @@
             sidebar.classList.toggle('fixed');
             sidebar.classList.toggle('inset-y-0');
             sidebar.classList.toggle('left-0');
-            sidebar.classList.toggle('z-40');
+            // PEMBETULAN: JANGAN toggle 'z-40' -- kelas ini SUDAH kekal (statik) pada
+            // elemen #sidebar sejak awal (lihat class asal di HTML). Meng-toggle kelas
+            // yang sudah wujud akan MEMBUANGNYA setiap kali menu mudah alih dibuka --
+            // menyebabkan sidebar kehilangan z-index & terbenam di bawah header/banner
+            // dashboard (bug "3 garis ditekan, menu keluar di bawah banner"). z-40
+            // kekal aktif sepanjang masa (tidak menjejaskan paparan desktop/flex).
             
             if (backdrop) {
                 backdrop.classList.toggle('hidden');
@@ -15516,7 +15539,68 @@
             renderLmAktiviti();
             renderLaAturcara();
             renderLaGambar();
+            setupPWA();
         });
+
+        // =============================================================================
+        //  PWA (Progressive Web App) -- lengkapkan sokongan Android/Chrome
+        // =============================================================================
+        //  Meta tag iOS (apple-touch-icon dll.) sudah ditambah statik di <head> -- itu
+        //  SELALU berfungsi. Bahagian di bawah ini khusus utk Android/Chrome, yg baca
+        //  Web App Manifest (bukan meta tag Apple). Manifest DIJANA SECARA DINAMIK
+        //  (bukan fail .json statik) sebab ia perlukan "start_url" yg SEPADAN dgn URL
+        //  deployment SEBENAR sistem anda -- yg cuma diketahui semasa runtime (setiap
+        //  sekolah ada URL deployment Apps Script yg berbeza).
+        //
+        //  NOTA KETERBATASAN JUJUR: Apps Script Web App biasanya "redirect" pelayar drpd
+        //  URL .../exec ke domain googleusercontent.com semasa memuatkan kandungan --
+        //  gelagat khusus hosting Google ini bermakna paparan "Install App" automatik
+        //  (beforeinstallprompt) Chrome MUNGKIN tidak konsisten muncul bergantung kpd versi
+        //  pelayar & cara Google hoskan Apps Script pd masa tsb -- ini di LUAR kawalan kod
+        //  ini. Walau bagaimanapun, "Tambah ke Skrin Utama" MANUAL (drpd menu 3-titik
+        //  Chrome) akan SENTIASA berfungsi dan menghasilkan ikon + mod standalone yg betul
+        //  di skrin utama, tidak kira sama ada paparan automatik itu muncul atau tidak.
+        function setupPWA() {
+            try {
+                const asalUrl = window.location.origin + window.location.pathname;
+                const manifest = {
+                    name: "Sistem Pengurusan Pengawas - SMK Jalan Damai",
+                    short_name: "SPP SMKJD",
+                    start_url: window.location.href,
+                    scope: asalUrl,
+                    display: "standalone",
+                    orientation: "any",
+                    background_color: "#ffffff",
+                    theme_color: "#1e3a8a",
+                    icons: [
+                        { src: "https://images.seeklogo.com/logo-png/35/1/sekolah-menengah-kebangsaan-jalan-damai-logo-png_seeklogo-359030.png", sizes: "192x192 512x512", type: "image/png", purpose: "any" },
+                        { src: "https://images.seeklogo.com/logo-png/35/1/sekolah-menengah-kebangsaan-jalan-damai-logo-png_seeklogo-359030.png", sizes: "192x192 512x512", type: "image/png", purpose: "maskable" }
+                    ]
+                };
+                const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+                const link = document.createElement('link');
+                link.rel = 'manifest';
+                link.href = URL.createObjectURL(manifestBlob);
+                document.head.appendChild(link);
+            } catch (errManifest) {
+                console.warn('Persediaan PWA manifest gagal (tidak menjejaskan fungsi sistem):', errManifest);
+            }
+
+            // Service worker -- USAHA TERBAIK sahaja (lihat nota keterbatasan di atas).
+            // Tiada caching offline dilaksanakan setakat ini -- ia sekadar wujud utk
+            // memenuhi salah satu kriteria "installability" Chrome bagi sesetengah versi
+            // pelayar. Kegagalan di sini SENTIASA senyap (try/catch) -- tidak pernah
+            // menjejaskan fungsi utama sistem walau apa pun berlaku.
+            if ('serviceWorker' in navigator) {
+                try {
+                    const swUrl = window.location.origin + window.location.pathname + '?action=pwasw';
+                    navigator.serviceWorker.register(swUrl, { scope: window.location.pathname })
+                        .catch(errSw => console.warn('Pendaftaran Service Worker PWA gagal (tidak menjejaskan fungsi sistem):', errSw));
+                } catch (errSwOuter) {
+                    console.warn('Persediaan Service Worker PWA gagal (tidak menjejaskan fungsi sistem):', errSwOuter);
+                }
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             DISIPLIN_AREAS.forEach(area => {
