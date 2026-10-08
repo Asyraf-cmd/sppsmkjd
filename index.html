@@ -343,6 +343,33 @@
         }
         
         .print-only { display: none; }
+    /* AKAUN PENGAWAS: butang PADAM rekod (individu & pukal) disembunyikan -- hanya akaun
+       Guru/Admin boleh memadam rekod. Kelas 'peranan-prefect' ditetapkan pada <body> oleh
+       updateUIRoles() & dibuang semasa log keluar. Butang "keluarkan baris" dlm borang
+       (cth. baris atur cara, lokasi/bidang tugas dlm Tetapan) SENGAJA tidak disembunyikan
+       kerana ia bukan pemadaman rekod tersimpan. Pelayan turut menyekat 'deleteRecord'
+       & 'deleteBilikDisiplin' bagi token Pengawas (lihat SUBACTION_KHAS_GURU_SAHAJA_). */
+    body.peranan-prefect [onclick*="deleteAksesPengawas("],
+    body.peranan-prefect [onclick*="deleteBilikDisiplin("],
+    body.peranan-prefect [onclick*="deleteKehadiranRecord("],
+    body.peranan-prefect [onclick*="deleteKemenjadian("],
+    body.peranan-prefect [onclick*="deleteKesalahan("],
+    body.peranan-prefect [onclick*="deleteLaporan("],
+    body.peranan-prefect [onclick*="deleteMinit("],
+    body.peranan-prefect [onclick*="deletePendaftaranGuru("],
+    body.peranan-prefect [onclick*="deletePengawas("],
+    body.peranan-prefect [onclick*="deletePenilaianPrestasi("],
+    body.peranan-prefect [onclick*="deletePerhimpunanKelas("],
+    body.peranan-prefect [onclick*="deletePrefectPermanently("],
+    body.peranan-prefect [onclick*="deleteProfilDisiplinCatatan("],
+    body.peranan-prefect [onclick*="deleteSurat("],
+    body.peranan-prefect [onclick*="deleteTeacher("],
+    body.peranan-prefect [onclick*="deleteTunjukSebab("],
+    body.peranan-prefect [onclick*="padamJadualRehat("],
+    body.peranan-prefect [onclick*="padamMingguSetting("],
+    body.peranan-prefect [onclick*="padamPermohonanPengawas("],
+    body.peranan-prefect [onclick*="padamTransaksiKewangan("],
+    body.peranan-prefect [onclick*="'delete')"] { display: none !important; }
     </style>
     <style id="dynamic-print-orientation">@page { size: A4 portrait; margin: 20mm; }</style>
 </head>
@@ -2519,9 +2546,10 @@
                                 <input type="text" id="kw-pautan-resit" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="https://drive.google.com/...">
                             </div>
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-semibold mb-1 text-slate-700">Direkodkan Oleh</label>
-                                <select id="kw-penyedia" class="w-full border border-slate-200 p-2.5 rounded-xl bg-white select-pengawas-filter select-pengawas-lapform font-semibold text-sm"></select>
-                                <div id="kw-penyedia-auto" class="hidden w-full border border-slate-200 p-2.5 rounded-xl bg-slate-50 font-semibold text-sm text-slate-700"></div>
+                                <label class="block text-sm font-semibold mb-1 text-slate-700">Direkodkan Oleh (Guru)</label>
+                                <div id="kw-direkod-oleh" class="w-full border border-slate-200 p-2.5 rounded-xl bg-slate-50 font-semibold text-sm text-slate-700">-</div>
+                                <p class="text-[11px] text-slate-400 mt-1">Diisi automatik mengikut akaun guru yang sedang log masuk.</p>
+                            </div>
                             </div>
                         </div>
                         <button onclick="simpanTransaksiKewangan()" class="w-full bg-brand-blue hover:bg-blue-800 text-white py-3 rounded-xl font-bold transition shadow-lg shadow-blue-900/10 active:scale-[0.99]"><i class="fas fa-save mr-2"></i>Simpan Transaksi</button>
@@ -4959,9 +4987,9 @@
         function getDefaultAksesTab() {
             const baseline = ['dashboard', 'kesalahan', 'sejarah-laporan-mingguan', 'sejarah-laporan-spotcheck', 'sejarah-laporan-disiplin', 'sejarah-laporan-aktiviti', 'carta-organisasi-lengkap'];
             const basisPengawas = {
-                'Ketua Pengawas': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan', 'kewangan']),
-                'Penolong Ketua Pengawas 1': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan', 'kewangan']),
-                'Penolong Ketua Pengawas 2': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan', 'kewangan']),
+                'Ketua Pengawas': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan']),
+                'Penolong Ketua Pengawas 1': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan']),
+                'Penolong Ketua Pengawas 2': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan']),
                 'Setiausaha': baseline.concat(['minit', 'laporan-aktiviti']),
                 'AJK Disiplin': baseline.concat(['laporan-disiplin']),
                 'AJK Blok': baseline.slice(),
@@ -7477,6 +7505,7 @@
 
         function performLogout() {
             state.currentUser = null;
+            document.body.classList.remove('peranan-prefect');
             state.currentTeacherUsername = null;
             state.currentPrefectId = null;
             state.currentPrefectUsername = null;
@@ -7542,6 +7571,9 @@
 
         function terapkanSenaraiAksesTabKeUI(senaraiNav) {
             (senaraiNav || []).forEach(nav => {
+                // Kewangan Pengawas: GURU/ADMIN SAHAJA -- tidak dipaparkan walau Tetapan Akses Tab
+                // dilanggan utk akaun Pengawas.
+                if (nav === 'kewangan' && state.currentUser === 'prefect') return;
                 let navLiId = nav;
                 if (LAPORAN_SUBTAB_IDS.includes(nav)) navLiId = 'laporan';
                 else if (SEJARAH_LAPORAN_SUBTAB_IDS.includes(nav)) navLiId = 'sejarah-laporan';
@@ -7567,6 +7599,7 @@
         }
 
         function updateUIRoles() {
+            document.body.classList.toggle('peranan-prefect', state.currentUser === 'prefect');
             const user = state.currentUser;
             let roleText = '';
             let jawatan = '';
@@ -7729,6 +7762,7 @@
 
         // --- UI NAVIGATION & TABS ---
         function switchTab(tabId) {
+            if (tabId === 'kewangan' && state.currentUser === 'prefect') { showCustomAlert("Modul Kewangan hanya boleh diakses oleh akaun Guru.", "error"); return; }
             const targetTabEl = document.getElementById('tab-' + tabId);
             if (!targetTabEl) return; // ID tab tidak sah/tidak wujud -- abaikan senyap
 
@@ -10034,16 +10068,13 @@
             semakAmaran();
         }
 
+        // Modul Kewangan: GURU/ADMIN SAHAJA. "Direkodkan Oleh" diisi AUTOMATIK dgn nama akaun
+        // guru yg sedang log masuk (bukan senarai pengawas). Nama dipaparkan di sini hanya utk
+        // paparan -- pelayan menetapkan semula nama sebenar daripada token sesi (Code_GS.txt).
         function populateKewanganPenyediaSelect() {
-            const sel = document.getElementById('kw-penyedia');
-            if (!sel) return;
-            const jawatanUtama = getJawatanKepimpinanUtama();
-            const pList = (state.pengawas || []).filter(p => isPengawasAktif(p));
-            const filtered = pList.filter(p => jawatanUtama.includes(p.jawatan) && (lapFormSesiFilter === 'Semua' || getSesiPengawas(p) === lapFormSesiFilter));
-            sel.innerHTML = filtered.length > 0
-                ? filtered.map(p => `<option value="${p.id}">${escapeHtml(p.nama)} (${formatJawatanRingkas(p.jawatan)})</option>`).join('')
-                : `<option value="">-- Tiada Majlis Tertinggi berdaftar --</option>`;
-            terapkanPenyediaAutolock_(sel, filtered);
+            const el = document.getElementById('kw-direkod-oleh');
+            if (!el) return;
+            el.textContent = (state.currentUser === 'admin' || state.currentUser === 'guru') ? getCurrentActorLabel() : '-';
         }
 
         function resetKewanganForm() {
@@ -10057,6 +10088,7 @@
         }
 
         function simpanTransaksiKewangan() {
+            if (state.currentUser !== 'admin' && state.currentUser !== 'guru') { showCustomAlert("Modul Kewangan hanya boleh digunakan oleh akaun Guru.", "error"); return; }
             const jenis = document.getElementById('kw-jenis').value;
             const tarikh = document.getElementById('kw-tarikh').value;
             const jumlah = parseFloat(document.getElementById('kw-jumlah').value);
@@ -10075,7 +10107,7 @@
                 kategori: document.getElementById('kw-kategori').value,
                 keterangan: document.getElementById('kw-keterangan').value.trim(),
                 jumlah, pautanResit: document.getElementById('kw-pautan-resit').value.trim(),
-                penyediaId: document.getElementById('kw-penyedia').value,
+                direkodOlehNama: getCurrentActorLabel(),
                 status: statusAwal, diluluskanOlehNama: '', tarikhDiluluskan: '', catatanKelulusan: ''
             };
             state.kewanganTransaksi.push(rekod);
@@ -10152,8 +10184,7 @@
         function lihatButiranTransaksi(id) {
             const t = (state.kewanganTransaksi || []).find(x => normalizeId(x.id) === normalizeId(id));
             if (!t) return;
-            const penyedia = (state.pengawas || []).find(p => normalizeId(p.id) === normalizeId(t.penyediaId));
-            let mesej = `Jenis: ${t.jenis}\nTarikh: ${t.tarikh}\nKategori: ${t.kategori || '-'}\nKeterangan: ${t.keterangan || '-'}\nJumlah: RM ${Number(t.jumlah || 0).toFixed(2)}\nDirekodkan Oleh: ${penyedia ? penyedia.nama : '-'}\nStatus: ${t.status}`;
+            let mesej = `Jenis: ${t.jenis}\nTarikh: ${t.tarikh}\nKategori: ${t.kategori || '-'}\nKeterangan: ${t.keterangan || '-'}\nJumlah: RM ${Number(t.jumlah || 0).toFixed(2)}\nDirekodkan Oleh: ${t.direkodOlehNama || '-'}\nStatus: ${t.status}`;
             if (t.pautanResit) mesej += `\nPautan Resit: ${t.pautanResit}`;
             if (t.status === 'Diluluskan' || t.status === 'Ditolak') {
                 mesej += `\n\n${t.status} Oleh: ${t.diluluskanOlehNama || '-'}\nTarikh: ${t.tarikhDiluluskan ? new Date(t.tarikhDiluluskan).toLocaleString('ms-MY') : '-'}`;
@@ -10288,7 +10319,7 @@
             html += `</tbody></table>`;
             html += `<p style="text-align:right; font-weight:bold; font-size:11pt; margin-top:10px;">BAKI AKHIR: RM ${baki.toFixed(2)}</p>`;
             html += `<div class="signature-box" style="margin-top:50px;">
-                <div><div class="sig-line">Disediakan Oleh<br>(Majlis Tertinggi Pengawas)</div></div>
+                <div><div class="sig-line">Disediakan Oleh<br>(Guru Penyelaras)</div></div>
                 <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
             </div>`;
             executePrint(html, 'portrait');
@@ -10399,7 +10430,7 @@
             });
             html += `</tbody></table>`;
             html += `<div class="signature-box" style="margin-top:50px;">
-                <div><div class="sig-line">Disediakan Oleh<br>(Majlis Tertinggi Pengawas)</div></div>
+                <div><div class="sig-line">Disediakan Oleh<br>(Guru Penyelaras)</div></div>
                 <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
             </div>`;
             executePrint(html, 'portrait');
