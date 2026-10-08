@@ -2485,6 +2485,7 @@
                     <button onclick="switchSubTab('kw-dashboard')" id="btn-kw-dashboard" class="subtab-btn inline-block p-4 text-brand-blue border-b-2 border-brand-blue font-bold rounded-t-lg transition-all">Dashboard</button>
                     <button onclick="switchSubTab('kw-transaksi')" id="btn-kw-transaksi" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Rekod Transaksi</button>
                     <button onclick="switchSubTab('kw-yuran')" id="btn-kw-yuran" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Yuran Pengawas</button>
+                    <button onclick="switchSubTab('kw-penyata')" id="btn-kw-penyata" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Penyata Kewangan</button>
                 </div>
 
                 <!-- Subtab: Dashboard Kewangan -->
@@ -2550,7 +2551,6 @@
                                 <div id="kw-direkod-oleh" class="w-full border border-slate-200 p-2.5 rounded-xl bg-slate-50 font-semibold text-sm text-slate-700">-</div>
                                 <p class="text-[11px] text-slate-400 mt-1">Diisi automatik mengikut akaun guru yang sedang log masuk.</p>
                             </div>
-                            </div>
                         </div>
                         <button onclick="simpanTransaksiKewangan()" class="w-full bg-brand-blue hover:bg-blue-800 text-white py-3 rounded-xl font-bold transition shadow-lg shadow-blue-900/10 active:scale-[0.99]"><i class="fas fa-save mr-2"></i>Simpan Transaksi</button>
                     </div>
@@ -2561,7 +2561,6 @@
                         <button onclick="tukarKewanganFilter('Pendapatan')" id="kw-filter-Pendapatan" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100">Pendapatan</button>
                         <button onclick="tukarKewanganFilter('Perbelanjaan')" id="kw-filter-Perbelanjaan" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100">Perbelanjaan</button>
                         <button onclick="tukarKewanganFilter('Menunggu Kelulusan')" id="kw-filter-MenungguKelulusan" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100">Menunggu Kelulusan</button>
-                        <button onclick="printPenyataKewangan()" class="ml-auto bg-slate-700 hover:bg-slate-800 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Penyata Kewangan</button>
                     </div>
 
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
@@ -2592,7 +2591,6 @@
                             <input type="text" id="kw-yuran-sesi-input" class="border border-slate-200 p-2 rounded-xl text-sm w-28" placeholder="cth: 2026">
                             <button onclick="janaSenaraiYuranSesiIni()" class="bg-brand-green hover:bg-green-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-magic"></i> Jana Senarai Yuran</button>
                         </div>
-                        <button onclick="printSenaraiYuran()" class="bg-slate-700 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Senarai Yuran</button>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
@@ -2623,6 +2621,61 @@
                                     </tr>
                                 </thead>
                                 <tbody id="table-yuran" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subtab: Penyata Kewangan -->
+                <div id="kw-penyata" class="subtab-content hidden">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                        <div class="flex flex-wrap items-end gap-3">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Dari Tarikh</label>
+                                <input type="date" id="kw-penyata-dari" onchange="renderPenyataKewangan()" class="border border-slate-200 p-2 rounded-xl text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Hingga Tarikh</label>
+                                <input type="date" id="kw-penyata-hingga" onchange="renderPenyataKewangan()" class="border border-slate-200 p-2 rounded-xl text-sm">
+                            </div>
+                            <div class="flex flex-wrap gap-2 ml-auto">
+                                <button onclick="printPenyataKewangan()" class="bg-slate-700 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Penyata Kewangan</button>
+                                <button onclick="printSenaraiYuran()" class="bg-slate-700 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Senarai Yuran</button>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-3"><i class="fas fa-info-circle mr-1"></i>Hanya transaksi berstatus Selesai/Diluluskan dikira. Perbelanjaan yang masih menunggu kelulusan atau ditolak tidak dimasukkan dalam penyata.</p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Baki Bawa Ke Hadapan</p>
+                            <p id="kw-penyata-bawa" class="text-xl font-black text-slate-700">RM 0.00</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Jumlah Pendapatan</p>
+                            <p id="kw-penyata-pendapatan" class="text-xl font-black text-green-600">RM 0.00</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Jumlah Perbelanjaan</p>
+                            <p id="kw-penyata-perbelanjaan" class="text-xl font-black text-red-600">RM 0.00</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-brand-blue">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Baki Akhir</p>
+                            <p id="kw-penyata-akhir" class="text-xl font-black text-brand-blue">RM 0.00</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left border-collapse">
+                                <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b">
+                                    <tr>
+                                        <th class="px-4 py-4 font-bold">Tarikh</th>
+                                        <th class="px-4 py-4 font-bold">Keterangan</th>
+                                        <th class="px-4 py-4 font-bold text-right">Pendapatan (RM)</th>
+                                        <th class="px-4 py-4 font-bold text-right">Perbelanjaan (RM)</th>
+                                        <th class="px-4 py-4 font-bold text-right">Baki (RM)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-penyata" class="divide-y divide-slate-100"></tbody>
                             </table>
                         </div>
                     </div>
@@ -7806,6 +7859,7 @@
                 renderKewanganDashboard();
                 renderTransaksiTable();
                 renderYuranTable();
+                renderPenyataKewangan();
             }
             if (tabId === 'tetapan') {
                 refreshHealthCheck();
@@ -10254,6 +10308,7 @@
             if (elBaki) elBaki.textContent = `RM ${baki.toFixed(2)}`;
             if (elPendapatan) elPendapatan.textContent = `RM ${jumlahPendapatanTahunIni.toFixed(2)}`;
             if (elPerbelanjaan) elPerbelanjaan.textContent = `RM ${jumlahPerbelanjaanTahunIni.toFixed(2)}`;
+            renderPenyataKewangan(); // segarkan subtab Penyata Kewangan sama setiap kali data kewangan berubah
 
             const bilMenunggu = senarai.filter(t => t.status === 'Menunggu Kelulusan').length;
             const kotakMenunggu = document.getElementById('kw-menunggu-kelulusan-box');
@@ -10285,39 +10340,94 @@
             }
         }
 
-        function printPenyataKewangan() {
-            const senarai = _senaraiKewanganDitapis_().slice().sort((a, b) => new Date(a.tarikh || 0) - new Date(b.tarikh || 0));
-            if (senarai.length === 0) {
-                showCustomAlert("Tiada transaksi untuk dicetak.", "error");
+        // --- Penyata Kewangan (subtab sendiri) ---
+        // Hanya transaksi 'Selesai'/'Diluluskan' dikira. Baki Bawa Ke Hadapan = jumlah bersih
+        // semua transaksi dikira SEBELUM tarikh mula; baki berjalan bermula drpd nilai itu.
+        function _ambilDataPenyata_() {
+            const dari = (document.getElementById('kw-penyata-dari') || {}).value || '';
+            const hingga = (document.getElementById('kw-penyata-hingga') || {}).value || '';
+            const semua = (state.kewanganTransaksi || []);
+            const dikira = semua.filter(t => t.status === 'Selesai' || t.status === 'Diluluskan')
+                .slice().sort((a, b) => String(a.tarikh || '').localeCompare(String(b.tarikh || '')));
+            const nilai = t => (t.jenis === 'Pendapatan' ? 1 : -1) * Number(t.jumlah || 0);
+            const tkh = t => String(t.tarikh || '').slice(0, 10);
+            const bakiBawa = dari ? dikira.filter(t => tkh(t) < dari).reduce((s, t) => s + nilai(t), 0) : 0;
+            const dalamTempoh = dikira.filter(t => (!dari || tkh(t) >= dari) && (!hingga || tkh(t) <= hingga));
+            let baki = bakiBawa, pendapatan = 0, perbelanjaan = 0;
+            const baris = dalamTempoh.map(t => {
+                baki += nilai(t);
+                if (t.jenis === 'Pendapatan') pendapatan += Number(t.jumlah || 0); else perbelanjaan += Number(t.jumlah || 0);
+                return { t, baki };
+            });
+            const bilTidakDikira = semua.filter(t => (t.status === 'Menunggu Kelulusan' || t.status === 'Ditolak') && (!dari || tkh(t) >= dari) && (!hingga || tkh(t) <= hingga)).length;
+            return { dari, hingga, bakiBawa, pendapatan, perbelanjaan, bakiAkhir: baki, baris, bilTidakDikira };
+        }
+
+        function renderPenyataKewangan() {
+            const elDari = document.getElementById('kw-penyata-dari');
+            const elHingga = document.getElementById('kw-penyata-hingga');
+            if (!elDari || !elHingga) return;
+            if (!elDari.value) elDari.value = new Date().getFullYear() + '-01-01';
+            if (!elHingga.value) elHingga.value = getRealTimeTodayStr();
+            const d = _ambilDataPenyata_();
+            const rm = n => `RM ${n.toFixed(2)}`;
+            document.getElementById('kw-penyata-bawa').textContent = rm(d.bakiBawa);
+            document.getElementById('kw-penyata-pendapatan').textContent = rm(d.pendapatan);
+            document.getElementById('kw-penyata-perbelanjaan').textContent = rm(d.perbelanjaan);
+            document.getElementById('kw-penyata-akhir').textContent = rm(d.bakiAkhir);
+            const tbody = document.getElementById('table-penyata');
+            if (!tbody) return;
+            if (d.baris.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400 text-sm">Tiada transaksi dalam tempoh ini.</td></tr>`;
                 return;
             }
-            let baki = 0;
+            tbody.innerHTML = d.baris.map(({ t, baki }) => `<tr class="hover:bg-slate-50">
+                <td class="px-4 py-3 text-xs">${t.tarikh ? new Date(t.tarikh).toLocaleDateString('ms-MY') : '-'}</td>
+                <td class="px-4 py-3">${escapeHtml(t.keterangan || t.kategori || '-')}</td>
+                <td class="px-4 py-3 text-right text-green-600">${t.jenis === 'Pendapatan' ? Number(t.jumlah || 0).toFixed(2) : ''}</td>
+                <td class="px-4 py-3 text-right text-red-600">${t.jenis === 'Perbelanjaan' ? Number(t.jumlah || 0).toFixed(2) : ''}</td>
+                <td class="px-4 py-3 text-right font-bold">${baki.toFixed(2)}</td>
+            </tr>`).join('');
+        }
+
+        function printPenyataKewangan() {
+            const d = _ambilDataPenyata_();
+            if (d.baris.length === 0 && d.bakiBawa === 0) {
+                showCustomAlert("Tiada transaksi dalam tempoh dipilih untuk dicetak.", "error");
+                return;
+            }
+            const fmtTkh = v => v ? new Date(v).toLocaleDateString('ms-MY') : '-';
+            const sel = 'border:1px solid #000; padding:6px;';
             let html = getPrintHeader();
-            html += `<h3 style="text-align:center; text-transform:uppercase; font-weight:bold; margin-bottom:15px; text-decoration:underline;">Penyata Kewangan Pengawas</h3>`;
+            html += `<h3 style="text-align:center; text-transform:uppercase; font-weight:bold; margin-bottom:4px; text-decoration:underline;">Penyata Kewangan Pengawas</h3>`;
+            html += `<p style="text-align:center; margin:0 0 15px 0; font-size:10pt;">Tempoh: ${fmtTkh(d.dari)} hingga ${fmtTkh(d.hingga)}</p>`;
             html += `<table style="width:100%; border-collapse:collapse;">
                 <thead><tr>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Tarikh</th>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Keterangan</th>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Status</th>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6; text-align:right;">Pendapatan (RM)</th>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6; text-align:right;">Perbelanjaan (RM)</th>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6; text-align:right;">Baki (RM)</th>
-                </tr></thead><tbody>`;
-            senarai.forEach(t => {
-                if (t.status === 'Selesai' || t.status === 'Diluluskan') {
-                    baki += (t.jenis === 'Pendapatan' ? Number(t.jumlah || 0) : -Number(t.jumlah || 0));
-                }
+                    <th style="${sel} background:#f3f4f6;">Tarikh</th>
+                    <th style="${sel} background:#f3f4f6;">Keterangan</th>
+                    <th style="${sel} background:#f3f4f6; text-align:right;">Pendapatan (RM)</th>
+                    <th style="${sel} background:#f3f4f6; text-align:right;">Perbelanjaan (RM)</th>
+                    <th style="${sel} background:#f3f4f6; text-align:right;">Baki (RM)</th>
+                </tr></thead><tbody>
+                <tr><td style="${sel}" colspan="4"><b>Baki Bawa Ke Hadapan</b></td><td style="${sel} text-align:right; font-weight:bold;">${d.bakiBawa.toFixed(2)}</td></tr>`;
+            d.baris.forEach(({ t, baki }) => {
                 html += `<tr>
-                    <td style="border:1px solid #000; padding:6px;">${t.tarikh ? new Date(t.tarikh).toLocaleDateString('ms-MY') : '-'}</td>
-                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(t.keterangan || t.kategori || '-')}</td>
-                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(t.status)}</td>
-                    <td style="border:1px solid #000; padding:6px; text-align:right;">${t.jenis === 'Pendapatan' ? Number(t.jumlah || 0).toFixed(2) : ''}</td>
-                    <td style="border:1px solid #000; padding:6px; text-align:right;">${t.jenis === 'Perbelanjaan' ? Number(t.jumlah || 0).toFixed(2) : ''}</td>
-                    <td style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">${(t.status === 'Selesai' || t.status === 'Diluluskan') ? baki.toFixed(2) : '-'}</td>
+                    <td style="${sel}">${fmtTkh(t.tarikh)}</td>
+                    <td style="${sel}">${escapeHtml(t.keterangan || t.kategori || '-')}</td>
+                    <td style="${sel} text-align:right;">${t.jenis === 'Pendapatan' ? Number(t.jumlah || 0).toFixed(2) : ''}</td>
+                    <td style="${sel} text-align:right;">${t.jenis === 'Perbelanjaan' ? Number(t.jumlah || 0).toFixed(2) : ''}</td>
+                    <td style="${sel} text-align:right; font-weight:bold;">${baki.toFixed(2)}</td>
                 </tr>`;
             });
+            html += `<tr style="background:#f3f4f6;"><td style="${sel}" colspan="2"><b>JUMLAH</b></td>
+                <td style="${sel} text-align:right; font-weight:bold;">${d.pendapatan.toFixed(2)}</td>
+                <td style="${sel} text-align:right; font-weight:bold;">${d.perbelanjaan.toFixed(2)}</td>
+                <td style="${sel} text-align:right; font-weight:bold;">${d.bakiAkhir.toFixed(2)}</td></tr>`;
             html += `</tbody></table>`;
-            html += `<p style="text-align:right; font-weight:bold; font-size:11pt; margin-top:10px;">BAKI AKHIR: RM ${baki.toFixed(2)}</p>`;
+            html += `<p style="text-align:right; font-weight:bold; font-size:11pt; margin-top:10px;">BAKI AKHIR: RM ${d.bakiAkhir.toFixed(2)}</p>`;
+            if (d.bilTidakDikira > 0) {
+                html += `<p style="font-size:9pt; color:#555;">Nota: ${d.bilTidakDikira} transaksi dalam tempoh ini (menunggu kelulusan/ditolak) tidak dimasukkan dalam penyata ini.</p>`;
+            }
             html += `<div class="signature-box" style="margin-top:50px;">
                 <div><div class="sig-line">Disediakan Oleh<br>(Guru Penyelaras)</div></div>
                 <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
