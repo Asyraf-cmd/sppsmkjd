@@ -527,6 +527,17 @@
                 <li id="nav-li-laporan" class="sidebar-group-mesyuarat-laporan"><div onclick="switchTab('laporan')" id="nav-laporan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chart-bar w-6 opacity-85 text-brand-yellow"></i> Laporan Pengawas</div></li>
                 <li id="nav-li-sejarah-laporan" class="sidebar-group-mesyuarat-laporan"><div onclick="switchTab('sejarah-laporan')" id="nav-sejarah-laporan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-history w-6 opacity-85 text-brand-yellow"></i> Sejarah Laporan dan Minit Mesyuarat</div></li>
 
+                <!-- Divider: Kewangan Pengawas -->
+                <li class="pt-3 pb-1 px-3">
+                    <p id="divider-kewangan" onclick="toggleSidebarGroup('kewangan')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
+                        <span class="flex-1 h-px bg-blue-800"></span>
+                        Kewangan Pengawas
+                        <i id="chevron-kewangan" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
+                        <span class="flex-1 h-px bg-blue-800"></span>
+                    </p>
+                </li>
+                <li id="nav-li-kewangan" class="sidebar-group-kewangan"><div onclick="switchTab('kewangan')" id="nav-kewangan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-wallet w-6 opacity-85 text-brand-yellow"></i> Kewangan Pengawas</div></li>
+
                 <!-- Divider 2: Pengurusan Guru -->
                 <li class="pt-3 pb-1 px-3 super-admin-only">
                     <p id="divider-guru" onclick="toggleSidebarGroup('guru')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
@@ -2437,6 +2448,159 @@
                 </div>
             </div>
 
+            <!-- TAB: Kewangan Pengawas -->
+            <div id="tab-kewangan" class="tab-content hidden">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
+                    <h2 class="text-2xl font-bold text-slate-800">Kewangan Pengawas</h2>
+                </div>
+
+                <div class="border-b border-slate-200 mb-6 flex gap-1 overflow-x-auto">
+                    <button onclick="switchSubTab('kw-dashboard')" id="btn-kw-dashboard" class="subtab-btn inline-block p-4 text-brand-blue border-b-2 border-brand-blue font-bold rounded-t-lg transition-all">Dashboard</button>
+                    <button onclick="switchSubTab('kw-transaksi')" id="btn-kw-transaksi" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Rekod Transaksi</button>
+                    <button onclick="switchSubTab('kw-yuran')" id="btn-kw-yuran" class="subtab-btn inline-block p-4 border-b-2 border-transparent font-bold hover:text-slate-600 hover:border-slate-300 rounded-t-lg transition-all">Yuran Pengawas</button>
+                </div>
+
+                <!-- Subtab: Dashboard Kewangan -->
+                <div id="kw-dashboard" class="subtab-content block">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-brand-blue">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Baki Semasa</p>
+                            <p id="kw-baki-semasa" class="text-3xl font-black text-brand-blue">RM 0.00</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-green-500">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Jumlah Pendapatan (Tahun Semasa)</p>
+                            <p id="kw-jumlah-pendapatan" class="text-3xl font-black text-green-600">RM 0.00</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-red-500">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Jumlah Perbelanjaan (Tahun Semasa)</p>
+                            <p id="kw-jumlah-perbelanjaan" class="text-3xl font-black text-red-600">RM 0.00</p>
+                        </div>
+                    </div>
+                    <div id="kw-menunggu-kelulusan-box" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
+                        <p class="text-sm font-bold text-amber-800 flex items-center gap-2"><i class="fas fa-hourglass-half"></i> <span id="kw-menunggu-kelulusan-count">0</span> perbelanjaan sedang menunggu kelulusan guru</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                        <h4 class="font-bold text-sm mb-3 text-slate-800 flex items-center gap-2"><i class="fas fa-chart-pie text-slate-400"></i>Pecahan Perbelanjaan Ikut Kategori (Tahun Semasa)</h4>
+                        <div id="kw-pecahan-kategori" class="space-y-2"></div>
+                    </div>
+                </div>
+
+                <!-- Subtab: Rekod Transaksi -->
+                <div id="kw-transaksi" class="subtab-content hidden">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-2 border-brand-blue mb-6">
+                        <h3 class="font-bold mb-4 text-slate-800 text-base">Rekod Transaksi Baharu</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-semibold mb-1 text-slate-700">Jenis <span class="text-red-500">*</span></label>
+                                <select id="kw-jenis" onchange="kemaskiniAmbangKelulusanUI()" class="w-full border border-slate-200 p-2.5 rounded-xl bg-white text-sm">
+                                    <option value="Pendapatan">Pendapatan</option>
+                                    <option value="Perbelanjaan">Perbelanjaan</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1 text-slate-700">Tarikh <span class="text-red-500">*</span></label>
+                                <input type="date" id="kw-tarikh" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1 text-slate-700">Kategori</label>
+                                <select id="kw-kategori" class="w-full border border-slate-200 p-2.5 rounded-xl bg-white text-sm"></select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1 text-slate-700">Jumlah (RM) <span class="text-red-500">*</span></label>
+                                <input type="number" min="0" step="0.01" id="kw-jumlah" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm">
+                                <p id="kw-amaran-ambang" class="hidden text-xs text-amber-600 font-semibold mt-1"><i class="fas fa-info-circle mr-1"></i>Perbelanjaan sejumlah ini akan menunggu kelulusan guru.</p>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-semibold mb-1 text-slate-700">Keterangan</label>
+                                <input type="text" id="kw-keterangan" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="Cth: Bayaran percetakan buku log pengawas">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-semibold mb-1 text-slate-700">Pautan Resit/Bukti <span class="text-[11px] font-normal text-slate-400">(Google Drive/Photos — pilihan)</span></label>
+                                <input type="text" id="kw-pautan-resit" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm" placeholder="https://drive.google.com/...">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-semibold mb-1 text-slate-700">Direkodkan Oleh</label>
+                                <select id="kw-penyedia" class="w-full border border-slate-200 p-2.5 rounded-xl bg-white select-pengawas-filter select-pengawas-lapform font-semibold text-sm"></select>
+                                <div id="kw-penyedia-auto" class="hidden w-full border border-slate-200 p-2.5 rounded-xl bg-slate-50 font-semibold text-sm text-slate-700"></div>
+                            </div>
+                        </div>
+                        <button onclick="simpanTransaksiKewangan()" class="w-full bg-brand-blue hover:bg-blue-800 text-white py-3 rounded-xl font-bold transition shadow-lg shadow-blue-900/10 active:scale-[0.99]"><i class="fas fa-save mr-2"></i>Simpan Transaksi</button>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-4 flex-wrap">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Papar:</span>
+                        <button onclick="tukarKewanganFilter('Semua')" id="kw-filter-Semua" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-brand-blue text-white border-brand-blue">Semua</button>
+                        <button onclick="tukarKewanganFilter('Pendapatan')" id="kw-filter-Pendapatan" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100">Pendapatan</button>
+                        <button onclick="tukarKewanganFilter('Perbelanjaan')" id="kw-filter-Perbelanjaan" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100">Perbelanjaan</button>
+                        <button onclick="tukarKewanganFilter('Menunggu Kelulusan')" id="kw-filter-MenungguKelulusan" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100">Menunggu Kelulusan</button>
+                        <button onclick="printPenyataKewangan()" class="ml-auto bg-slate-700 hover:bg-slate-800 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Penyata Kewangan</button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left border-collapse">
+                                <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b">
+                                    <tr>
+                                        <th class="px-4 py-4 font-bold">Tarikh</th>
+                                        <th class="px-4 py-4 font-bold">Jenis</th>
+                                        <th class="px-4 py-4 font-bold">Kategori</th>
+                                        <th class="px-4 py-4 font-bold">Keterangan</th>
+                                        <th class="px-4 py-4 font-bold text-right">Jumlah (RM)</th>
+                                        <th class="px-4 py-4 font-bold">Status</th>
+                                        <th class="px-4 py-4 text-right font-bold">Tindakan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-kewangan" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subtab: Yuran Pengawas -->
+                <div id="kw-yuran" class="subtab-content hidden">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                        <div class="flex items-center gap-2">
+                            <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Sesi/Tahun:</label>
+                            <input type="text" id="kw-yuran-sesi-input" class="border border-slate-200 p-2 rounded-xl text-sm w-28" placeholder="cth: 2026">
+                            <button onclick="janaSenaraiYuranSesiIni()" class="bg-brand-green hover:bg-green-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-magic"></i> Jana Senarai Yuran</button>
+                        </div>
+                        <button onclick="printSenaraiYuran()" class="bg-slate-700 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Senarai Yuran</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Jumlah Patut Dikutip</p>
+                            <p id="kw-yuran-patut" class="text-2xl font-black text-slate-700">RM 0.00</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Jumlah Terkumpul</p>
+                            <p id="kw-yuran-terkumpul" class="text-2xl font-black text-green-600">RM 0.00</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Baki Belum Bayar</p>
+                            <p id="kw-yuran-baki" class="text-2xl font-black text-red-600">RM 0.00</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left border-collapse">
+                                <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b">
+                                    <tr>
+                                        <th class="px-4 py-4 font-bold">Nama</th>
+                                        <th class="px-4 py-4 font-bold">Kelas</th>
+                                        <th class="px-4 py-4 font-bold">Sesi/Tahun</th>
+                                        <th class="px-4 py-4 font-bold text-right">Jumlah (RM)</th>
+                                        <th class="px-4 py-4 font-bold">Status</th>
+                                        <th class="px-4 py-4 font-bold">Tarikh Bayar</th>
+                                        <th class="px-4 py-4 text-right font-bold">Tindakan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-yuran" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- TAB: Senarai Guru -->
             <div id="tab-guru" class="tab-content hidden">
                 <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
@@ -2802,6 +2966,15 @@
                             <input type="number" id="set-ambang-demerit" min="1" class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm bg-slate-50" placeholder="5">
                         </div>
                         <button onclick="saveSettings('ambangDemerit')" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2.5 px-4 rounded-xl transition shadow-md shadow-blue-900/10 active:scale-98 self-end mt-4">Simpan Ambang</button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 admin-only-block flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-base text-slate-800 mb-4 border-b border-slate-100 pb-2 flex items-center gap-2"><i class="fas fa-wallet text-green-600"></i>Ambang Kelulusan Perbelanjaan (Kewangan)</h3>
+                            <p class="text-[11px] text-slate-500 mb-3">Perbelanjaan pengawas sama/lebih daripada jumlah ini (RM) akan menunggu kelulusan guru sebelum dikira dalam baki. Perbelanjaan lebih kecil terus dianggap selesai.</p>
+                            <input type="number" id="set-ambang-kelulusan" min="1" step="1" class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm bg-slate-50" placeholder="100">
+                        </div>
+                        <button onclick="saveSettings('ambangKelulusan')" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2.5 px-4 rounded-xl transition shadow-md shadow-blue-900/10 active:scale-98 self-end mt-4">Simpan Ambang</button>
                     </div>
 
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 admin-only-block flex flex-col justify-between">
@@ -3886,6 +4059,8 @@
             bilikDisiplinLog: [], // Pengurusan Bilik Disiplin (Jadual Bertugas) - disegerakkan ke Google Sheets
             auditLog: [], // Log Aktiviti Sistem (siapa buat apa bila) - disegerakkan ke Google Sheets
             permohonanPengawas: [], // Permohonan Pengawas (mohon sendiri / cadangan guru) - disegerakkan ke Google Sheets
+            kewanganTransaksi: [], // Kewangan Pengawas - rekod pendapatan/perbelanjaan - disegerakkan ke Google Sheets
+            yuranPengawas: [], // Kewangan Pengawas - status bayaran yuran setiap pengawas - disegerakkan ke Google Sheets
             // --- DELTA SYNC QUEUE ---
             // pendingDeltas: senarai rekod BAHARU (tambah sahaja) yang belum di-push ke Google Sheets.
             // Setiap item: { subAction: 'addX', data: {...} }. Dihantar SATU-SATU semasa Push (cekap, tidak hantar seluruh pangkalan data).
@@ -4765,6 +4940,7 @@
             { id: 'sejarah-laporan-spotcheck', label: 'Sejarah Laporan - Spotcheck' },
             { id: 'sejarah-laporan-disiplin', label: 'Sejarah Laporan - Disiplin' },
             { id: 'sejarah-laporan-aktiviti', label: 'Sejarah Laporan - Aktiviti Pengawas' },
+            { id: 'kewangan', label: 'Kewangan Pengawas' },
             { id: 'arkib', label: 'Arkib Pengawas' },
             { id: 'carta-organisasi-lengkap', label: 'Carta Organisasi Lengkap' },
             { id: 'tetapan-bidang-tugas', label: 'Tetapan Bidang Tugas Pengawas' }
@@ -4783,9 +4959,9 @@
         function getDefaultAksesTab() {
             const baseline = ['dashboard', 'kesalahan', 'sejarah-laporan-mingguan', 'sejarah-laporan-spotcheck', 'sejarah-laporan-disiplin', 'sejarah-laporan-aktiviti', 'carta-organisasi-lengkap'];
             const basisPengawas = {
-                'Ketua Pengawas': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan']),
-                'Penolong Ketua Pengawas 1': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan']),
-                'Penolong Ketua Pengawas 2': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan']),
+                'Ketua Pengawas': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan', 'kewangan']),
+                'Penolong Ketua Pengawas 1': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan', 'kewangan']),
+                'Penolong Ketua Pengawas 2': baseline.concat(['laporan-mingguan', 'kehadiran', 'sejarah-kehadiran', 'rehat', 'perhimpunan', 'kewangan']),
                 'Setiausaha': baseline.concat(['minit', 'laporan-aktiviti']),
                 'AJK Disiplin': baseline.concat(['laporan-disiplin']),
                 'AJK Blok': baseline.slice(),
@@ -4797,7 +4973,7 @@
                 'Pengawas Percubaan': baseline.slice()
             };
             const hasil = {
-                guru: ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kesalahan', 'surat', 'tunjuk-sebab', 'profil-disiplin', 'kemenjadian', 'penilaian-prestasi', 'bilik-disiplin', 'arkib', 'tetapan-lokasi', 'carta-organisasi-lengkap', 'tetapan-bidang-tugas']
+                guru: ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kesalahan', 'surat', 'tunjuk-sebab', 'profil-disiplin', 'kemenjadian', 'penilaian-prestasi', 'bilik-disiplin', 'arkib', 'tetapan-lokasi', 'carta-organisasi-lengkap', 'tetapan-bidang-tugas', 'kewangan']
             };
             // Setiap jawatan lalai digandakan untuk KEDUA-DUA sesi (cth "Ketua Pengawas (Sesi
             // Pagi)" & "Ketua Pengawas (Sesi Petang)") -- ini SATU peranan berasingan yang
@@ -5956,6 +6132,7 @@
         function buildSharedSettingsPayload() {
             return {
                 ambangDemeritAmaran: state.settings.ambangDemeritAmaran || 5,
+                ambangKelulusanPerbelanjaan: state.settings.ambangKelulusanPerbelanjaan || 100,
                 logoUrl: state.settings.logoUrl || '',
                 aksesTab: state.settings.aksesTab || getDefaultAksesTab(),
                 jawatanPengawasPetangList: getJawatanPengawasList('Petang'),
@@ -6007,6 +6184,8 @@
                 bilikDisiplinLog: state.bilikDisiplinLog || [],
                 auditLog: state.auditLog || [],
                 permohonanPengawas: state.permohonanPengawas || [],
+                kewanganTransaksi: state.kewanganTransaksi || [],
+                yuranPengawas: state.yuranPengawas || [],
                 // Tetapan yang dikongsi merentasi SEMUA peranti (bukan tetapan sulit/setempat seperti
                 // kata laluan atau URL Apps Script -- itu kekal tempatan pada setiap peranti sahaja)
                 sharedSettings: buildSharedSettingsPayload()
@@ -6035,12 +6214,17 @@
             state.bilikDisiplinLog = remoteState.bilikDisiplinLog || [];
             state.auditLog = remoteState.auditLog || [];
             state.permohonanPengawas = remoteState.permohonanPengawas || [];
+            state.kewanganTransaksi = remoteState.kewanganTransaksi || [];
+            state.yuranPengawas = remoteState.yuranPengawas || [];
 
             // Tetapan kongsi merentasi peranti (ambang amaran, logo) -- gabung sahaja medan ini,
             // JANGAN sentuh tetapan sulit/setempat (scriptUrl, kata laluan, log sync tempatan)
             if (remoteState.sharedSettings) {
                 if (remoteState.sharedSettings.ambangDemeritAmaran) {
                     state.settings.ambangDemeritAmaran = remoteState.sharedSettings.ambangDemeritAmaran;
+                }
+                if (remoteState.sharedSettings.ambangKelulusanPerbelanjaan) {
+                    state.settings.ambangKelulusanPerbelanjaan = remoteState.sharedSettings.ambangKelulusanPerbelanjaan;
                 }
                 if (remoteState.sharedSettings.logoUrl) {
                     state.settings.logoUrl = remoteState.sharedSettings.logoUrl;
@@ -6674,6 +6858,17 @@
                 markUnsynced();
                 renderDashboardWarnings();
                 showCustomAlert("Ambang amaran demerit berjaya dikemaskini. Tekan 'Push' untuk kongsikan tetapan ini ke semua peranti lain.", "success");
+            } else if (type === 'ambangKelulusan') {
+                const val = parseFloat(document.getElementById('set-ambang-kelulusan').value);
+                if (!val || val < 1) {
+                    showCustomAlert("Sila masukkan jumlah ambang yang sah (sekurang-kurangnya RM 1).", "error");
+                    return;
+                }
+                state.settings.ambangKelulusanPerbelanjaan = val;
+                queueDelta('updateSettings', { kunci: 'sharedSettings', nilai: buildSharedSettingsPayload() }, 'Kemaskini ambang kelulusan perbelanjaan kewangan');
+                saveStateToLocal();
+                markUnsynced();
+                showCustomAlert("Ambang kelulusan perbelanjaan berjaya dikemaskini. Tekan 'Push' untuk kongsikan tetapan ini ke semua peranti lain.", "success");
             } else if (type === 'autologout') {
                 const aktif = document.getElementById('set-autologout-aktif').checked;
                 const jam = parseFloat(document.getElementById('set-autologout-jam').value);
@@ -7295,7 +7490,7 @@
 
         // --- SIDEBAR BOLEH DILIPAT (Collapsible Sections) ---
         const SIDEBAR_GROUP_STORAGE_KEY = 'spp_smkjd_sidebar_groups';
-        const SIDEBAR_GROUPS = ['pendaftaran-akaun', 'operasi-harian', 'disiplin', 'pencapaian', 'mesyuarat-laporan', 'guru', 'tetapan'];
+        const SIDEBAR_GROUPS = ['pendaftaran-akaun', 'operasi-harian', 'disiplin', 'pencapaian', 'mesyuarat-laporan', 'kewangan', 'guru', 'tetapan'];
 
         function getSidebarGroupState() {
             try {
@@ -7377,7 +7572,7 @@
             let jawatan = '';
 
             // Hide all tab elements in sidebar first
-            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'log-aktiviti'];
+            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'kewangan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'log-aktiviti'];
             navTabs.forEach(nav => {
                 const el = document.getElementById(`nav-li-${nav}`);
                 if (el) el.style.display = 'none';
@@ -7569,6 +7764,14 @@
             if (tabId === 'permohonan-pengawas') {
                 renderPermohonanPrintButton(_permohonanStatusFilter);
                 renderPermohonanPengawas();
+            }
+            if (tabId === 'kewangan') {
+                kemaskiniKategoriKewangan();
+                populateKewanganPenyediaSelect();
+                if (!document.getElementById('kw-tarikh').value) document.getElementById('kw-tarikh').value = getRealTimeTodayStr();
+                renderKewanganDashboard();
+                renderTransaksiTable();
+                renderYuranTable();
             }
             if (tabId === 'tetapan') {
                 refreshHealthCheck();
@@ -8439,6 +8642,7 @@
             populateGuruPdSelect();
             populatePerjanjianGuruSelect();
             populateLaGuruPenasihatSelect();
+            populateKewanganPenyediaSelect();
             renderTableAksesPengawas();
             renderTableArkib();
             renderTetapanMinggu();
@@ -9790,6 +9994,415 @@
                 <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
             </div>`;
             executePrint(html, 'landscape');
+        }
+
+        // =========================================================================
+        //  MODUL: KEWANGAN PENGAWAS
+        //  "Disediakan/Direkodkan Oleh" guna jawatan Majlis Tertinggi sedia ada (sama
+        //  dgn Laporan Mingguan) -- TIADA jawatan "Bendahari" berasingan dicipta. Status
+        //  kelulusan perbelanjaan SENTIASA disahkan semula di PELAYAN (Code_GS.txt) --
+        //  nilai yg dipaparkan di sini (client) adalah UNTUK PAPARAN sahaja, bukan
+        //  sumber kebenaran (lihat nota di subAction 'addKewanganTransaksi').
+        // =========================================================================
+        const KATEGORI_PENDAPATAN_KEWANGAN = ['Yuran Pengawas', 'Derma/Sumbangan', 'Geran Sekolah/PIBG', 'Jualan', 'Lain-lain'];
+        const KATEGORI_PERBELANJAAN_KEWANGAN = ['Pembelian Peralatan/Lencana', 'Program/Aktiviti Pengawas', 'Cenderahati/Anugerah', 'Percetakan/Alat Tulis', 'Makan Minum Mesyuarat', 'Lain-lain'];
+
+        function kemaskiniKategoriKewangan() {
+            const jenis = document.getElementById('kw-jenis').value;
+            const sel = document.getElementById('kw-kategori');
+            if (!sel) return;
+            const senarai = jenis === 'Pendapatan' ? KATEGORI_PENDAPATAN_KEWANGAN : KATEGORI_PERBELANJAAN_KEWANGAN;
+            sel.innerHTML = senarai.map(k => `<option value="${k}">${k}</option>`).join('');
+        }
+
+        function kemaskiniAmbangKelulusanUI() {
+            kemaskiniKategoriKewangan();
+            const jenis = document.getElementById('kw-jenis').value;
+            const amaran = document.getElementById('kw-amaran-ambang');
+            const jumlahInput = document.getElementById('kw-jumlah');
+            if (!amaran || !jumlahInput) return;
+            const semakAmaran = () => {
+                const ambang = (state.settings && state.settings.ambangKelulusanPerbelanjaan) || 100;
+                const jumlah = parseFloat(jumlahInput.value) || 0;
+                if (jenis === 'Perbelanjaan' && jumlah >= ambang) {
+                    amaran.classList.remove('hidden');
+                } else {
+                    amaran.classList.add('hidden');
+                }
+            };
+            jumlahInput.oninput = semakAmaran;
+            semakAmaran();
+        }
+
+        function populateKewanganPenyediaSelect() {
+            const sel = document.getElementById('kw-penyedia');
+            if (!sel) return;
+            const jawatanUtama = getJawatanKepimpinanUtama();
+            const pList = (state.pengawas || []).filter(p => isPengawasAktif(p));
+            const filtered = pList.filter(p => jawatanUtama.includes(p.jawatan) && (lapFormSesiFilter === 'Semua' || getSesiPengawas(p) === lapFormSesiFilter));
+            sel.innerHTML = filtered.length > 0
+                ? filtered.map(p => `<option value="${p.id}">${escapeHtml(p.nama)} (${formatJawatanRingkas(p.jawatan)})</option>`).join('')
+                : `<option value="">-- Tiada Majlis Tertinggi berdaftar --</option>`;
+            terapkanPenyediaAutolock_(sel, filtered);
+        }
+
+        function resetKewanganForm() {
+            document.getElementById('kw-jenis').value = 'Pendapatan';
+            document.getElementById('kw-tarikh').value = '';
+            document.getElementById('kw-jumlah').value = '';
+            document.getElementById('kw-keterangan').value = '';
+            document.getElementById('kw-pautan-resit').value = '';
+            kemaskiniAmbangKelulusanUI();
+            populateKewanganPenyediaSelect();
+        }
+
+        function simpanTransaksiKewangan() {
+            const jenis = document.getElementById('kw-jenis').value;
+            const tarikh = document.getElementById('kw-tarikh').value;
+            const jumlah = parseFloat(document.getElementById('kw-jumlah').value);
+            if (!tarikh) { showCustomAlert("Sila isi Tarikh.", "error"); return; }
+            if (!jumlah || jumlah <= 0) { showCustomAlert("Sila isi Jumlah (RM) yang sah.", "error"); return; }
+
+            const ambang = (state.settings && state.settings.ambangKelulusanPerbelanjaan) || 100;
+            // NOTA: status di sini cuma ANGGARAN papar segera (UX) -- pelayan akan kira
+            // SEMULA status sebenar secara bebas apabila delta ini sampai (lihat
+            // 'addKewanganTransaksi' di Code_GS.txt), jadi client TIDAK dipercayai.
+            const statusAwal = (jenis === 'Perbelanjaan' && jumlah >= ambang) ? 'Menunggu Kelulusan' : 'Selesai';
+
+            const rekod = {
+                id: 'KWG-' + new Date().getTime() + '-' + Math.floor(Math.random() * 1000),
+                tarikh, jenis,
+                kategori: document.getElementById('kw-kategori').value,
+                keterangan: document.getElementById('kw-keterangan').value.trim(),
+                jumlah, pautanResit: document.getElementById('kw-pautan-resit').value.trim(),
+                penyediaId: document.getElementById('kw-penyedia').value,
+                status: statusAwal, diluluskanOlehNama: '', tarikhDiluluskan: '', catatanKelulusan: ''
+            };
+            state.kewanganTransaksi.push(rekod);
+            queueDelta('addKewanganTransaksi', rekod, 'Rekod transaksi kewangan baharu');
+            saveStateToLocal();
+            markUnsynced();
+            resetKewanganForm();
+            renderTransaksiTable();
+            renderKewanganDashboard();
+            showCustomAlert(statusAwal === 'Menunggu Kelulusan' ? "Transaksi disimpan -- menunggu kelulusan guru." : "Transaksi berjaya disimpan.", "success");
+        }
+
+        let _kewanganFilter = 'Semua';
+        const KW_FILTER_SLUG_ = { 'Semua': 'Semua', 'Pendapatan': 'Pendapatan', 'Perbelanjaan': 'Perbelanjaan', 'Menunggu Kelulusan': 'MenungguKelulusan' };
+        function tukarKewanganFilter(status) {
+            _kewanganFilter = status;
+            Object.keys(KW_FILTER_SLUG_).forEach(s => {
+                const btn = document.getElementById(`kw-filter-${KW_FILTER_SLUG_[s]}`);
+                if (!btn) return;
+                if (s === status) {
+                    btn.classList.add('bg-brand-blue', 'text-white', 'border-brand-blue');
+                    btn.classList.remove('bg-white', 'text-slate-500', 'border-slate-200');
+                } else {
+                    btn.classList.remove('bg-brand-blue', 'text-white', 'border-brand-blue');
+                    btn.classList.add('bg-white', 'text-slate-500', 'border-slate-200');
+                }
+            });
+            renderTransaksiTable();
+        }
+
+        function _senaraiKewanganDitapis_() {
+            let senarai = [...(state.kewanganTransaksi || [])];
+            if (_kewanganFilter === 'Pendapatan' || _kewanganFilter === 'Perbelanjaan') {
+                senarai = senarai.filter(t => t.jenis === _kewanganFilter);
+            } else if (_kewanganFilter === 'Menunggu Kelulusan') {
+                senarai = senarai.filter(t => t.status === 'Menunggu Kelulusan');
+            }
+            senarai.sort((a, b) => new Date(b.tarikh || 0) - new Date(a.tarikh || 0));
+            return senarai;
+        }
+
+        function renderTransaksiTable() {
+            const tbody = document.getElementById('table-kewangan');
+            if (!tbody) return;
+            const senarai = _senaraiKewanganDitapis_();
+            const bolehLuluskan = (state.currentUser === 'admin' || state.currentUser === 'guru');
+
+            if (senarai.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 text-sm">Tiada transaksi direkodkan.</td></tr>`;
+                return;
+            }
+            const badgeStatus = { 'Selesai': 'bg-green-100 text-green-700', 'Menunggu Kelulusan': 'bg-amber-100 text-amber-700', 'Diluluskan': 'bg-green-100 text-green-700', 'Ditolak': 'bg-red-100 text-red-700' };
+            tbody.innerHTML = senarai.map(t => {
+                const warnaJumlah = t.jenis === 'Pendapatan' ? 'text-green-600' : 'text-red-600';
+                const tandaJumlah = t.jenis === 'Pendapatan' ? '+' : '-';
+                let tindakan = `<button onclick="lihatButiranTransaksi('${t.id}')" class="text-slate-400 hover:text-brand-blue mr-2" title="Lihat Butiran"><i class="fas fa-eye"></i></button>`;
+                if (t.status === 'Menunggu Kelulusan' && bolehLuluskan) {
+                    tindakan += `<button onclick="luluskanTransaksi('${t.id}')" class="text-green-600 hover:text-green-800 mr-2" title="Luluskan"><i class="fas fa-check-circle"></i></button>
+                                 <button onclick="tolakTransaksi('${t.id}')" class="text-red-600 hover:text-red-800 mr-2" title="Tolak"><i class="fas fa-times-circle"></i></button>`;
+                }
+                tindakan += `<button onclick="padamTransaksiKewangan('${t.id}')" class="text-slate-400 hover:text-red-600" title="Padam"><i class="fas fa-trash-alt"></i></button>`;
+                return `<tr class="hover:bg-slate-50">
+                    <td class="px-4 py-3 text-xs">${t.tarikh ? new Date(t.tarikh).toLocaleDateString('ms-MY') : '-'}</td>
+                    <td class="px-4 py-3">${escapeHtml(t.jenis)}</td>
+                    <td class="px-4 py-3">${escapeHtml(t.kategori || '-')}</td>
+                    <td class="px-4 py-3">${escapeHtml(t.keterangan || '-')}</td>
+                    <td class="px-4 py-3 text-right font-bold ${warnaJumlah}">${tandaJumlah} RM ${Number(t.jumlah || 0).toFixed(2)}</td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs font-bold ${badgeStatus[t.status] || 'bg-slate-100 text-slate-600'}">${escapeHtml(t.status || 'Selesai')}</span></td>
+                    <td class="px-4 py-3 text-right whitespace-nowrap">${tindakan}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function lihatButiranTransaksi(id) {
+            const t = (state.kewanganTransaksi || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!t) return;
+            const penyedia = (state.pengawas || []).find(p => normalizeId(p.id) === normalizeId(t.penyediaId));
+            let mesej = `Jenis: ${t.jenis}\nTarikh: ${t.tarikh}\nKategori: ${t.kategori || '-'}\nKeterangan: ${t.keterangan || '-'}\nJumlah: RM ${Number(t.jumlah || 0).toFixed(2)}\nDirekodkan Oleh: ${penyedia ? penyedia.nama : '-'}\nStatus: ${t.status}`;
+            if (t.pautanResit) mesej += `\nPautan Resit: ${t.pautanResit}`;
+            if (t.status === 'Diluluskan' || t.status === 'Ditolak') {
+                mesej += `\n\n${t.status} Oleh: ${t.diluluskanOlehNama || '-'}\nTarikh: ${t.tarikhDiluluskan ? new Date(t.tarikhDiluluskan).toLocaleString('ms-MY') : '-'}`;
+                if (t.catatanKelulusan) mesej += `\nCatatan: ${t.catatanKelulusan}`;
+            }
+            alert(mesej);
+        }
+
+        function luluskanTransaksi(id) {
+            _prosesKelulusanTransaksi_(id, 'Diluluskan');
+        }
+        function tolakTransaksi(id) {
+            _prosesKelulusanTransaksi_(id, 'Ditolak');
+        }
+        function _prosesKelulusanTransaksi_(id, statusBaharu) {
+            const t = (state.kewanganTransaksi || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!t) return;
+            const labelTindakan = statusBaharu === 'Diluluskan' ? 'luluskan' : 'tolak';
+            showCustomConfirm(`${statusBaharu} Perbelanjaan`, `Adakah anda pasti untuk ${labelTindakan} perbelanjaan "${t.keterangan || t.kategori}" (RM ${Number(t.jumlah || 0).toFixed(2)})?`, function() {
+                const catatan = statusBaharu === 'Ditolak' ? (prompt('Catatan (pilihan) -- sebab penolakan:') || '') : '';
+                const namaGuru = (state.currentUser === 'admin') ? 'Admin' : getGuruPengawasName();
+                t.status = statusBaharu;
+                t.diluluskanOlehNama = namaGuru;
+                t.tarikhDiluluskan = new Date().toISOString();
+                t.catatanKelulusan = catatan;
+                queueDelta('approveKewanganTransaksi', { id: t.id, statusBaharu, catatanKelulusan: catatan, diluluskanOlehNama: namaGuru }, `${statusBaharu} perbelanjaan kewangan`);
+                saveStateToLocal();
+                markUnsynced();
+                renderTransaksiTable();
+                renderKewanganDashboard();
+                showCustomAlert(`Perbelanjaan berjaya ${labelTindakan === 'luluskan' ? 'diluluskan' : 'ditolak'}.`, "success");
+            });
+        }
+
+        function padamTransaksiKewangan(id) {
+            const t = (state.kewanganTransaksi || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!t) return;
+            showCustomConfirm("Padam Transaksi", `Adakah anda pasti untuk memadam transaksi "${t.keterangan || t.kategori}" (RM ${Number(t.jumlah || 0).toFixed(2)}) secara kekal?`, function() {
+                state.kewanganTransaksi = (state.kewanganTransaksi || []).filter(x => normalizeId(x.id) !== normalizeId(id));
+                queueDeleteRecord('kewangan', id, 'Padam rekod kewangan');
+                saveStateToLocal();
+                markUnsynced();
+                renderTransaksiTable();
+                renderKewanganDashboard();
+                showCustomAlert("Transaksi berjaya dipadam.", "success");
+            });
+        }
+
+        // Hanya transaksi berstatus 'Selesai' / 'Diluluskan' dikira ke dlm baki & jumlah --
+        // 'Menunggu Kelulusan' & 'Ditolak' TIDAK menjejaskan baki dipaparkan.
+        function renderKewanganDashboard() {
+            const senarai = state.kewanganTransaksi || [];
+            const dikira = senarai.filter(t => t.status === 'Selesai' || t.status === 'Diluluskan');
+            const tahunSemasa = new Date().getFullYear().toString();
+            const dikiraTahunIni = dikira.filter(t => (t.tarikh || '').startsWith(tahunSemasa));
+
+            const jumlahPendapatanSepanjangMasa = dikira.filter(t => t.jenis === 'Pendapatan').reduce((s, t) => s + Number(t.jumlah || 0), 0);
+            const jumlahPerbelanjaanSepanjangMasa = dikira.filter(t => t.jenis === 'Perbelanjaan').reduce((s, t) => s + Number(t.jumlah || 0), 0);
+            const baki = jumlahPendapatanSepanjangMasa - jumlahPerbelanjaanSepanjangMasa;
+
+            const jumlahPendapatanTahunIni = dikiraTahunIni.filter(t => t.jenis === 'Pendapatan').reduce((s, t) => s + Number(t.jumlah || 0), 0);
+            const jumlahPerbelanjaanTahunIni = dikiraTahunIni.filter(t => t.jenis === 'Perbelanjaan').reduce((s, t) => s + Number(t.jumlah || 0), 0);
+
+            const elBaki = document.getElementById('kw-baki-semasa');
+            const elPendapatan = document.getElementById('kw-jumlah-pendapatan');
+            const elPerbelanjaan = document.getElementById('kw-jumlah-perbelanjaan');
+            if (elBaki) elBaki.textContent = `RM ${baki.toFixed(2)}`;
+            if (elPendapatan) elPendapatan.textContent = `RM ${jumlahPendapatanTahunIni.toFixed(2)}`;
+            if (elPerbelanjaan) elPerbelanjaan.textContent = `RM ${jumlahPerbelanjaanTahunIni.toFixed(2)}`;
+
+            const bilMenunggu = senarai.filter(t => t.status === 'Menunggu Kelulusan').length;
+            const kotakMenunggu = document.getElementById('kw-menunggu-kelulusan-box');
+            const countMenunggu = document.getElementById('kw-menunggu-kelulusan-count');
+            if (kotakMenunggu && countMenunggu) {
+                if (bilMenunggu > 0) { kotakMenunggu.classList.remove('hidden'); countMenunggu.textContent = bilMenunggu; }
+                else { kotakMenunggu.classList.add('hidden'); }
+            }
+
+            const pecahanEl = document.getElementById('kw-pecahan-kategori');
+            if (pecahanEl) {
+                const perbelanjaanIkutKategori = {};
+                dikiraTahunIni.filter(t => t.jenis === 'Perbelanjaan').forEach(t => {
+                    const k = t.kategori || 'Lain-lain';
+                    perbelanjaanIkutKategori[k] = (perbelanjaanIkutKategori[k] || 0) + Number(t.jumlah || 0);
+                });
+                const entri = Object.entries(perbelanjaanIkutKategori).sort((a, b) => b[1] - a[1]);
+                if (entri.length === 0) {
+                    pecahanEl.innerHTML = `<p class="text-xs text-slate-400 italic">Tiada perbelanjaan direkodkan tahun ini.</p>`;
+                } else {
+                    const maksimum = Math.max(...entri.map(e => e[1]));
+                    pecahanEl.innerHTML = entri.map(([kategori, jumlah]) => `
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1"><span>${escapeHtml(kategori)}</span><span>RM ${jumlah.toFixed(2)}</span></div>
+                            <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-brand-blue h-2 rounded-full" style="width:${maksimum > 0 ? (jumlah / maksimum * 100) : 0}%"></div></div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        function printPenyataKewangan() {
+            const senarai = _senaraiKewanganDitapis_().slice().sort((a, b) => new Date(a.tarikh || 0) - new Date(b.tarikh || 0));
+            if (senarai.length === 0) {
+                showCustomAlert("Tiada transaksi untuk dicetak.", "error");
+                return;
+            }
+            let baki = 0;
+            let html = getPrintHeader();
+            html += `<h3 style="text-align:center; text-transform:uppercase; font-weight:bold; margin-bottom:15px; text-decoration:underline;">Penyata Kewangan Pengawas</h3>`;
+            html += `<table style="width:100%; border-collapse:collapse;">
+                <thead><tr>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Tarikh</th>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Keterangan</th>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Status</th>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6; text-align:right;">Pendapatan (RM)</th>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6; text-align:right;">Perbelanjaan (RM)</th>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6; text-align:right;">Baki (RM)</th>
+                </tr></thead><tbody>`;
+            senarai.forEach(t => {
+                if (t.status === 'Selesai' || t.status === 'Diluluskan') {
+                    baki += (t.jenis === 'Pendapatan' ? Number(t.jumlah || 0) : -Number(t.jumlah || 0));
+                }
+                html += `<tr>
+                    <td style="border:1px solid #000; padding:6px;">${t.tarikh ? new Date(t.tarikh).toLocaleDateString('ms-MY') : '-'}</td>
+                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(t.keterangan || t.kategori || '-')}</td>
+                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(t.status)}</td>
+                    <td style="border:1px solid #000; padding:6px; text-align:right;">${t.jenis === 'Pendapatan' ? Number(t.jumlah || 0).toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:6px; text-align:right;">${t.jenis === 'Perbelanjaan' ? Number(t.jumlah || 0).toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">${(t.status === 'Selesai' || t.status === 'Diluluskan') ? baki.toFixed(2) : '-'}</td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            html += `<p style="text-align:right; font-weight:bold; font-size:11pt; margin-top:10px;">BAKI AKHIR: RM ${baki.toFixed(2)}</p>`;
+            html += `<div class="signature-box" style="margin-top:50px;">
+                <div><div class="sig-line">Disediakan Oleh<br>(Majlis Tertinggi Pengawas)</div></div>
+                <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
+            </div>`;
+            executePrint(html, 'portrait');
+        }
+
+        // --- Yuran Pengawas ---
+        function janaSenaraiYuranSesiIni() {
+            const sesiInput = document.getElementById('kw-yuran-sesi-input');
+            const sesiTahun = (sesiInput.value || '').trim() || new Date().getFullYear().toString();
+            const jumlahStr = prompt(`Jumlah yuran dikenakan setiap pengawas bagi sesi/tahun "${sesiTahun}" (RM):`, "10");
+            if (jumlahStr === null) return;
+            const jumlahDikenakan = parseFloat(jumlahStr);
+            if (!jumlahDikenakan || jumlahDikenakan <= 0) { showCustomAlert("Jumlah tidak sah.", "error"); return; }
+
+            const pengawasAktif = (state.pengawas || []).filter(p => isPengawasAktif(p));
+            const sudahAda = new Set((state.yuranPengawas || []).filter(y => y.sesiTahun === sesiTahun).map(y => normalizeId(y.pengawasId)));
+            const rekodBaharu = pengawasAktif.filter(p => !sudahAda.has(normalizeId(p.id))).map(p => ({
+                id: 'YRN-' + p.id + '-' + sesiTahun, pengawasId: p.id, sesiTahun, jumlahDikenakan,
+                status: 'Belum Bayar', tarikhBayar: '', catatan: ''
+            }));
+
+            if (rekodBaharu.length === 0) {
+                showCustomAlert(`Semua pengawas aktif sudah ada rekod yuran bagi sesi/tahun "${sesiTahun}".`, "info");
+                return;
+            }
+            state.yuranPengawas.push(...rekodBaharu);
+            queueDelta('addYuranPengawas', rekodBaharu, 'Jana senarai yuran pengawas');
+            saveStateToLocal();
+            markUnsynced();
+            renderYuranTable();
+            showCustomAlert(`${rekodBaharu.length} rekod yuran berjaya dijana bagi sesi/tahun "${sesiTahun}".`, "success");
+        }
+
+        function renderYuranTable() {
+            const tbody = document.getElementById('table-yuran');
+            if (!tbody) return;
+            const senarai = [...(state.yuranPengawas || [])].sort((a, b) => (b.sesiTahun || '').localeCompare(a.sesiTahun || ''));
+
+            if (senarai.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 text-sm">Tiada rekod yuran. Guna "Jana Senarai Yuran" untuk mula.</td></tr>`;
+                document.getElementById('kw-yuran-patut').textContent = 'RM 0.00';
+                document.getElementById('kw-yuran-terkumpul').textContent = 'RM 0.00';
+                document.getElementById('kw-yuran-baki').textContent = 'RM 0.00';
+                return;
+            }
+
+            let jumlahPatut = 0, jumlahTerkumpul = 0;
+            tbody.innerHTML = senarai.map(y => {
+                const p = (state.pengawas || []).find(x => normalizeId(x.id) === normalizeId(y.pengawasId));
+                jumlahPatut += Number(y.jumlahDikenakan || 0);
+                if (y.status === 'Sudah Bayar') jumlahTerkumpul += Number(y.jumlahDikenakan || 0);
+                const statusBadge = y.status === 'Sudah Bayar' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+                const tindakan = y.status === 'Sudah Bayar'
+                    ? `<button onclick="tandaYuranStatus('${y.id}', 'Belum Bayar')" class="text-xs text-slate-500 hover:text-red-600 font-semibold">Tanda Belum Bayar</button>`
+                    : `<button onclick="tandaYuranStatus('${y.id}', 'Sudah Bayar')" class="text-xs text-white bg-green-600 hover:bg-green-700 px-2.5 py-1 rounded-lg font-semibold">Tanda Sudah Bayar</button>`;
+                return `<tr class="hover:bg-slate-50">
+                    <td class="px-4 py-3 font-semibold">${escapeHtml(p ? p.nama : '-')}</td>
+                    <td class="px-4 py-3">${escapeHtml(p ? p.kelas : '-')}</td>
+                    <td class="px-4 py-3">${escapeHtml(y.sesiTahun || '-')}</td>
+                    <td class="px-4 py-3 text-right">RM ${Number(y.jumlahDikenakan || 0).toFixed(2)}</td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs font-bold ${statusBadge}">${escapeHtml(y.status)}</span></td>
+                    <td class="px-4 py-3 text-xs">${y.tarikhBayar ? new Date(y.tarikhBayar).toLocaleDateString('ms-MY') : '-'}</td>
+                    <td class="px-4 py-3 text-right">${tindakan}</td>
+                </tr>`;
+            }).join('');
+
+            document.getElementById('kw-yuran-patut').textContent = `RM ${jumlahPatut.toFixed(2)}`;
+            document.getElementById('kw-yuran-terkumpul').textContent = `RM ${jumlahTerkumpul.toFixed(2)}`;
+            document.getElementById('kw-yuran-baki').textContent = `RM ${(jumlahPatut - jumlahTerkumpul).toFixed(2)}`;
+        }
+
+        function tandaYuranStatus(id, statusBaharu) {
+            const y = (state.yuranPengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!y) return;
+            y.status = statusBaharu;
+            y.tarikhBayar = statusBaharu === 'Sudah Bayar' ? new Date().toISOString() : '';
+            queueUpdateRecord('yuranPengawas', y, 'Kemaskini status yuran pengawas');
+            saveStateToLocal();
+            markUnsynced();
+            renderYuranTable();
+        }
+
+        function printSenaraiYuran() {
+            const senarai = [...(state.yuranPengawas || [])].sort((a, b) => (b.sesiTahun || '').localeCompare(a.sesiTahun || '') || (a.pengawasId || 0) - (b.pengawasId || 0));
+            if (senarai.length === 0) {
+                showCustomAlert("Tiada rekod yuran untuk dicetak.", "error");
+                return;
+            }
+            let html = getPrintHeader();
+            html += `<h3 style="text-align:center; text-transform:uppercase; font-weight:bold; margin-bottom:15px; text-decoration:underline;">Senarai Yuran Pengawas</h3>`;
+            html += `<table style="width:100%; border-collapse:collapse;">
+                <thead><tr>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Nama</th>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Kelas</th>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Sesi/Tahun</th>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6; text-align:right;">Jumlah (RM)</th>
+                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Status</th>
+                </tr></thead><tbody>`;
+            senarai.forEach(y => {
+                const p = (state.pengawas || []).find(x => normalizeId(x.id) === normalizeId(y.pengawasId));
+                html += `<tr>
+                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(p ? p.nama : '-')}</td>
+                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(p ? p.kelas : '-')}</td>
+                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(y.sesiTahun || '-')}</td>
+                    <td style="border:1px solid #000; padding:6px; text-align:right;">${Number(y.jumlahDikenakan || 0).toFixed(2)}</td>
+                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(y.status)}</td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            html += `<div class="signature-box" style="margin-top:50px;">
+                <div><div class="sig-line">Disediakan Oleh<br>(Majlis Tertinggi Pengawas)</div></div>
+                <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
+            </div>`;
+            executePrint(html, 'portrait');
         }
 
         // =========================================================================
@@ -15539,6 +16152,7 @@
             renderLmAktiviti();
             renderLaAturcara();
             renderLaGambar();
+            kemaskiniKategoriKewangan();
             setupPWA();
         });
 
@@ -16900,6 +17514,8 @@
             }
             if (scriptEl) scriptEl.value = state.settings.scriptUrl;
             if (ambangEl) ambangEl.value = state.settings.ambangDemeritAmaran || 5;
+            const ambangKelulusanEl = document.getElementById('set-ambang-kelulusan');
+            if (ambangKelulusanEl) ambangKelulusanEl.value = state.settings.ambangKelulusanPerbelanjaan || 100;
             if (autoLogoutAktifEl) autoLogoutAktifEl.checked = !!state.settings.autoLogoutEnabled;
             if (autoLogoutJamEl) autoLogoutJamEl.value = state.settings.autoLogoutJam || 2;
             // Lalai AKTIF (tercentang) jika belum pernah ditetapkan -- selaras dgn semakan
