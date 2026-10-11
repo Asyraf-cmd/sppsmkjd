@@ -863,12 +863,33 @@
                     </div>
                 </div>
 
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                    <h4 class="font-bold text-sm mb-1 text-slate-800 flex items-center gap-2"><i class="fas fa-calendar-xmark text-slate-400"></i>Tarikh Tutup Permohonan</h4>
+                    <p class="text-xs text-slate-500 mb-3">Tetapkan tarikh akhir penerimaan permohonan. Tarikh ini diselaraskan terus ke KEDUA-DUA Google Form (Borang Murid & Borang Cadangan Guru): borang dibuka sehingga tarikh itu dan ditutup sendiri pada penghujung hari tersebut. Perubahan sampai ke Google Form selepas data disegerakkan (Push).</p>
+                    <div class="flex flex-wrap items-end gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Tutup pada (hujung hari)</label>
+                            <input type="date" id="permohonan-tarikh-tutup" class="border border-slate-200 p-2 rounded-xl text-sm">
+                        </div>
+                        <button onclick="simpanTarikhTutupPermohonan()" class="bg-brand-blue hover:bg-blue-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-link"></i> Simpan & Selaras ke Google Form</button>
+                        <button onclick="buangTarikhTutupPermohonan()" class="bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-lock-open"></i> Buang Tarikh (Buka Borang)</button>
+                        <button onclick="semakStatusBorangPermohonan()" class="bg-slate-600 hover:bg-slate-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-rotate"></i> Semak Status Borang</button>
+                    </div>
+                    <p class="text-sm font-semibold">Tarikh tutup: <span id="permohonan-tutup-status" class="text-slate-700">Tiada</span></p>
+                    <p id="permohonan-borang-status" class="text-xs text-slate-500 mt-1"></p>
+                </div>
+
                 <div class="flex items-center gap-2 mb-4 flex-wrap">
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Papar Status:</span>
                     <button onclick="tukarPermohonanStatusFilter('Menunggu')" id="permohonan-filter-Menunggu" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-brand-blue text-white border-brand-blue"><i class="fas fa-hourglass-half mr-1"></i>Menunggu</button>
                     <button onclick="tukarPermohonanStatusFilter('Diterima')" id="permohonan-filter-Diterima" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100"><i class="fas fa-user-check mr-1"></i>Diterima</button>
                     <button onclick="tukarPermohonanStatusFilter('Ditolak')" id="permohonan-filter-Ditolak" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100"><i class="fas fa-user-times mr-1"></i>Ditolak</button>
                     <button onclick="tukarPermohonanStatusFilter('Semua')" id="permohonan-filter-Semua" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100"><i class="fas fa-users mr-1"></i>Semua</button>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500 ml-3">Isih:</span>
+                    <select id="permohonan-isih" onchange="tukarIsihPermohonan(this.value)" class="border border-slate-200 px-2 py-1 rounded-lg text-xs bg-white">
+                        <option value="terbaharu">Terbaharu</option>
+                        <option value="skor">Skor temu duga tertinggi</option>
+                    </select>
                 </div>
 
                 <div id="bulk-permohonan-bar" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-sm font-medium">
@@ -893,6 +914,7 @@
                                     <th class="px-4 py-4 font-bold">Tingkatan/Kelas</th>
                                     <th class="px-4 py-4 font-bold">Sumber</th>
                                     <th class="px-4 py-4 font-bold">Tarikh Mohon</th>
+                                    <th class="px-4 py-4 font-bold">Skor Temu Duga</th>
                                     <th class="px-4 py-4 font-bold">Status</th>
                                     <th class="px-4 py-4 text-right font-bold">Tindakan</th>
                                 </tr>
@@ -911,6 +933,25 @@
                         <button onclick="closeModalT('modal-lihat-permohonan')" class="text-slate-400 hover:text-red-600 text-sm px-2" title="Tutup"><i class="fas fa-times"></i></button>
                     </div>
                     <div id="lihat-permohonan-body" class="text-sm text-slate-700 space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- MODAL: Skor Temu Duga Permohonan Pengawas -->
+            <div id="modal-skor-permohonan" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs hidden no-print p-4 modal-transition">
+                <div class="bg-white p-6 rounded-2xl shadow-2xl border-t-8 border-brand-blue w-full max-w-md">
+                    <div class="flex justify-between items-center border-b pb-2 mb-4">
+                        <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i class="fas fa-clipboard-check text-brand-blue"></i>Skor Temu Duga</h4>
+                        <button onclick="closeModalT('modal-skor-permohonan')" class="text-slate-400 hover:text-red-600 text-sm px-2" title="Tutup"><i class="fas fa-times"></i></button>
+                    </div>
+                    <p id="skor-nama-calon" class="text-sm font-bold text-slate-700 mb-3"></p>
+                    <input type="hidden" id="skor-permohonan-id">
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Markah Panel 1 (1-10)</label><input type="number" min="1" max="10" step="0.5" id="skor-p1" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm"></div>
+                        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Markah Panel 2 (1-10)</label><input type="number" min="1" max="10" step="0.5" id="skor-p2" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm"></div>
+                    </div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Catatan Temu Duga (pilihan)</label>
+                    <textarea id="skor-catatan" rows="3" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm mb-4"></textarea>
+                    <button onclick="simpanSkorPermohonan()" class="w-full bg-brand-blue hover:bg-blue-800 text-white py-2.5 rounded-xl font-bold transition"><i class="fas fa-save mr-2"></i>Simpan Skor</button>
                 </div>
             </div>
 
@@ -2504,6 +2545,9 @@
                             <p id="kw-jumlah-perbelanjaan" class="text-3xl font-black text-red-600">RM 0.00</p>
                         </div>
                     </div>
+                    <div id="kw-baki-rendah-box" class="hidden bg-red-50 border border-red-200 rounded-2xl p-4 mb-4">
+                        <p class="text-sm font-bold text-red-700 flex items-center gap-2"><i class="fas fa-triangle-exclamation"></i> <span id="kw-baki-rendah-teks"></span></p>
+                    </div>
                     <div id="kw-menunggu-kelulusan-box" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
                         <p class="text-sm font-bold text-amber-800 flex items-center gap-2"><i class="fas fa-hourglass-half"></i> <span id="kw-menunggu-kelulusan-count">0</span> perbelanjaan sedang menunggu kelulusan guru</p>
                     </div>
@@ -2561,6 +2605,7 @@
                         <button onclick="tukarKewanganFilter('Pendapatan')" id="kw-filter-Pendapatan" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100">Pendapatan</button>
                         <button onclick="tukarKewanganFilter('Perbelanjaan')" id="kw-filter-Perbelanjaan" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100">Perbelanjaan</button>
                         <button onclick="tukarKewanganFilter('Menunggu Kelulusan')" id="kw-filter-MenungguKelulusan" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100">Menunggu Kelulusan</button>
+                        <button onclick="tukarKewanganFilter('Dibatalkan')" id="kw-filter-Dibatalkan" class="px-3 py-1 rounded-full text-xs font-bold border transition bg-white text-slate-500 border-slate-200 hover:bg-slate-100">Dibatalkan</button>
                     </div>
 
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
@@ -2590,6 +2635,10 @@
                             <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Sesi/Tahun:</label>
                             <input type="text" id="kw-yuran-sesi-input" class="border border-slate-200 p-2 rounded-xl text-sm w-28" placeholder="cth: 2026">
                             <button onclick="janaSenaraiYuranSesiIni()" class="bg-brand-green hover:bg-green-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-magic"></i> Jana Senarai Yuran</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Papar Sesi/Tahun:</label>
+                            <select id="kw-yuran-filter-sesi" onchange="renderYuranTable()" class="border border-slate-200 p-2 rounded-xl text-sm bg-white"></select>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -2640,10 +2689,24 @@
                             </div>
                             <div class="flex flex-wrap gap-2 ml-auto">
                                 <button onclick="printPenyataKewangan()" class="bg-slate-700 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Penyata Kewangan</button>
+                                <button onclick="eksportPenyataExcel()" class="bg-green-700 hover:bg-green-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-file-excel"></i> Eksport Excel</button>
                                 <button onclick="printSenaraiYuran()" class="bg-slate-700 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> Cetak Senarai Yuran</button>
                             </div>
                         </div>
-                        <p class="text-[11px] text-slate-400 mt-3"><i class="fas fa-info-circle mr-1"></i>Hanya transaksi berstatus Selesai/Diluluskan dikira. Perbelanjaan yang masih menunggu kelulusan atau ditolak tidak dimasukkan dalam penyata.</p>
+                        <p class="text-[11px] text-slate-400 mt-3"><i class="fas fa-info-circle mr-1"></i>Hanya transaksi berstatus Selesai/Diluluskan dikira. Perbelanjaan yang masih menunggu kelulusan, ditolak atau dibatalkan tidak dimasukkan dalam penyata.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                        <h4 class="font-bold text-sm mb-1 text-slate-800 flex items-center gap-2"><i class="fas fa-lock text-slate-400"></i>Kunci Kewangan (Tutup Bulan)</h4>
+                        <p class="text-xs text-slate-500 mb-3">Selepas penyata sesuatu bulan disahkan, kunci kewangan supaya transaksi bulan itu (dan sebelumnya) tidak boleh ditambah, dibatalkan atau dipadam lagi.</p>
+                        <p class="text-sm font-semibold mb-3">Status: <span id="kw-kunci-status" class="text-slate-700">Tiada kunci</span></p>
+                        <div class="flex flex-wrap items-end gap-3">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Kunci sehingga akhir bulan</label>
+                                <input type="month" id="kw-kunci-bulan" class="border border-slate-200 p-2 rounded-xl text-sm">
+                            </div>
+                            <button onclick="kunciKewanganBulan()" class="bg-slate-700 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-lock"></i> Kunci</button>
+                            <button onclick="bukaKunciKewangan()" class="admin-only-block bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-lock-open"></i> Buka Kunci (Admin)</button>
+                        </div>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
@@ -3056,6 +3119,15 @@
                             <input type="number" id="set-ambang-kelulusan" min="1" step="1" class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm bg-slate-50" placeholder="100">
                         </div>
                         <button onclick="saveSettings('ambangKelulusan')" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2.5 px-4 rounded-xl transition shadow-md shadow-blue-900/10 active:scale-98 self-end mt-4">Simpan Ambang</button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 admin-only-block flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-base text-slate-800 mb-4 border-b border-slate-100 pb-2 flex items-center gap-2"><i class="fas fa-triangle-exclamation text-amber-500"></i>Amaran Baki Kewangan Rendah</h3>
+                            <p class="text-[11px] text-slate-500 mb-3">Dashboard Kewangan memaparkan amaran apabila baki semasa kurang daripada jumlah ini (RM). Letak 0 untuk matikan amaran.</p>
+                            <input type="number" id="set-ambang-bakirendah" min="0" step="1" class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm bg-slate-50" placeholder="50">
+                        </div>
+                        <button onclick="saveSettings('ambangBakiRendah')" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2.5 px-4 rounded-xl transition shadow-md shadow-blue-900/10 active:scale-98 self-end mt-4">Simpan Ambang</button>
                     </div>
 
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 admin-only-block flex flex-col justify-between">
@@ -6214,6 +6286,9 @@
             return {
                 ambangDemeritAmaran: state.settings.ambangDemeritAmaran || 5,
                 ambangKelulusanPerbelanjaan: state.settings.ambangKelulusanPerbelanjaan || 100,
+                ambangBakiRendah: (state.settings.ambangBakiRendah === undefined || state.settings.ambangBakiRendah === null) ? 50 : Number(state.settings.ambangBakiRendah),
+                kunciKewanganSehingga: state.settings.kunciKewanganSehingga || '',
+                tarikhTutupPermohonan: state.settings.tarikhTutupPermohonan || '',
                 logoUrl: state.settings.logoUrl || '',
                 aksesTab: state.settings.aksesTab || getDefaultAksesTab(),
                 jawatanPengawasPetangList: getJawatanPengawasList('Petang'),
@@ -6307,6 +6382,12 @@
                 if (remoteState.sharedSettings.ambangKelulusanPerbelanjaan) {
                     state.settings.ambangKelulusanPerbelanjaan = remoteState.sharedSettings.ambangKelulusanPerbelanjaan;
                 }
+                if (remoteState.sharedSettings.ambangBakiRendah !== undefined && remoteState.sharedSettings.ambangBakiRendah !== null) {
+                    state.settings.ambangBakiRendah = Number(remoteState.sharedSettings.ambangBakiRendah);
+                }
+                // Kunci kewangan: sentiasa ikut pelayan (termasuk nilai kosong = tidak dikunci)
+                state.settings.kunciKewanganSehingga = remoteState.sharedSettings.kunciKewanganSehingga || '';
+                state.settings.tarikhTutupPermohonan = remoteState.sharedSettings.tarikhTutupPermohonan || '';
                 if (remoteState.sharedSettings.logoUrl) {
                     state.settings.logoUrl = remoteState.sharedSettings.logoUrl;
                 }
@@ -6950,6 +7031,18 @@
                 saveStateToLocal();
                 markUnsynced();
                 showCustomAlert("Ambang kelulusan perbelanjaan berjaya dikemaskini. Tekan 'Push' untuk kongsikan tetapan ini ke semua peranti lain.", "success");
+            } else if (type === 'ambangBakiRendah') {
+                const val = parseFloat(document.getElementById('set-ambang-bakirendah').value);
+                if (isNaN(val) || val < 0) {
+                    showCustomAlert("Sila masukkan jumlah yang sah (0 atau lebih).", "error");
+                    return;
+                }
+                state.settings.ambangBakiRendah = val;
+                queueDelta('updateSettings', { kunci: 'sharedSettings', nilai: buildSharedSettingsPayload() }, 'Kemaskini ambang amaran baki kewangan rendah');
+                saveStateToLocal();
+                markUnsynced();
+                renderKewanganDashboard();
+                showCustomAlert("Ambang amaran baki berjaya dikemaskini. Tekan 'Push' untuk kongsikan tetapan ini ke semua peranti lain.", "success");
             } else if (type === 'autologout') {
                 const aktif = document.getElementById('set-autologout-aktif').checked;
                 const jam = parseFloat(document.getElementById('set-autologout-jam').value);
@@ -7851,6 +7944,7 @@
             if (tabId === 'permohonan-pengawas') {
                 renderPermohonanPrintButton(_permohonanStatusFilter);
                 renderPermohonanPengawas();
+                renderTarikhTutupPermohonanUI(true);
             }
             if (tabId === 'kewangan') {
                 kemaskiniKategoriKewangan();
@@ -9800,12 +9894,131 @@
             cont.innerHTML = `<button onclick="printSenaraiPermohonanIkutStatus('${status}')" class="${konfig.warna} text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-print"></i> ${konfig.label}</button>`;
         }
 
+        // --- Tarikh Tutup Permohonan (diselaraskan ke Google Form oleh pelayan) ---
+        function renderTarikhTutupPermohonanUI(isiInput) {
+            const t = (state.settings && state.settings.tarikhTutupPermohonan) || '';
+            const inp = document.getElementById('permohonan-tarikh-tutup');
+            if (inp && isiInput) inp.value = t;
+            const el = document.getElementById('permohonan-tutup-status');
+            if (el) {
+                el.textContent = t ? new Date(t).toLocaleDateString('ms-MY') + ' (penghujung hari)' : 'Tiada (borang dibuka tanpa had)';
+                el.className = t ? 'text-amber-700' : 'text-slate-700';
+            }
+        }
+
+        function simpanTarikhTutupPermohonan() {
+            const tarikh = document.getElementById('permohonan-tarikh-tutup').value;
+            if (!tarikh) { showCustomAlert("Sila pilih tarikh tutup.", "error"); return; }
+            const sudahLepas = tarikh < getRealTimeTodayStr();
+            const mesej = sudahLepas
+                ? `Tarikh ${new Date(tarikh).toLocaleDateString('ms-MY')} sudah berlalu. Borang akan DITUTUP SERTA-MERTA selepas disegerakkan. Teruskan?`
+                : `Borang akan ditutup pada penghujung ${new Date(tarikh).toLocaleDateString('ms-MY')}. Teruskan?`;
+            showCustomConfirm("Tarikh Tutup Permohonan", mesej, function() {
+                state.settings.tarikhTutupPermohonan = tarikh;
+                queueDelta('tetapTarikhTutupPermohonan', { tarikh }, 'Tetapkan tarikh tutup permohonan pengawas');
+                saveStateToLocal(); markUnsynced();
+                renderTarikhTutupPermohonanUI(false);
+                showCustomAlert("Tarikh disimpan. Ia akan diselaraskan ke Google Form apabila data disegerakkan (Push).", "success");
+            });
+        }
+
+        function buangTarikhTutupPermohonan() {
+            showCustomConfirm("Buang Tarikh Tutup", "Buang tarikh tutup dan BUKA semula kedua-dua borang (selepas disegerakkan)?", function() {
+                state.settings.tarikhTutupPermohonan = '';
+                document.getElementById('permohonan-tarikh-tutup').value = '';
+                queueDelta('tetapTarikhTutupPermohonan', { tarikh: '' }, 'Buang tarikh tutup permohonan pengawas');
+                saveStateToLocal(); markUnsynced();
+                renderTarikhTutupPermohonanUI(false);
+                showCustomAlert("Tarikh tutup dibuang. Borang akan dibuka apabila data disegerakkan (Push).", "success");
+            });
+        }
+
+        async function semakStatusBorangPermohonan() {
+            const el = document.getElementById('permohonan-borang-status');
+            const scriptUrl = state.settings.scriptUrl;
+            if (!scriptUrl || !state.sessionToken) { showCustomAlert("Sambungan ke Google Sheets/sesi log masuk tidak tersedia.", "error"); return; }
+            if (el) el.textContent = 'Menyemak status borang di Google Form...';
+            try {
+                const res = await fetch(`${scriptUrl}?action=statusBorangPermohonan&token=${encodeURIComponent(state.sessionToken)}`);
+                const data = await res.json();
+                if (data.status !== 'success') { if (el) el.textContent = ''; showCustomAlert(data.message || "Gagal menyemak status borang.", "error"); return; }
+                if (!data.borang.length) { if (el) el.textContent = 'Tiada borang dijumpai di Google Drive (semak nama borang).'; return; }
+                if (el) el.innerHTML = data.borang.map(b => `${escapeHtml(b.nama)}: <b class="${b.menerima ? 'text-green-700' : 'text-red-700'}">${b.menerima ? 'MENERIMA permohonan' : 'DITUTUP'}</b>`).join(' &nbsp;|&nbsp; ')
+                    + (data.penutupanDijadualkan ? ' &nbsp;|&nbsp; Penutupan automatik: <b>dijadualkan</b>' : '');
+            } catch (err) {
+                if (el) el.textContent = '';
+                showCustomAlert("Ralat sambungan: " + err.message, "error");
+            }
+        }
+
+        let _permohonanIsih = 'terbaharu';
+        function tukarIsihPermohonan(nilai) { _permohonanIsih = nilai; renderPermohonanPengawas(); }
+
+        // Purata markah panel (hanya panel yg diisi); null jika belum dinilai.
+        function _purataSkorPermohonan_(m) {
+            const nilai = [m.markahPanel1, m.markahPanel2].filter(v => v !== undefined && v !== null && v !== '' && !isNaN(Number(v))).map(Number);
+            return nilai.length ? nilai.reduce((a, b) => a + b, 0) / nilai.length : null;
+        }
+
+        // Semakan pendua: IC sama (>=10 digit) ATAU nama sama + kelas sama dgn pengawas sedia ada;
+        // atau IC/nama sama dgn permohonan lain yg belum ditolak. Dikira semasa paparan (sentiasa terkini).
+        function _digitIC_(ic) { return String(ic || '').replace(/\D/g, ''); }
+        function _normNama_(n) { return String(n || '').toUpperCase().replace(/\s+/g, ' ').trim(); }
+        function cariPenduaPermohonan(m) {
+            const ic = _digitIC_(m.ic), nama = _normNama_(m.nama), hasil = [];
+            (state.pengawas || []).forEach(p => {
+                const sama = (ic.length >= 10 && _digitIC_(p.ic) === ic) ||
+                    (nama && _normNama_(p.nama) === nama && String(p.kelas || '').toUpperCase() === String(m.kelas || '').toUpperCase());
+                if (sama) hasil.push(`pengawas sedia ada "${p.nama}" (${isPengawasAktif(p) ? 'aktif' : 'tidak aktif'})`);
+            });
+            (state.permohonanPengawas || []).forEach(o => {
+                if (normalizeId(o.id) === normalizeId(m.id) || o.status === 'Ditolak') return;
+                const sama = (ic.length >= 10 && _digitIC_(o.ic) === ic) ||
+                    (nama && _normNama_(o.nama) === nama && String(o.tingkatan || '') === String(m.tingkatan || ''));
+                if (sama) hasil.push(`permohonan lain (${o.sumber || 'Sendiri'}, ${o.status || 'Menunggu'})`);
+            });
+            return hasil.join('; ');
+        }
+
+        function bukaSkorPermohonan(id) {
+            const m = (state.permohonanPengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!m) return;
+            document.getElementById('skor-permohonan-id').value = m.id;
+            document.getElementById('skor-nama-calon').textContent = `${m.nama || '-'} (${(m.tingkatan || '')} ${(m.kelas || '')})`;
+            document.getElementById('skor-p1').value = (m.markahPanel1 === undefined || m.markahPanel1 === null) ? '' : m.markahPanel1;
+            document.getElementById('skor-p2').value = (m.markahPanel2 === undefined || m.markahPanel2 === null) ? '' : m.markahPanel2;
+            document.getElementById('skor-catatan').value = m.catatanTemuDuga || '';
+            openModalT('modal-skor-permohonan');
+        }
+
+        function simpanSkorPermohonan() {
+            const m = (state.permohonanPengawas || []).find(x => normalizeId(x.id) === normalizeId(document.getElementById('skor-permohonan-id').value));
+            if (!m) return;
+            const baca = id => { const v = document.getElementById(id).value.trim(); return v === '' ? '' : Number(v); };
+            const p1 = baca('skor-p1'), p2 = baca('skor-p2');
+            for (const v of [p1, p2]) {
+                if (v !== '' && (isNaN(v) || v < 1 || v > 10)) { showCustomAlert("Markah mesti antara 1 hingga 10.", "error"); return; }
+            }
+            m.markahPanel1 = p1;
+            m.markahPanel2 = p2;
+            m.catatanTemuDuga = document.getElementById('skor-catatan').value.trim();
+            queueUpdateRecord('permohonanPengawas', m, 'Kemaskini skor temu duga permohonan');
+            saveStateToLocal(); markUnsynced();
+            closeModalT('modal-skor-permohonan');
+            renderPermohonanPengawas();
+            showCustomAlert("Skor temu duga disimpan.", "success");
+        }
+
         function _senaraiPermohonanDitapis_() {
             let senarai = [...(state.permohonanPengawas || [])];
             if (_permohonanStatusFilter !== 'Semua') {
                 senarai = senarai.filter(m => (m.status || 'Menunggu') === _permohonanStatusFilter);
             }
-            senarai.sort((a, b) => new Date(b.tarikhMohon || 0) - new Date(a.tarikhMohon || 0));
+            if (_permohonanIsih === 'skor') {
+                senarai.sort((a, b) => (_purataSkorPermohonan_(b) ?? -1) - (_purataSkorPermohonan_(a) ?? -1) || new Date(b.tarikhMohon || 0) - new Date(a.tarikhMohon || 0));
+            } else {
+                senarai.sort((a, b) => new Date(b.tarikhMohon || 0) - new Date(a.tarikhMohon || 0));
+            }
             return senarai;
         }
 
@@ -9815,7 +10028,7 @@
             const senarai = _senaraiPermohonanDitapis_();
 
             if (senarai.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 text-sm">Tiada permohonan${_permohonanStatusFilter === 'Semua' ? '' : ` berstatus "${escapeHtml(_permohonanStatusFilter)}"`} buat masa ini.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400 text-sm">Tiada permohonan${_permohonanStatusFilter === 'Semua' ? '' : ` berstatus "${escapeHtml(_permohonanStatusFilter)}"`} buat masa ini.</td></tr>`;
                 return;
             }
 
@@ -9824,16 +10037,22 @@
                 const status = m.status || 'Menunggu';
                 const sumberBadge = m.sumber === 'Cadangan Guru' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700';
                 const tarikhPaparan = m.tarikhMohon ? new Date(m.tarikhMohon).toLocaleDateString('ms-MY') : '-';
+                const dup = status === 'Menunggu' ? cariPenduaPermohonan(m) : '';
+                const purata = _purataSkorPermohonan_(m);
+                const sel_skor = purata === null ? '<span class="text-xs text-slate-300">Belum dinilai</span>'
+                    : `<span class="font-bold text-slate-700">${purata.toFixed(1)}</span> <span class="text-[10px] text-slate-400">(${m.markahPanel1 === '' || m.markahPanel1 === undefined ? '-' : m.markahPanel1} / ${m.markahPanel2 === '' || m.markahPanel2 === undefined ? '-' : m.markahPanel2})</span>`;
                 const tindakan = status === 'Menunggu'
-                    ? `<button onclick="lantikPermohonanPengawas('${m.id}')" class="text-green-600 hover:text-green-800 mr-3" title="Lantik sebagai Pengawas"><i class="fas fa-user-check"></i></button>
+                    ? `<button onclick="bukaSkorPermohonan('${m.id}')" class="text-brand-blue hover:text-blue-800 mr-3" title="Isi/kemaskini skor temu duga"><i class="fas fa-clipboard-check"></i></button>
+                       <button onclick="lantikPermohonanPengawas('${m.id}')" class="text-green-600 hover:text-green-800 mr-3" title="Lantik sebagai Pengawas"><i class="fas fa-user-check"></i></button>
                        <button onclick="tolakPermohonanPengawas('${m.id}')" class="text-red-600 hover:text-red-800 mr-3" title="Tolak"><i class="fas fa-user-times"></i></button>`
                     : `<span class="text-xs text-slate-400 italic mr-3">${status === 'Diterima' ? 'Sudah Dilantik' : 'Ditolak'}</span>`;
                 return `<tr class="hover:bg-slate-50">
                     <td class="px-4 py-3 text-center"><input type="checkbox" name="permohonan-select" value="${m.id}" onchange="updateBulkBar('permohonan')"></td>
-                    <td class="px-4 py-3 font-semibold text-brand-blue hover:underline cursor-pointer" onclick="lihatButiranPermohonan('${m.id}')">${escapeHtml(m.nama || '-')}</td>
+                    <td class="px-4 py-3 font-semibold text-brand-blue hover:underline cursor-pointer" onclick="lihatButiranPermohonan('${m.id}')">${escapeHtml(m.nama || '-')}${dup ? ` <span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold" title="${escapeHtml('Kemungkinan pendua: ' + dup)}"><i class="fas fa-triangle-exclamation"></i> Pendua?</span>` : ''}</td>
                     <td class="px-4 py-3">${escapeHtml(m.tingkatan || '')} ${escapeHtml(m.kelas || '')}</td>
                     <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs font-bold ${sumberBadge}">${escapeHtml(m.sumber || 'Sendiri')}</span></td>
                     <td class="px-4 py-3 text-xs">${tarikhPaparan}</td>
+                    <td class="px-4 py-3">${sel_skor}</td>
                     <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs font-bold ${badgeStatus[status] || 'bg-slate-100 text-slate-600'}">${escapeHtml(status)}</span></td>
                     <td class="px-4 py-3 text-right">${tindakan}<button onclick="padamPermohonanPengawas('${m.id}')" class="text-slate-400 hover:text-red-600 ml-2" title="Padam Rekod"><i class="fas fa-trash-alt"></i></button></td>
                 </tr>`;
@@ -9863,6 +10082,17 @@
         }
 
         function lantikPermohonanPengawas(id) {
+            const m = (state.permohonanPengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!m) return;
+            const dup = cariPenduaPermohonan(m);
+            if (dup) {
+                showCustomConfirm("Kemungkinan Pendua", `"${m.nama}" mungkin pendua: ${dup}. Teruskan lantik juga?`, function() { _mulaLantikPermohonan_(id); });
+                return;
+            }
+            _mulaLantikPermohonan_(id);
+        }
+
+        function _mulaLantikPermohonan_(id) {
             const m = (state.permohonanPengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
             if (!m) return;
             openDaftarModal(); // ini set _permohonanIdSedangDilantik = null dahulu -- kekalkan urutan ini
@@ -9982,6 +10212,8 @@
                             <th style="width:70px;">Kelas</th>
                             <th style="width:90px;">Sumber</th>
                             <th style="width:110px;">Jumlah Demerit Terkumpul</th>
+                            <th style="width:60px;">Markah P1</th>
+                            <th style="width:60px;">Markah P2</th>
                             <th>Catatan Panel 1</th>
                             <th>Catatan Panel 2</th>
                         </tr>
@@ -9994,6 +10226,8 @@
                         <td>${escapeHtml(m.ic) || '-'}</td>
                         <td>${escapeHtml(m.kelas) || '-'}</td>
                         <td>${escapeHtml(m.sumber || 'Sendiri')}</td>
+                        <td style="height:55px;">&nbsp;</td>
+                        <td style="height:55px;">&nbsp;</td>
                         <td style="height:55px;">&nbsp;</td>
                         <td style="height:55px; min-width:140px;">&nbsp;</td>
                         <td style="height:55px; min-width:140px;">&nbsp;</td>
@@ -10055,6 +10289,7 @@
                             <th style="width:70px;">Kelas</th>
                             <th style="width:90px;">Sumber</th>
                             <th style="width:85px;">Tarikh Mohon</th>
+                            <th style="width:60px;">Skor</th>
                             ${status === 'Diterima' ? '<th style="width:110px;">ID Pengawas Dilantik</th>' : '<th>Sebab Memohon/Dicadangkan</th>'}
                         </tr>
                     </thead>
@@ -10071,6 +10306,7 @@
                         <td>${escapeHtml(m.kelas) || '-'}</td>
                         <td>${escapeHtml(m.sumber || 'Sendiri')}</td>
                         <td>${tarikhPaparan}</td>
+                        <td>${_purataSkorPermohonan_(m) === null ? '-' : _purataSkorPermohonan_(m).toFixed(1)}</td>
                         <td>${lajurAkhir}</td>
                     </tr>`;
                 });
@@ -10148,6 +10384,7 @@
             const jumlah = parseFloat(document.getElementById('kw-jumlah').value);
             if (!tarikh) { showCustomAlert("Sila isi Tarikh.", "error"); return; }
             if (!jumlah || jumlah <= 0) { showCustomAlert("Sila isi Jumlah (RM) yang sah.", "error"); return; }
+            if (kewanganTerkunci(tarikh)) { showCustomAlert("Tarikh ini berada dalam tempoh yang telah dikunci. Pilih tarikh selepas tempoh kunci.", "error"); return; }
 
             const ambang = (state.settings && state.settings.ambangKelulusanPerbelanjaan) || 100;
             // NOTA: status di sini cuma ANGGARAN papar segera (UX) -- pelayan akan kira
@@ -10174,8 +10411,14 @@
             showCustomAlert(statusAwal === 'Menunggu Kelulusan' ? "Transaksi disimpan -- menunggu kelulusan guru." : "Transaksi berjaya disimpan.", "success");
         }
 
+        function kewanganTerkunci(tarikh) {
+            const k = (state.settings && state.settings.kunciKewanganSehingga) || '';
+            const t = String(tarikh || '').slice(0, 10);
+            return !!k && !!t && t <= k;
+        }
+
         let _kewanganFilter = 'Semua';
-        const KW_FILTER_SLUG_ = { 'Semua': 'Semua', 'Pendapatan': 'Pendapatan', 'Perbelanjaan': 'Perbelanjaan', 'Menunggu Kelulusan': 'MenungguKelulusan' };
+        const KW_FILTER_SLUG_ = { 'Semua': 'Semua', 'Pendapatan': 'Pendapatan', 'Perbelanjaan': 'Perbelanjaan', 'Menunggu Kelulusan': 'MenungguKelulusan', 'Dibatalkan': 'Dibatalkan' };
         function tukarKewanganFilter(status) {
             _kewanganFilter = status;
             Object.keys(KW_FILTER_SLUG_).forEach(s => {
@@ -10196,8 +10439,8 @@
             let senarai = [...(state.kewanganTransaksi || [])];
             if (_kewanganFilter === 'Pendapatan' || _kewanganFilter === 'Perbelanjaan') {
                 senarai = senarai.filter(t => t.jenis === _kewanganFilter);
-            } else if (_kewanganFilter === 'Menunggu Kelulusan') {
-                senarai = senarai.filter(t => t.status === 'Menunggu Kelulusan');
+            } else if (_kewanganFilter === 'Menunggu Kelulusan' || _kewanganFilter === 'Dibatalkan') {
+                senarai = senarai.filter(t => t.status === _kewanganFilter);
             }
             senarai.sort((a, b) => new Date(b.tarikh || 0) - new Date(a.tarikh || 0));
             return senarai;
@@ -10213,16 +10456,22 @@
                 tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 text-sm">Tiada transaksi direkodkan.</td></tr>`;
                 return;
             }
-            const badgeStatus = { 'Selesai': 'bg-green-100 text-green-700', 'Menunggu Kelulusan': 'bg-amber-100 text-amber-700', 'Diluluskan': 'bg-green-100 text-green-700', 'Ditolak': 'bg-red-100 text-red-700' };
+            const badgeStatus = { 'Selesai': 'bg-green-100 text-green-700', 'Menunggu Kelulusan': 'bg-amber-100 text-amber-700', 'Diluluskan': 'bg-green-100 text-green-700', 'Ditolak': 'bg-red-100 text-red-700', 'Dibatalkan': 'bg-slate-200 text-slate-600' };
             tbody.innerHTML = senarai.map(t => {
-                const warnaJumlah = t.jenis === 'Pendapatan' ? 'text-green-600' : 'text-red-600';
+                const warnaJumlah = (t.status === 'Dibatalkan' || t.status === 'Ditolak') ? 'text-slate-400 line-through' : (t.jenis === 'Pendapatan' ? 'text-green-600' : 'text-red-600');
                 const tandaJumlah = t.jenis === 'Pendapatan' ? '+' : '-';
                 let tindakan = `<button onclick="lihatButiranTransaksi('${t.id}')" class="text-slate-400 hover:text-brand-blue mr-2" title="Lihat Butiran"><i class="fas fa-eye"></i></button>`;
                 if (t.status === 'Menunggu Kelulusan' && bolehLuluskan) {
                     tindakan += `<button onclick="luluskanTransaksi('${t.id}')" class="text-green-600 hover:text-green-800 mr-2" title="Luluskan"><i class="fas fa-check-circle"></i></button>
                                  <button onclick="tolakTransaksi('${t.id}')" class="text-red-600 hover:text-red-800 mr-2" title="Tolak"><i class="fas fa-times-circle"></i></button>`;
                 }
-                tindakan += `<button onclick="padamTransaksiKewangan('${t.id}')" class="text-slate-400 hover:text-red-600" title="Padam"><i class="fas fa-trash-alt"></i></button>`;
+                if (kewanganTerkunci(t.tarikh)) {
+                    tindakan += `<span class="text-slate-300" title="Tempoh ini telah dikunci"><i class="fas fa-lock"></i></span>`;
+                } else if (t.status === 'Selesai' || t.status === 'Diluluskan') {
+                    tindakan += `<button onclick="batalkanTransaksi('${t.id}')" class="text-slate-400 hover:text-amber-600" title="Batalkan (rekod kekal untuk audit)"><i class="fas fa-ban"></i></button>`;
+                } else {
+                    tindakan += `<button onclick="padamTransaksiKewangan('${t.id}')" class="text-slate-400 hover:text-red-600" title="Padam"><i class="fas fa-trash-alt"></i></button>`;
+                }
                 return `<tr class="hover:bg-slate-50">
                     <td class="px-4 py-3 text-xs">${t.tarikh ? new Date(t.tarikh).toLocaleDateString('ms-MY') : '-'}</td>
                     <td class="px-4 py-3">${escapeHtml(t.jenis)}</td>
@@ -10244,6 +10493,9 @@
                 mesej += `\n\n${t.status} Oleh: ${t.diluluskanOlehNama || '-'}\nTarikh: ${t.tarikhDiluluskan ? new Date(t.tarikhDiluluskan).toLocaleString('ms-MY') : '-'}`;
                 if (t.catatanKelulusan) mesej += `\nCatatan: ${t.catatanKelulusan}`;
             }
+            if (t.status === 'Dibatalkan') {
+                mesej += `\n\nDibatalkan Oleh: ${t.dibatalkanOlehNama || '-'}\nTarikh: ${t.tarikhBatal ? new Date(t.tarikhBatal).toLocaleString('ms-MY') : '-'}\nSebab: ${t.sebabBatal || '-'}`;
+            }
             alert(mesej);
         }
 
@@ -10259,7 +10511,7 @@
             const labelTindakan = statusBaharu === 'Diluluskan' ? 'luluskan' : 'tolak';
             showCustomConfirm(`${statusBaharu} Perbelanjaan`, `Adakah anda pasti untuk ${labelTindakan} perbelanjaan "${t.keterangan || t.kategori}" (RM ${Number(t.jumlah || 0).toFixed(2)})?`, function() {
                 const catatan = statusBaharu === 'Ditolak' ? (prompt('Catatan (pilihan) -- sebab penolakan:') || '') : '';
-                const namaGuru = (state.currentUser === 'admin') ? 'Admin' : getGuruPengawasName();
+                const namaGuru = getCurrentActorLabel();
                 t.status = statusBaharu;
                 t.diluluskanOlehNama = namaGuru;
                 t.tarikhDiluluskan = new Date().toISOString();
@@ -10273,9 +10525,40 @@
             });
         }
 
+        function batalkanTransaksi(id) {
+            const t = (state.kewanganTransaksi || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!t) return;
+            if (kewanganTerkunci(t.tarikh)) { showCustomAlert("Transaksi ini berada dalam tempoh yang telah dikunci.", "error"); return; }
+            showCustomConfirm("Batalkan Transaksi", `Batalkan transaksi "${t.keterangan || t.kategori}" (RM ${Number(t.jumlah || 0).toFixed(2)})? Rekod KEKAL dalam sistem untuk audit tetapi tidak lagi dikira dalam baki/penyata.`, function() {
+                const sebab = (prompt('Sebab pembatalan (wajib):') || '').trim();
+                if (!sebab) { showCustomAlert("Sebab pembatalan diperlukan.", "error"); return; }
+                t.status = 'Dibatalkan';
+                t.sebabBatal = sebab;
+                t.tarikhBatal = new Date().toISOString();
+                t.dibatalkanOlehNama = getCurrentActorLabel();
+                queueDelta('batalKewanganTransaksi', { id: t.id, sebab, dibatalkanOlehNama: t.dibatalkanOlehNama }, 'Batalkan transaksi kewangan');
+                // Jika transaksi ini dijana drpd bayaran yuran, kembalikan yuran itu ke 'Belum Bayar'
+                if (t.rujukanYuranId) {
+                    const y = (state.yuranPengawas || []).find(x => normalizeId(x.id) === normalizeId(t.rujukanYuranId));
+                    if (y && y.status === 'Sudah Bayar' && y.transaksiId === t.id) {
+                        y.status = 'Belum Bayar'; y.tarikhBayar = ''; y.transaksiId = '';
+                        queueUpdateRecord('yuranPengawas', y, 'Yuran dikembalikan ke Belum Bayar (transaksi dibatalkan)');
+                    }
+                }
+                saveStateToLocal();
+                markUnsynced();
+                renderTransaksiTable();
+                renderKewanganDashboard();
+                renderYuranTable();
+                showCustomAlert("Transaksi berjaya dibatalkan.", "success");
+            });
+        }
+
         function padamTransaksiKewangan(id) {
             const t = (state.kewanganTransaksi || []).find(x => normalizeId(x.id) === normalizeId(id));
             if (!t) return;
+            if (kewanganTerkunci(t.tarikh)) { showCustomAlert("Transaksi ini berada dalam tempoh yang telah dikunci.", "error"); return; }
+            if (t.status === 'Selesai' || t.status === 'Diluluskan') { showCustomAlert("Transaksi yang sudah sah tidak boleh dipadam. Guna butang Batalkan.", "error"); return; }
             showCustomConfirm("Padam Transaksi", `Adakah anda pasti untuk memadam transaksi "${t.keterangan || t.kategori}" (RM ${Number(t.jumlah || 0).toFixed(2)}) secara kekal?`, function() {
                 state.kewanganTransaksi = (state.kewanganTransaksi || []).filter(x => normalizeId(x.id) !== normalizeId(id));
                 queueDeleteRecord('kewangan', id, 'Padam rekod kewangan');
@@ -10309,6 +10592,16 @@
             if (elPendapatan) elPendapatan.textContent = `RM ${jumlahPendapatanTahunIni.toFixed(2)}`;
             if (elPerbelanjaan) elPerbelanjaan.textContent = `RM ${jumlahPerbelanjaanTahunIni.toFixed(2)}`;
             renderPenyataKewangan(); // segarkan subtab Penyata Kewangan sama setiap kali data kewangan berubah
+
+            const ambangBaki = (state.settings && state.settings.ambangBakiRendah !== undefined && state.settings.ambangBakiRendah !== null) ? Number(state.settings.ambangBakiRendah) : 50;
+            const kotakBaki = document.getElementById('kw-baki-rendah-box');
+            const teksBaki = document.getElementById('kw-baki-rendah-teks');
+            if (kotakBaki && teksBaki) {
+                if (ambangBaki > 0 && baki < ambangBaki) {
+                    teksBaki.textContent = `Baki semasa (RM ${baki.toFixed(2)}) kurang daripada ambang amaran RM ${ambangBaki.toFixed(2)}.`;
+                    kotakBaki.classList.remove('hidden');
+                } else { kotakBaki.classList.add('hidden'); }
+            }
 
             const bilMenunggu = senarai.filter(t => t.status === 'Menunggu Kelulusan').length;
             const kotakMenunggu = document.getElementById('kw-menunggu-kelulusan-box');
@@ -10359,7 +10652,7 @@
                 if (t.jenis === 'Pendapatan') pendapatan += Number(t.jumlah || 0); else perbelanjaan += Number(t.jumlah || 0);
                 return { t, baki };
             });
-            const bilTidakDikira = semua.filter(t => (t.status === 'Menunggu Kelulusan' || t.status === 'Ditolak') && (!dari || tkh(t) >= dari) && (!hingga || tkh(t) <= hingga)).length;
+            const bilTidakDikira = semua.filter(t => (t.status === 'Menunggu Kelulusan' || t.status === 'Ditolak' || t.status === 'Dibatalkan') && (!dari || tkh(t) >= dari) && (!hingga || tkh(t) <= hingga)).length;
             return { dari, hingga, bakiBawa, pendapatan, perbelanjaan, bakiAkhir: baki, baris, bilTidakDikira };
         }
 
@@ -10369,6 +10662,7 @@
             if (!elDari || !elHingga) return;
             if (!elDari.value) elDari.value = new Date().getFullYear() + '-01-01';
             if (!elHingga.value) elHingga.value = getRealTimeTodayStr();
+            renderKunciKewanganUI();
             const d = _ambilDataPenyata_();
             const rm = n => `RM ${n.toFixed(2)}`;
             document.getElementById('kw-penyata-bawa').textContent = rm(d.bakiBawa);
@@ -10388,6 +10682,64 @@
                 <td class="px-4 py-3 text-right text-red-600">${t.jenis === 'Perbelanjaan' ? Number(t.jumlah || 0).toFixed(2) : ''}</td>
                 <td class="px-4 py-3 text-right font-bold">${baki.toFixed(2)}</td>
             </tr>`).join('');
+        }
+
+        function renderKunciKewanganUI() {
+            const el = document.getElementById('kw-kunci-status');
+            if (!el) return;
+            const k = (state.settings && state.settings.kunciKewanganSehingga) || '';
+            el.textContent = k ? `Dikunci sehingga ${new Date(k).toLocaleDateString('ms-MY')}` : 'Tiada kunci';
+            el.className = k ? 'text-amber-700' : 'text-slate-700';
+        }
+
+        function kunciKewanganBulan() {
+            const v = document.getElementById('kw-kunci-bulan').value; // YYYY-MM
+            if (!v) { showCustomAlert("Sila pilih bulan untuk dikunci.", "error"); return; }
+            const [thn, bln] = v.split('-').map(Number);
+            const sehingga = `${v}-${String(new Date(thn, bln, 0).getDate()).padStart(2, '0')}`;
+            const semasa = (state.settings && state.settings.kunciKewanganSehingga) || '';
+            if (semasa && sehingga < semasa && state.currentUser !== 'admin') {
+                showCustomAlert("Hanya Admin boleh mengundurkan tarikh kunci.", "error"); return;
+            }
+            const bilMenunggu = (state.kewanganTransaksi || []).filter(t => t.status === 'Menunggu Kelulusan' && String(t.tarikh || '').slice(0, 10) <= sehingga).length;
+            if (bilMenunggu > 0) {
+                showCustomAlert(`Tidak boleh kunci: masih ada ${bilMenunggu} perbelanjaan menunggu kelulusan dalam tempoh ini. Luluskan atau tolak dahulu.`, "error"); return;
+            }
+            showCustomConfirm("Kunci Kewangan", `Kunci semua transaksi sehingga ${new Date(sehingga).toLocaleDateString('ms-MY')}? Transaksi dalam tempoh ini tidak boleh ditambah, dibatalkan atau dipadam lagi (hanya Admin boleh membuka kunci).`, function() {
+                state.settings.kunciKewanganSehingga = sehingga;
+                queueDelta('kunciKewangan', { sehingga }, 'Kunci kewangan');
+                saveStateToLocal(); markUnsynced();
+                renderKunciKewanganUI(); renderTransaksiTable();
+                showCustomAlert("Kewangan berjaya dikunci.", "success");
+            });
+        }
+
+        function bukaKunciKewangan() {
+            if (state.currentUser !== 'admin') { showCustomAlert("Hanya Admin boleh membuka kunci kewangan.", "error"); return; }
+            showCustomConfirm("Buka Kunci Kewangan", "Buka kunci kewangan? Transaksi lama akan boleh diubah semula.", function() {
+                state.settings.kunciKewanganSehingga = '';
+                queueDelta('kunciKewangan', { sehingga: '' }, 'Buka kunci kewangan');
+                saveStateToLocal(); markUnsynced();
+                renderKunciKewanganUI(); renderTransaksiTable();
+                showCustomAlert("Kunci kewangan dibuka.", "success");
+            });
+        }
+
+        function eksportPenyataExcel() {
+            if (typeof XLSX === 'undefined') { showCustomAlert("Pustaka Excel belum dimuat. Semak sambungan internet.", "error"); return; }
+            const d = _ambilDataPenyata_();
+            if (d.baris.length === 0 && d.bakiBawa === 0) { showCustomAlert("Tiada transaksi dalam tempoh dipilih.", "error"); return; }
+            const aoa = [['PENYATA KEWANGAN PENGAWAS'], [`Tempoh: ${d.dari} hingga ${d.hingga}`], [],
+                ['Tarikh', 'Keterangan', 'Kategori', 'Pendapatan (RM)', 'Perbelanjaan (RM)', 'Baki (RM)'],
+                ['', 'Baki Bawa Ke Hadapan', '', '', '', d.bakiBawa]];
+            d.baris.forEach(({ t, baki }) => aoa.push([t.tarikh || '', t.keterangan || '', t.kategori || '',
+                t.jenis === 'Pendapatan' ? Number(t.jumlah || 0) : '', t.jenis === 'Perbelanjaan' ? Number(t.jumlah || 0) : '', baki]));
+            aoa.push(['', 'JUMLAH', '', d.pendapatan, d.perbelanjaan, d.bakiAkhir]);
+            const ws = XLSX.utils.aoa_to_sheet(aoa);
+            ws['!cols'] = [{ wch: 12 }, { wch: 40 }, { wch: 26 }, { wch: 16 }, { wch: 18 }, { wch: 12 }];
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Penyata');
+            XLSX.writeFile(wb, `Penyata_Kewangan_${d.dari}_${d.hingga}.xlsx`);
         }
 
         function printPenyataKewangan() {
@@ -10426,7 +10778,7 @@
             html += `</tbody></table>`;
             html += `<p style="text-align:right; font-weight:bold; font-size:11pt; margin-top:10px;">BAKI AKHIR: RM ${d.bakiAkhir.toFixed(2)}</p>`;
             if (d.bilTidakDikira > 0) {
-                html += `<p style="font-size:9pt; color:#555;">Nota: ${d.bilTidakDikira} transaksi dalam tempoh ini (menunggu kelulusan/ditolak) tidak dimasukkan dalam penyata ini.</p>`;
+                html += `<p style="font-size:9pt; color:#555;">Nota: ${d.bilTidakDikira} transaksi dalam tempoh ini (menunggu kelulusan/ditolak/dibatalkan) tidak dimasukkan dalam penyata ini.</p>`;
             }
             html += `<div class="signature-box" style="margin-top:50px;">
                 <div><div class="sig-line">Disediakan Oleh<br>(Guru Penyelaras)</div></div>
@@ -10463,10 +10815,29 @@
             showCustomAlert(`${rekodBaharu.length} rekod yuran berjaya dijana bagi sesi/tahun "${sesiTahun}".`, "success");
         }
 
+        function _senaraiYuranDitapis_() {
+            const sel = document.getElementById('kw-yuran-filter-sesi');
+            const sesi = sel ? sel.value : '';
+            let senarai = [...(state.yuranPengawas || [])];
+            if (sesi && sesi !== '__semua__') senarai = senarai.filter(y => y.sesiTahun === sesi);
+            const namaDari = y => String(((state.pengawas || []).find(x => normalizeId(x.id) === normalizeId(y.pengawasId)) || {}).nama || '');
+            return senarai.sort((a, b) => (b.sesiTahun || '').localeCompare(a.sesiTahun || '') || namaDari(a).localeCompare(namaDari(b)));
+        }
+
+        function _segarkanPilihanSesiYuran_() {
+            const sel = document.getElementById('kw-yuran-filter-sesi');
+            if (!sel) return;
+            const semuaSesi = [...new Set((state.yuranPengawas || []).map(y => y.sesiTahun).filter(Boolean))].sort().reverse();
+            const dipilih = sel.value;
+            sel.innerHTML = `<option value="__semua__">Semua</option>` + semuaSesi.map(x => `<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`).join('');
+            sel.value = (dipilih && (dipilih === '__semua__' || semuaSesi.includes(dipilih))) ? dipilih : (semuaSesi[0] || '__semua__');
+        }
+
         function renderYuranTable() {
             const tbody = document.getElementById('table-yuran');
             if (!tbody) return;
-            const senarai = [...(state.yuranPengawas || [])].sort((a, b) => (b.sesiTahun || '').localeCompare(a.sesiTahun || ''));
+            _segarkanPilihanSesiYuran_();
+            const senarai = _senaraiYuranDitapis_();
 
             if (senarai.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 text-sm">Tiada rekod yuran. Guna "Jana Senarai Yuran" untuk mula.</td></tr>`;
@@ -10483,7 +10854,7 @@
                 if (y.status === 'Sudah Bayar') jumlahTerkumpul += Number(y.jumlahDikenakan || 0);
                 const statusBadge = y.status === 'Sudah Bayar' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
                 const tindakan = y.status === 'Sudah Bayar'
-                    ? `<button onclick="tandaYuranStatus('${y.id}', 'Belum Bayar')" class="text-xs text-slate-500 hover:text-red-600 font-semibold">Tanda Belum Bayar</button>`
+                    ? `<button onclick="printSlipYuran('${y.id}')" class="text-xs text-brand-blue hover:underline font-semibold mr-3" title="Cetak slip pengesahan bayaran"><i class="fas fa-receipt mr-1"></i>Slip</button><button onclick="tandaYuranStatus('${y.id}', 'Belum Bayar')" class="text-xs text-slate-500 hover:text-red-600 font-semibold">Tanda Belum Bayar</button>`
                     : `<button onclick="tandaYuranStatus('${y.id}', 'Sudah Bayar')" class="text-xs text-white bg-green-600 hover:bg-green-700 px-2.5 py-1 rounded-lg font-semibold">Tanda Sudah Bayar</button>`;
                 return `<tr class="hover:bg-slate-50">
                     <td class="px-4 py-3 font-semibold">${escapeHtml(p ? p.nama : '-')}</td>
@@ -10492,7 +10863,7 @@
                     <td class="px-4 py-3 text-right">RM ${Number(y.jumlahDikenakan || 0).toFixed(2)}</td>
                     <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs font-bold ${statusBadge}">${escapeHtml(y.status)}</span></td>
                     <td class="px-4 py-3 text-xs">${y.tarikhBayar ? new Date(y.tarikhBayar).toLocaleDateString('ms-MY') : '-'}</td>
-                    <td class="px-4 py-3 text-right">${tindakan}</td>
+                    <td class="px-4 py-3 text-right whitespace-nowrap">${tindakan}</td>
                 </tr>`;
             }).join('');
 
@@ -10501,46 +10872,111 @@
             document.getElementById('kw-yuran-baki').textContent = `RM ${(jumlahPatut - jumlahTerkumpul).toFixed(2)}`;
         }
 
+        // Tanda "Sudah Bayar" => cipta transaksi PENDAPATAN (Yuran Pengawas) secara automatik supaya
+        // baki & penyata kewangan sentiasa sepadan dgn kutipan yuran. Tanda "Belum Bayar" => transaksi
+        // terpaut dibatalkan (rekod kekal utk audit). Bayaran lama (sebelum ciri ini) tiada transaksi
+        // terpaut -- menanda Belum Bayar hanya menukar status yuran.
         function tandaYuranStatus(id, statusBaharu) {
             const y = (state.yuranPengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
             if (!y) return;
-            y.status = statusBaharu;
-            y.tarikhBayar = statusBaharu === 'Sudah Bayar' ? new Date().toISOString() : '';
-            queueUpdateRecord('yuranPengawas', y, 'Kemaskini status yuran pengawas');
-            saveStateToLocal();
-            markUnsynced();
-            renderYuranTable();
+            const p = (state.pengawas || []).find(x => normalizeId(x.id) === normalizeId(y.pengawasId));
+            if (statusBaharu === 'Sudah Bayar') {
+                const tarikh = getRealTimeTodayStr();
+                if (kewanganTerkunci(tarikh)) { showCustomAlert("Tarikh hari ini berada dalam tempoh kewangan yang telah dikunci. Hubungi Admin.", "error"); return; }
+                const trx = {
+                    id: 'KWG-YRN-' + y.id + '-' + new Date().getTime(), tarikh, jenis: 'Pendapatan', kategori: 'Yuran Pengawas',
+                    keterangan: `Yuran ${p ? p.nama : ''} (${y.sesiTahun || ''})`.trim(), jumlah: Number(y.jumlahDikenakan || 0),
+                    pautanResit: '', direkodOlehNama: getCurrentActorLabel(), status: 'Selesai',
+                    diluluskanOlehNama: '', tarikhDiluluskan: '', catatanKelulusan: '', rujukanYuranId: y.id
+                };
+                state.kewanganTransaksi.push(trx);
+                queueDelta('addKewanganTransaksi', trx, 'Pendapatan yuran pengawas');
+                y.status = 'Sudah Bayar';
+                y.tarikhBayar = new Date().toISOString();
+                y.transaksiId = trx.id;
+                y.diterimaOlehNama = getCurrentActorLabel();
+                queueUpdateRecord('yuranPengawas', y, 'Yuran ditanda Sudah Bayar');
+                saveStateToLocal(); markUnsynced();
+                renderYuranTable(); renderKewanganDashboard(); renderTransaksiTable();
+                return;
+            }
+            // Belum Bayar
+            const trx = y.transaksiId ? (state.kewanganTransaksi || []).find(x => normalizeId(x.id) === normalizeId(y.transaksiId)) : null;
+            if (trx && (trx.status === 'Selesai' || trx.status === 'Diluluskan') && kewanganTerkunci(trx.tarikh)) {
+                showCustomAlert("Bayaran ini direkodkan dalam tempoh kewangan yang telah dikunci dan tidak boleh dibatalkan.", "error"); return;
+            }
+            showCustomConfirm("Tanda Belum Bayar", `Tanda yuran ${p ? p.nama : ''} sebagai Belum Bayar? ${trx ? 'Transaksi pendapatan yang berkaitan akan dibatalkan.' : ''}`, function() {
+                if (trx && (trx.status === 'Selesai' || trx.status === 'Diluluskan')) {
+                    trx.status = 'Dibatalkan';
+                    trx.sebabBatal = 'Yuran ditanda Belum Bayar';
+                    trx.tarikhBatal = new Date().toISOString();
+                    trx.dibatalkanOlehNama = getCurrentActorLabel();
+                    queueDelta('batalKewanganTransaksi', { id: trx.id, sebab: trx.sebabBatal, dibatalkanOlehNama: trx.dibatalkanOlehNama }, 'Batal pendapatan yuran');
+                }
+                y.status = 'Belum Bayar';
+                y.tarikhBayar = '';
+                y.transaksiId = '';
+                queueUpdateRecord('yuranPengawas', y, 'Yuran ditanda Belum Bayar');
+                saveStateToLocal(); markUnsynced();
+                renderYuranTable(); renderKewanganDashboard(); renderTransaksiTable();
+            });
         }
 
         function printSenaraiYuran() {
-            const senarai = [...(state.yuranPengawas || [])].sort((a, b) => (b.sesiTahun || '').localeCompare(a.sesiTahun || '') || (a.pengawasId || 0) - (b.pengawasId || 0));
+            const senarai = _senaraiYuranDitapis_();
             if (senarai.length === 0) {
                 showCustomAlert("Tiada rekod yuran untuk dicetak.", "error");
                 return;
             }
+            const sel = 'border:1px solid #000; padding:6px;';
             let html = getPrintHeader();
             html += `<h3 style="text-align:center; text-transform:uppercase; font-weight:bold; margin-bottom:15px; text-decoration:underline;">Senarai Yuran Pengawas</h3>`;
             html += `<table style="width:100%; border-collapse:collapse;">
                 <thead><tr>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Nama</th>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Kelas</th>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Sesi/Tahun</th>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6; text-align:right;">Jumlah (RM)</th>
-                    <th style="border:1px solid #000; padding:6px; background:#f3f4f6;">Status</th>
+                    <th style="${sel} background:#f3f4f6;">Nama</th>
+                    <th style="${sel} background:#f3f4f6;">Kelas</th>
+                    <th style="${sel} background:#f3f4f6;">Sesi/Tahun</th>
+                    <th style="${sel} background:#f3f4f6; text-align:right;">Jumlah (RM)</th>
+                    <th style="${sel} background:#f3f4f6;">Status</th>
                 </tr></thead><tbody>`;
             senarai.forEach(y => {
                 const p = (state.pengawas || []).find(x => normalizeId(x.id) === normalizeId(y.pengawasId));
                 html += `<tr>
-                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(p ? p.nama : '-')}</td>
-                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(p ? p.kelas : '-')}</td>
-                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(y.sesiTahun || '-')}</td>
-                    <td style="border:1px solid #000; padding:6px; text-align:right;">${Number(y.jumlahDikenakan || 0).toFixed(2)}</td>
-                    <td style="border:1px solid #000; padding:6px;">${escapeHtml(y.status)}</td>
+                    <td style="${sel}">${escapeHtml(p ? p.nama : '-')}</td>
+                    <td style="${sel}">${escapeHtml(p ? p.kelas : '-')}</td>
+                    <td style="${sel}">${escapeHtml(y.sesiTahun || '-')}</td>
+                    <td style="${sel} text-align:right;">${Number(y.jumlahDikenakan || 0).toFixed(2)}</td>
+                    <td style="${sel}">${escapeHtml(y.status)}</td>
                 </tr>`;
             });
             html += `</tbody></table>`;
             html += `<div class="signature-box" style="margin-top:50px;">
                 <div><div class="sig-line">Disediakan Oleh<br>(Guru Penyelaras)</div></div>
+                <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
+            </div>`;
+            executePrint(html, 'portrait');
+        }
+
+        // Slip pengesahan bayaran yuran bagi SATU pengawas (bukti kepada pengawas/penjaga).
+        function printSlipYuran(id) {
+            const y = (state.yuranPengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!y || y.status !== 'Sudah Bayar') { showCustomAlert("Slip hanya boleh dicetak bagi yuran yang sudah dibayar.", "error"); return; }
+            const p = (state.pengawas || []).find(x => normalizeId(x.id) === normalizeId(y.pengawasId));
+            const sel = 'border:1px solid #000; padding:8px;';
+            let html = getPrintHeader();
+            html += `<h3 style="text-align:center; text-transform:uppercase; font-weight:bold; margin-bottom:18px; text-decoration:underline;">Slip Pengesahan Bayaran Yuran Pengawas</h3>
+            <table style="width:100%; border-collapse:collapse; font-size:11pt;">
+                <tr><th style="${sel} width:32%; text-align:left; background:#f3f4f6;">No. Rujukan</th><td style="${sel}">${escapeHtml(String(y.id))}</td></tr>
+                <tr><th style="${sel} text-align:left; background:#f3f4f6;">Nama Pengawas</th><td style="${sel}"><b>${escapeHtml(p ? p.nama : '-')}</b></td></tr>
+                <tr><th style="${sel} text-align:left; background:#f3f4f6;">Kelas</th><td style="${sel}">${escapeHtml(p ? ((p.tingkatan || '') + ' ' + (p.kelas || '')).trim() : '-')}</td></tr>
+                <tr><th style="${sel} text-align:left; background:#f3f4f6;">Sesi/Tahun</th><td style="${sel}">${escapeHtml(y.sesiTahun || '-')}</td></tr>
+                <tr><th style="${sel} text-align:left; background:#f3f4f6;">Jumlah Dibayar</th><td style="${sel}"><b>RM ${Number(y.jumlahDikenakan || 0).toFixed(2)}</b></td></tr>
+                <tr><th style="${sel} text-align:left; background:#f3f4f6;">Tarikh Bayar</th><td style="${sel}">${y.tarikhBayar ? new Date(y.tarikhBayar).toLocaleDateString('ms-MY') : '-'}</td></tr>
+                <tr><th style="${sel} text-align:left; background:#f3f4f6;">Status</th><td style="${sel}"><b>SUDAH BAYAR</b></td></tr>
+            </table>
+            <p style="font-size:9pt; color:#555; margin-top:12px;">Slip ini dijana oleh Sistem Pengurusan Pengawas sebagai bukti penerimaan bayaran yuran.</p>
+            <div class="signature-box" style="margin-top:60px;">
+                <div><div class="sig-line">Diterima Oleh<br><b>${escapeHtml(y.diterimaOlehNama || '')}</b><br>Guru</div></div>
                 <div><div class="sig-line">Disahkan Oleh<br><b>${getGuruPengawasName()}</b><br>Guru Pengawas</div></div>
             </div>`;
             executePrint(html, 'portrait');
@@ -16298,38 +16734,29 @@
         });
 
         // =============================================================================
-        //  PWA (Progressive Web App) -- lengkapkan sokongan Android/Chrome
+        //  PWA (Progressive Web App) -- ikon skrin utama & mod standalone
         // =============================================================================
-        //  Meta tag iOS (apple-touch-icon dll.) sudah ditambah statik di <head> -- itu
-        //  SELALU berfungsi. Bahagian di bawah ini khusus utk Android/Chrome, yg baca
-        //  Web App Manifest (bukan meta tag Apple). Manifest DIJANA SECARA DINAMIK
-        //  (bukan fail .json statik) sebab ia perlukan "start_url" yg SEPADAN dgn URL
-        //  deployment SEBENAR sistem anda -- yg cuma diketahui semasa runtime (setiap
-        //  sekolah ada URL deployment Apps Script yg berbeza).
-        //
-        //  NOTA KETERBATASAN JUJUR: Apps Script Web App biasanya "redirect" pelayar drpd
-        //  URL .../exec ke domain googleusercontent.com semasa memuatkan kandungan --
-        //  gelagat khusus hosting Google ini bermakna paparan "Install App" automatik
-        //  (beforeinstallprompt) Chrome MUNGKIN tidak konsisten muncul bergantung kpd versi
-        //  pelayar & cara Google hoskan Apps Script pd masa tsb -- ini di LUAR kawalan kod
-        //  ini. Walau bagaimanapun, "Tambah ke Skrin Utama" MANUAL (drpd menu 3-titik
-        //  Chrome) akan SENTIASA berfungsi dan menghasilkan ikon + mod standalone yg betul
-        //  di skrin utama, tidak kira sama ada paparan automatik itu muncul atau tidak.
+        //  Meta tag iOS (apple-touch-icon dll.) ada statik di <head>. Bahagian ini menjana Web
+        //  App Manifest utk Android/Chrome SECARA DINAMIK sebab "start_url" mesti sepadan dgn
+        //  alamat tempat fail HTML ini dihoskan (diketahui semasa runtime sahaja).
+        //  NOTA: tiada Service Worker didaftarkan. Frontend ini dihoskan berasingan drpd
+        //  Apps Script (pelayan hanya API JSON), jadi Service Worker tidak boleh dimuat dari
+        //  Apps Script (mesti satu asal/origin). Sistem ini perlukan sambungan internet utk
+        //  segerak, jadi caching luar talian tidak ditawarkan.
         function setupPWA() {
             try {
                 const asalUrl = window.location.origin + window.location.pathname;
                 const manifest = {
                     name: "Sistem Pengurusan Pengawas - SMK Jalan Damai",
                     short_name: "SPP SMKJD",
-                    start_url: window.location.href,
-                    scope: asalUrl,
+                    start_url: asalUrl,
+                    scope: asalUrl.replace(/[^\/]*$/, ''),
                     display: "standalone",
                     orientation: "any",
                     background_color: "#ffffff",
                     theme_color: "#1e3a8a",
                     icons: [
-                        { src: "https://images.seeklogo.com/logo-png/35/1/sekolah-menengah-kebangsaan-jalan-damai-logo-png_seeklogo-359030.png", sizes: "192x192 512x512", type: "image/png", purpose: "any" },
-                        { src: "https://images.seeklogo.com/logo-png/35/1/sekolah-menengah-kebangsaan-jalan-damai-logo-png_seeklogo-359030.png", sizes: "192x192 512x512", type: "image/png", purpose: "maskable" }
+                        { src: "https://images.seeklogo.com/logo-png/35/1/sekolah-menengah-kebangsaan-jalan-damai-logo-png_seeklogo-359030.png", sizes: "192x192 512x512", type: "image/png", purpose: "any" }
                     ]
                 };
                 const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
@@ -16339,21 +16766,6 @@
                 document.head.appendChild(link);
             } catch (errManifest) {
                 console.warn('Persediaan PWA manifest gagal (tidak menjejaskan fungsi sistem):', errManifest);
-            }
-
-            // Service worker -- USAHA TERBAIK sahaja (lihat nota keterbatasan di atas).
-            // Tiada caching offline dilaksanakan setakat ini -- ia sekadar wujud utk
-            // memenuhi salah satu kriteria "installability" Chrome bagi sesetengah versi
-            // pelayar. Kegagalan di sini SENTIASA senyap (try/catch) -- tidak pernah
-            // menjejaskan fungsi utama sistem walau apa pun berlaku.
-            if ('serviceWorker' in navigator) {
-                try {
-                    const swUrl = window.location.origin + window.location.pathname + '?action=pwasw';
-                    navigator.serviceWorker.register(swUrl, { scope: window.location.pathname })
-                        .catch(errSw => console.warn('Pendaftaran Service Worker PWA gagal (tidak menjejaskan fungsi sistem):', errSw));
-                } catch (errSwOuter) {
-                    console.warn('Persediaan Service Worker PWA gagal (tidak menjejaskan fungsi sistem):', errSwOuter);
-                }
             }
         }
 
@@ -17657,6 +18069,8 @@
             if (ambangEl) ambangEl.value = state.settings.ambangDemeritAmaran || 5;
             const ambangKelulusanEl = document.getElementById('set-ambang-kelulusan');
             if (ambangKelulusanEl) ambangKelulusanEl.value = state.settings.ambangKelulusanPerbelanjaan || 100;
+            const ambangBakiRendahEl = document.getElementById('set-ambang-bakirendah');
+            if (ambangBakiRendahEl) ambangBakiRendahEl.value = (state.settings.ambangBakiRendah === undefined || state.settings.ambangBakiRendah === null) ? 50 : state.settings.ambangBakiRendah;
             if (autoLogoutAktifEl) autoLogoutAktifEl.checked = !!state.settings.autoLogoutEnabled;
             if (autoLogoutJamEl) autoLogoutJamEl.value = state.settings.autoLogoutJam || 2;
             // Lalai AKTIF (tercentang) jika belum pernah ditetapkan -- selaras dgn semakan
