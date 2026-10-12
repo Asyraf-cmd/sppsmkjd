@@ -7947,6 +7947,11 @@
                 renderTarikhTutupPermohonanUI(true);
             }
             if (tabId === 'kewangan') {
+                // switchSubTab() (digunakan tab lain semasa log masuk/penyediaan peranan) menyembunyikan
+                // SEMUA .subtab-content -- termasuk subtab Kewangan -- jadi tab ini nampak kosong
+                // sehingga satu subtab dipilih. Pulihkan subtab terakhir (lalai: Dashboard) setiap
+                // kali tab dibuka.
+                switchSubTab(window._kwSubtabAktif || 'kw-dashboard');
                 kemaskiniKategoriKewangan();
                 populateKewanganPenyediaSelect();
                 if (!document.getElementById('kw-tarikh').value) document.getElementById('kw-tarikh').value = getRealTimeTodayStr();
@@ -8076,6 +8081,8 @@
         }
 
         function switchSubTab(id) {
+    // Ingat subtab Kewangan terakhir dipilih supaya dipulihkan semasa tab Kewangan dibuka semula.
+    if (String(id).indexOf('kw-') === 0) window._kwSubtabAktif = id;
     document.querySelectorAll('.subtab-content').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.subtab-btn').forEach(el => {
         el.classList.remove('text-brand-blue', 'border-brand-blue');
