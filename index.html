@@ -25,12 +25,11 @@
     <meta name="theme-color" content="#1e3a8a">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS: digunakan utk Import Pukal (CSV/Excel) Pendaftaran Pengawas & Eksport
+    <!-- SheetJS (xlsx) TIDAK dimuat di sini lagi -- dimuat atas permintaan oleh muatSkripLuar_('xlsx') apabila
+         pengguna benar-benar import/eksport Excel (jimat ~0.9 MB pada setiap pemuatan halaman). Digunakan utk Import Pukal (CSV/Excel) Pendaftaran Pengawas & Eksport
          Excel (Sejarah Kehadiran, Rekod Kesalahan) -- lihat fungsi bertanda "IMPORT/EKSPORT". -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Chart.js: digunakan utk Carta Trend Antara Tahun (tab Reset Tahunan) --
+    <!-- Chart.js TIDAK dimuat di sini lagi -- dimuat atas permintaan oleh muatSkripLuar_('chart'). Digunakan utk Carta Trend Antara Tahun (tab Reset Tahunan) --
          bandingkan statistik disiplin/kehadiran tahun semasa vs data arkib tahun lepas. -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
@@ -5559,7 +5558,7 @@
                             <h2 style="color:#dc2626;font-size:1.25rem;font-weight:700;margin-bottom:0.75rem;"><i class="fas fa-triangle-exclamation"></i> Aplikasi Gagal Dimuatkan</h2>
                             <p style="color:#334155;margin-bottom:1rem;">Berlaku ralat semasa memuatkan data tempatan peranti ini. Ini mungkin disebabkan data tersimpan yang rosak.</p>
                             <p style="color:#64748b;font-size:0.875rem;margin-bottom:1.25rem;">Ralat teknikal: ${(errInit && errInit.message) ? errInit.message : errInit}</p>
-                            <button onclick="localStorage.removeItem('${STORAGE_KEY}'); location.reload();" style="background:#dc2626;color:#fff;padding:0.625rem 1.25rem;border-radius:0.5rem;font-weight:600;border:none;cursor:pointer;">
+                            <button onclick="window._bekukanSimpanTempatan = true; localStorage.removeItem('${STORAGE_KEY}'); location.reload();" style="background:#dc2626;color:#fff;padding:0.625rem 1.25rem;border-radius:0.5rem;font-weight:600;border:none;cursor:pointer;">
                                 Kosongkan Data Tempatan &amp; Cuba Semula
                             </button>
                             <p style="color:#94a3b8;font-size:0.75rem;margin-top:1rem;">Nota: Jika Google Apps Script anda sudah disegerakkan sebelum ini, data anda selamat di Google Sheets/Drive dan boleh dimuat turun semula (Pull) selepas ini dimuatkan.</p>
@@ -5930,7 +5929,9 @@
             if (paginationEl) paginationEl.innerHTML = renderPaginationControlsHtml('logAktiviti', pageInfo, 'renderAuditLogTable');
         }
 
-        function exportLogAktivitiToExcel() {
+        async function exportLogAktivitiToExcel() {
+            try { await muatSkripLuar_('xlsx'); } catch (errMuat) { showCustomAlert(errMuat.message, "error"); return; }
+
             const list = ambilLogAktivitiTertapis_();
             if (!list.length) { showCustomAlert("Tiada log aktiviti (mengikut penapis semasa) untuk dieksport.", "error"); return; }
             const rows = list.map(a => ({
@@ -6213,9 +6214,58 @@
             // buat kali pertama, melainkan pengguna sudah pin ia terbuka.
         }
 
-        function saveStateToLocal() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        // =============================================================================
+        //  SIMPANAN TEMPATAN (localStorage) -- ditunda, dikelompok & selamat
+        // =============================================================================
+        //  Sebelum ini seluruh `state` di-JSON.stringify & ditulis pada SETIAP perubahan (101 tempat
+        //  memanggilnya, termasuk dlm gelung) -- kos meningkat dgn saiz data & memperlahankan klik.
+        //  Kini penulisan DITUNDA 400ms & digabungkan (banyak panggilan berturut = 1 penulisan), dan
+        //  DIPAKSA serta-merta apabila halaman disembunyikan/ditutup supaya tiada perubahan hilang.
+        //  Jika ruang pelayar penuh/ditolak, pengguna DIBERI AMARAN (sebelum ini ralat senyap dan
+        //  data tempatan terbaru boleh hilang tanpa disedari).
+        let _simpanTempatanTimer_ = null;
+        let _simpanTempatanMenunggu_ = false;
+        let _simpanTempatanAmaranMasa_ = 0;
+        window._bekukanSimpanTempatan = false; // ditetapkan oleh butang "reset kecemasan" supaya data tidak ditulis semula
+
+        function _tulisStateTempatanSegera_() {
+            clearTimeout(_simpanTempatanTimer_);
+            _simpanTempatanTimer_ = null;
+            if (window._bekukanSimpanTempatan) { _simpanTempatanMenunggu_ = false; return false; }
+            _simpanTempatanMenunggu_ = false;
+            let teks = '';
+            try {
+                teks = JSON.stringify(state);
+                localStorage.setItem(STORAGE_KEY, teks);
+                return true;
+            } catch (err) {
+                console.error('Gagal menyimpan data tempatan:', err);
+                _simpanTempatanMenunggu_ = true; // cuba lagi pada perubahan seterusnya
+                const sekarang = Date.now();
+                if (sekarang - _simpanTempatanAmaranMasa_ > 60000) { // amaran paling kerap sekali seminit
+                    _simpanTempatanAmaranMasa_ = sekarang;
+                    const mb = teks ? (teks.length / 1048576).toFixed(1) + ' MB' : 'besar';
+                    try {
+                        showCustomAlert(`Amaran: data tempatan (${mb}) TIDAK dapat disimpan dalam pelayar (ruang penuh atau disekat). Perubahan terbaru mungkin hilang jika halaman ditutup. Sila tekan Push SEGERA untuk menyimpan data ke pelayan, dan hubungi Admin untuk arkib/reset tahunan jika data sudah terlalu besar.`, "error");
+                    } catch (e2) { /* abaikan */ }
+                }
+                return false;
+            }
         }
+
+        function saveStateToLocal() {
+            _simpanTempatanMenunggu_ = true;
+            clearTimeout(_simpanTempatanTimer_);
+            _simpanTempatanTimer_ = setTimeout(_tulisStateTempatanSegera_, 400);
+        }
+
+        // Tulis serta-merta jika ada perubahan tertunda (dipanggil apabila halaman disembunyikan/ditutup).
+        function flushSimpanTempatan() {
+            if (_simpanTempatanMenunggu_) _tulisStateTempatanSegera_();
+        }
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushSimpanTempatan(); });
+        window.addEventListener('pagehide', flushSimpanTempatan);
+        window.addEventListener('beforeunload', flushSimpanTempatan);
 
         function loadStateFromLocal() {
             const data = localStorage.getItem(STORAGE_KEY);
@@ -6599,6 +6649,16 @@
             return res.json();
         }
 
+        // Hantar BANYAK delta dlm satu permintaan (lihat handlePushKelompok di Code_GS.txt).
+        async function pushDeltaKelompok(scriptUrl, senaraiDelta) {
+            const res = await fetch(scriptUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'push', deltas: senaraiDelta, token: state.sessionToken })
+            });
+            return res.json();
+        }
+
         // Hantar SELURUH pangkalan data (fallback penuh). Digunakan hanya apabila ada edit/padam
         // rekod sedia ada (state.needsFullSync === true), kerana operasi sedemikian tidak boleh
         // diwakili sebagai delta ringkas dalam seni bina "append sahaja" Sheets semasa.
@@ -6666,6 +6726,7 @@
 
         async function _performSyncPushSebenar_(scriptUrl) {
             const pending = state.pendingDeltas || [];
+            const jumlahAsal = pending.length; // pending dikecilkan semasa proses -- simpan bilangan asal utk mesej
             const perluFullSync = !!state.needsFullSync;
 
             // Tiada apa-apa untuk disegerakkan
@@ -6705,10 +6766,36 @@
                     // DELTA SAHAJA: hantar SATU-SATU rekod baharu yang belum di-push (cekap, tidak hantar seluruh pangkalan data)
                     showCustomAlert(`Sedang menghantar ${pending.length} rekod baharu ke Google Sheets...`, "info");
                     let berjaya = 0;
+                    const SAIZ_KELOMPOK = 25; // had kelompok -- elak kunci pelayan dipegang terlalu lama
                     while (state.pendingDeltas && state.pendingDeltas.length > 0) {
-                        const item = state.pendingDeltas[0];
-                        const data = await pushSingleDelta(scriptUrl, item);
-                        if (data.status === 'success') {
+                        const kelompok = state.pendingDeltas.slice(0, SAIZ_KELOMPOK);
+                        // Bentuk hasil seragam utk kedua-dua laluan: { diterapkan, hasil: [], ralat }
+                        let hasilKelompok;
+                        if (kelompok.length > 1 && !window._serverTiadaPushKelompok) {
+                            // PUSH KELOMPOK: banyak delta dlm SATU permintaan = pelayan baca & tulis
+                            // pangkalan data SEKALI sahaja (bukan sekali bagi setiap delta).
+                            const dataK = await pushDeltaKelompok(scriptUrl, kelompok);
+                            if (dataK.status === 'error' && /Payload push mesti ada/.test(dataK.message || '')) {
+                                // Pelayan masih versi LAMA (belum Deploy "New version") -- guna laluan satu-satu.
+                                window._serverTiadaPushKelompok = true;
+                                continue;
+                            }
+                            hasilKelompok = {
+                                diterapkan: dataK.diterapkan || 0,
+                                hasil: dataK.hasil || [],
+                                ralat: dataK.status === 'success' ? null : (dataK.ralat || dataK.message || 'Ralat tidak diketahui')
+                            };
+                        } else {
+                            const data = await pushSingleDelta(scriptUrl, kelompok[0]);
+                            hasilKelompok = data.status === 'success'
+                                ? { diterapkan: 1, hasil: [data], ralat: null }
+                                : { diterapkan: 0, hasil: [], ralat: data.message || 'Ralat tidak diketahui' };
+                        }
+                        if (hasilKelompok.diterapkan === 0 && !hasilKelompok.ralat) hasilKelompok.ralat = 'Pelayan tidak memproses sebarang rekod';
+
+                        for (let i = 0; i < hasilKelompok.diterapkan; i++) {
+                            const item = kelompok[i];
+                            const data = hasilKelompok.hasil[i] || {};
                             // Jika pelayan mengesan & menyelesaikan PERLANGGARAN ID pengawas (dua peranti
                             // daftar pengawas baharu serentak dgn ID sama), pelayan pulangkan ID BAHARU yang
                             // ditetapkan -- kemas kini rekod TEMPATAN supaya kekal selaras dgn pelayan.
@@ -6719,13 +6806,17 @@
                                     showCustomAlert(`Perhatian: ID pengawas "${pLocal.nama}" ditukar secara automatik kepada ${data.assignedPrefectId} kerana perlanggaran ID dengan peranti lain.`, "info");
                                 }
                             }
-                            state.pendingDeltas.shift(); // buang dari baris gilir hanya selepas berjaya
-                            berjaya++;
-                            saveStateToLocal(); // simpan progres -- jika sambungan putus, baki queue tidak hilang
-                        } else {
+                        }
+                        state.pendingDeltas.splice(0, hasilKelompok.diterapkan); // buang dari baris gilir hanya yang BERJAYA
+                        berjaya += hasilKelompok.diterapkan;
+                        saveStateToLocal(); // simpan progres -- jika sambungan putus, baki queue tidak hilang
+
+                        if (hasilKelompok.ralat) {
                             // Berhenti pada kegagalan pertama; baki queue dikekalkan utk cubaan seterusnya
-                            catatStatusSync('push', false, `${item.subAction}: ` + (data.message || 'Ralat tidak diketahui'));
-                            showCustomAlert(`Gagal hantar rekod (${item.subAction}): ` + (data.message || "Ralat tidak diketahui") + `. ${berjaya} daripada ${pending.length} rekod berjaya dihantar. Sila cuba Push semula.`, "error");
+                            const gagal = kelompok[hasilKelompok.diterapkan];
+                            const namaGagal = gagal ? gagal.subAction : 'push';
+                            catatStatusSync('push', false, `${namaGagal}: ` + hasilKelompok.ralat);
+                            showCustomAlert(`Gagal hantar rekod (${namaGagal}): ` + hasilKelompok.ralat + `. ${berjaya} daripada ${jumlahAsal} rekod berjaya dihantar. Sila cuba Push semula.`, "error");
                             setSyncButtonsLoading(false);
                             return;
                         }
@@ -8108,6 +8199,32 @@
         lapSesiFilterWrap.style.display = (id === 'sl-minit') ? 'none' : '';
     }
 }
+
+        // =============================================================================
+        //  PEMUAT PUSTAKA LUAR ATAS PERMINTAAN (lazy-load)
+        // =============================================================================
+        //  SheetJS (~0.9 MB) hanya perlu semasa import/eksport Excel & Chart.js hanya utk carta trend
+        //  tahunan (tab Reset Tahunan). Memuatkannya bila perlu mempercepat paparan pertama (terutama
+        //  telefon). Hasilnya Promise yg di-cache; jika gagal (tiada internet) cubaan seterusnya diulang.
+        const _SKRIP_LUAR_ = {
+            xlsx: { url: 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', ada: () => typeof XLSX !== 'undefined', nama: 'Excel (SheetJS)' },
+            chart: { url: 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js', ada: () => typeof Chart !== 'undefined', nama: 'carta (Chart.js)' }
+        };
+        const _skripSedangMuat_ = {};
+        function muatSkripLuar_(kunci) {
+            const cfg = _SKRIP_LUAR_[kunci];
+            if (!cfg) return Promise.reject(new Error('Pustaka tidak dikenali: ' + kunci));
+            if (cfg.ada()) return Promise.resolve();
+            if (_skripSedangMuat_[kunci]) return _skripSedangMuat_[kunci];
+            _skripSedangMuat_[kunci] = new Promise((resolve, reject) => {
+                const el = document.createElement('script');
+                el.src = cfg.url;
+                el.onload = () => cfg.ada() ? resolve() : (delete _skripSedangMuat_[kunci], reject(new Error('Pustaka ' + cfg.nama + ' dimuat tetapi tidak sah.')));
+                el.onerror = () => { delete _skripSedangMuat_[kunci]; el.remove(); reject(new Error('Gagal memuat pustaka ' + cfg.nama + '. Semak sambungan internet dan cuba lagi.')); };
+                document.head.appendChild(el);
+            });
+            return _skripSedangMuat_[kunci];
+        }
 
         function toggleMobileMenu() {
             const sidebar = document.getElementById('sidebar');
@@ -10732,7 +10849,8 @@
             });
         }
 
-        function eksportPenyataExcel() {
+        async function eksportPenyataExcel() {
+            try { await muatSkripLuar_('xlsx'); } catch (errMuat) { showCustomAlert(errMuat.message, "error"); return; }
             if (typeof XLSX === 'undefined') { showCustomAlert("Pustaka Excel belum dimuat. Semak sambungan internet.", "error"); return; }
             const d = _ambilDataPenyata_();
             if (d.baris.length === 0 && d.bakiBawa === 0) { showCustomAlert("Tiada transaksi dalam tempoh dipilih.", "error"); return; }
@@ -10998,7 +11116,9 @@
         // =========================================================================
         let importPengawasDataSah = []; // Senarai objek pengawas SAH yg sedia utk push ke state.pengawas
 
-        function downloadTemplatImportPengawas() {
+        async function downloadTemplatImportPengawas() {
+            try { await muatSkripLuar_('xlsx'); } catch (errMuat) { showCustomAlert(errMuat.message, "error"); return; }
+
             const templat = [
                 { "Nama": "AHMAD BIN ALI", "IC": "080101-10-1234", "Jantina": "Lelaki", "Tingkatan": "4", "Kelas": "Neon", "Tel": "011-11002364", "Jawatan": "Pengawas Biasa", "Nama Ibu/Bapa": "", "Tel Ibu/Bapa": "", "Tarikh Lantikan": "2026-01-01" }
             ];
@@ -11021,9 +11141,11 @@
             closeModalT('modal-import-pengawas');
         }
 
-        function handleImportPengawasFile(event) {
+        async function handleImportPengawasFile(event) {
             const file = event.target.files[0];
             if (!file) return;
+            try { await muatSkripLuar_('xlsx'); } catch (errMuat) { showCustomAlert(errMuat.message, "error"); return; }
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
@@ -11170,7 +11292,9 @@
         //  (window.XLSX) utk jana fail Excel terus di pelayar, supaya Guru boleh
         //  analisis data di luar sistem (Excel/Google Sheets).
         // =========================================================================
-        function exportPengawasToExcel() {
+        async function exportPengawasToExcel() {
+            try { await muatSkripLuar_('xlsx'); } catch (errMuat) { showCustomAlert(errMuat.message, "error"); return; }
+
             const rows = [...state.pengawas]
                 .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''))
                 .map(p => ({
@@ -11186,7 +11310,9 @@
             XLSX.writeFile(wb, `Pendaftaran_Pengawas_${getRealTimeTodayStr()}.xlsx`);
         }
 
-        function exportKehadiranToExcel() {
+        async function exportKehadiranToExcel() {
+            try { await muatSkripLuar_('xlsx'); } catch (errMuat) { showCustomAlert(errMuat.message, "error"); return; }
+
             const filterTarikhEl = document.getElementById('kehadiran-filter-tarikh');
             const filterTarikh = filterTarikhEl ? filterTarikhEl.value : '';
             let list = [...(state.kehadiranLog || [])];
@@ -11221,7 +11347,9 @@
             XLSX.writeFile(wb, `Sejarah_Kehadiran_${filterTarikh || 'Semua'}.xlsx`);
         }
 
-        function exportKesalahanToExcel() {
+        async function exportKesalahanToExcel() {
+            try { await muatSkripLuar_('xlsx'); } catch (errMuat) { showCustomAlert(errMuat.message, "error"); return; }
+
             const activePrefectIds = state.pengawas
                 .filter(p => isPengawasAktif(p) && (kesalahanSesiFilter === 'Semua' || getSesiPengawas(p) === kesalahanSesiFilter))
                 .map(p => normalizeId(p.id));
@@ -15344,7 +15472,9 @@
             }
         }
 
-        function renderCartaTrendTahunan_(semuaTahun) {
+        async function renderCartaTrendTahunan_(semuaTahun) {
+            try { await muatSkripLuar_('chart'); } catch (errMuat) { showCustomAlert(errMuat.message, "error"); return; }
+
             const label = semuaTahun.map(t => t.tahun + (t.semasa ? ' (Semasa)' : ''));
 
             // --- Carta 1: Kesalahan & Demerit ---
