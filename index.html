@@ -871,6 +871,8 @@
                             <input type="date" id="permohonan-tarikh-tutup" class="border border-slate-200 p-2 rounded-xl text-sm">
                         </div>
                         <button onclick="simpanTarikhTutupPermohonan()" class="bg-brand-blue hover:bg-blue-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-link"></i> Simpan & Selaras ke Google Form</button>
+                        <button onclick="urusBorangPermohonanSekarang('tutup')" class="bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-ban"></i> Tutup Borang Sekarang</button>
+                        <button onclick="urusBorangPermohonanSekarang('buka')" class="bg-green-600 hover:bg-green-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-door-open"></i> Buka Borang Semula</button>
                         <button onclick="buangTarikhTutupPermohonan()" class="bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-lock-open"></i> Buang Tarikh (Buka Borang)</button>
                         <button onclick="semakStatusBorangPermohonan()" class="bg-slate-600 hover:bg-slate-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-rotate"></i> Semak Status Borang</button>
                     </div>
@@ -10044,6 +10046,30 @@
                 renderTarikhTutupPermohonanUI(false);
                 showCustomAlert("Tarikh disimpan. Ia akan diselaraskan ke Google Form apabila data disegerakkan (Push).", "success");
             });
+        }
+
+        // Tutup/buka borang SERTA-MERTA: hantar arahan ke pelayan (Google Form) dgn segera -- tidak
+        // menunggu jadual push automatik -- kemudian semak keadaan sebenar borang.
+        function urusBorangPermohonanSekarang(tindakan) {
+            const tutup = tindakan === 'tutup';
+            showCustomConfirm(tutup ? "Tutup Borang Sekarang" : "Buka Borang Semula",
+                tutup ? "Tutup KEDUA-DUA Google Form (Borang Murid & Borang Cadangan Guru) SEKARANG? Pemohon tidak boleh menghantar permohonan lagi sehingga borang dibuka semula. Jadual penutupan automatik (jika ada) turut dibatalkan."
+                      : "Buka semula KEDUA-DUA Google Form sekarang? Tarikh tutup yang ditetapkan (jika ada) akan dibuang.",
+                async function() {
+                    state.settings.tarikhTutupPermohonan = tutup ? getRealTimeTodayStr() : '';
+                    queueDelta('urusBorangPermohonan', { tindakan }, tutup ? 'Tutup borang permohonan pengawas sekarang' : 'Buka semula borang permohonan pengawas');
+                    saveStateToLocal(); markUnsynced();
+                    renderTarikhTutupPermohonanUI(true);
+                    const el = document.getElementById('permohonan-borang-status');
+                    if (el) el.textContent = tutup ? 'Menutup borang di Google Form...' : 'Membuka borang di Google Form...';
+                    try {
+                        if (state.settings.scriptUrl) await performSyncPush(state.settings.scriptUrl);
+                        await semakStatusBorangPermohonan();
+                    } catch (err) {
+                        if (el) el.textContent = '';
+                        showCustomAlert("Arahan disimpan tetapi belum sampai ke Google Form: " + err.message + ". Tekan Push untuk cuba lagi.", "error");
+                    }
+                });
         }
 
         function buangTarikhTutupPermohonan() {
