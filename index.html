@@ -12664,6 +12664,59 @@
         }
 
         // --- ARKIB PENGAWAS LOGIC ---
+        // Surat Pemakluman Letak Jawatan Pengawas -- ditujukan kpd Ibu Bapa/Penjaga (salinan utk pengawas),
+        // mengesahkan penerimaan peletakan jawatan, tarikh berkuat kuasa & penamatan tugas. Hanya utk
+        // pengawas berstatus 'Letak Jawatan' (data: tarikhArkib/sebabArkib drpd proses arkib).
+        function printSuratPemaklumanLetakJawatan(id) {
+            const p = (state.pengawas || []).find(x => normalizeId(x.id) === normalizeId(id));
+            if (!p) return;
+            if (p.status !== 'Letak Jawatan') {
+                showCustomAlert("Surat ini hanya untuk pengawas berstatus 'Letak Jawatan'.", "error");
+                return;
+            }
+            const kosong = '_______________';
+            const tarikhSurat = formatTarikhSuratPanjang(getRealTimeTodayStr());
+            const tarikhLetak = p.tarikhArkib ? formatTarikhSuratPanjang(p.tarikhArkib) : kosong;
+            const tarikhLantik = p.tarikhLantikan ? formatTarikhSuratPanjang(p.tarikhLantikan) : '';
+            const namaGuru = getGuruPengawasName();
+            const sel = 'border:1px solid black; padding:5px 8px;';
+            const baris = (label, nilai) => `<tr><th style="${sel} width:32%; text-align:left; background:#f3f4f6;">${label}</th><td style="${sel}">${nilai}</td></tr>`;
+
+            let html = getPrintHeader();
+            html += `<div style="text-align:right; margin-bottom:8px; font-size:10pt;">Tarikh: ${tarikhSurat}</div>
+                <div style="margin-bottom:14px; line-height:1.45; font-size:10.5pt;">
+                    <b>Kepada:</b><br>
+                    Ibu Bapa/Penjaga kepada <b>${escapeHtml(p.nama)}</b><br>
+                    ${p.ibubapa ? `Nama Ibu Bapa/Penjaga: ${escapeHtml(p.ibubapa)}<br>` : ''}
+                    Kelas: ${escapeHtml(p.kelas || '-')}
+                </div>
+                <hr style="border:0.5px solid black; margin-bottom:10px;">
+                <h3 style="text-decoration:underline; font-weight:bold; text-transform:uppercase; font-size:11pt; margin:0 0 12px 0; text-align:center;">Pemakluman Penerimaan Letak Jawatan Pengawas Sekolah</h3>
+                <div style="line-height:1.5; text-align:justify; font-size:10.5pt;">
+                    <p style="margin:0 0 8px 0;">Tuan/Puan,</p>
+                    <p style="margin:0 0 8px 0;">Dengan segala hormatnya, perkara di atas adalah dirujuk.</p>
+                    <p style="margin:0 0 8px 0;">1. Dimaklumkan bahawa anak/jagaan tuan/puan, <b>${escapeHtml(p.nama)}</b>, telah meletakkan jawatan sebagai <b>${escapeHtml(namaAsasJawatan(p.jawatan) || p.jawatan || 'Pengawas')}</b> dan peletakan jawatan tersebut telah diterima serta direkodkan oleh pihak sekolah berkuat kuasa mulai <b>${tarikhLetak}</b>. Butiran rekod adalah seperti berikut:</p>
+                    <table style="width:100%; border-collapse:collapse; margin:6px 0 10px 0; font-size:10pt;">
+                        ${baris('Nama Pengawas', escapeHtml(p.nama))}
+                        ${baris('No. Kad Pengenalan', escapeHtml(p.ic || '-'))}
+                        ${baris('Kelas', escapeHtml(p.kelas || '-'))}
+                        ${baris('Jawatan Terakhir', escapeHtml(namaAsasJawatan(p.jawatan) || p.jawatan || '-'))}
+                        ${tarikhLantik ? baris('Tarikh Dilantik', tarikhLantik) : ''}
+                        ${baris('Tarikh Berkuat Kuasa', tarikhLetak)}
+                        ${p.sebabArkib ? baris('Sebab/Catatan', escapeHtml(p.sebabArkib).replace(/\n/g, '<br>')) : ''}
+                    </table>
+                    <p style="margin:0 0 8px 0;">2. Sehubungan itu, status murid berkenaan telah ditukar daripada pengawas aktif kepada tidak aktif, dan segala tugas serta tanggungjawab sebagai pengawas sekolah adalah ditamatkan mulai tarikh tersebut.</p>
+                    <p style="margin:0 0 8px 0;">3. Murid berkenaan dimohon memulangkan sebarang kelengkapan pengawas (seperti lencana, tanda nama dan lain-lain) yang masih dalam simpanan kepada Guru Pengawas sekiranya belum berbuat demikian.</p>
+                    <p style="margin:0 0 8px 0;">4. Pihak sekolah merakamkan setinggi-tinggi penghargaan atas sumbangan dan khidmat bakti yang telah dicurahkan sepanjang tempoh berkhidmat sebagai pengawas${tarikhLantik ? ` (sejak ${tarikhLantik})` : ''}. Semoga murid berkenaan terus cemerlang dalam pelajaran dan sahsiah.</p>
+                    <p style="margin:10px 0 0 0;">Sekian, untuk makluman tuan/puan. Terima kasih.</p>
+                </div>
+                <div class="signature-box" style="margin-top:34px; display:flex; justify-content:space-between;">
+                    <div><div class="sig-line" style="border-top:1px solid black; width:220px; text-align:center; padding-top:4px; margin-top:34px; font-size:10pt;">Dikeluarkan Oleh<br><br><b>${escapeHtml(namaGuru)}</b><br>Guru Pengawas</div></div>
+                    <div><div class="sig-line" style="border-top:1px solid black; width:220px; text-align:center; padding-top:4px; margin-top:34px; font-size:10pt;">Perakuan Penerimaan<br><br>Nama Ibu Bapa/Penjaga: ${p.ibubapa ? `<b>${escapeHtml(p.ibubapa)}</b>` : kosong}<br>Tarikh: ${kosong}</div></div>
+                </div>`;
+            executePrint(html, 'portrait');
+        }
+
         function renderTableArkib() {
             const tbody = document.getElementById('table-arkib');
             if(!tbody) return;
@@ -12716,6 +12769,7 @@
                     </td>
                     <td class="px-4 py-3.5 text-right whitespace-nowrap text-xs">
                         <button onclick="openChecklistPengawasModal('offboarding', '${p.id}')" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-2.5 py-1.5 rounded-md font-bold mr-1.5 transition-all" title="Senarai Semak Offboarding"><i class="fas fa-clipboard-list"></i></button>
+                        ${p.status === 'Letak Jawatan' ? `<button onclick="printSuratPemaklumanLetakJawatan('${p.id}')" class="bg-amber-50 text-amber-700 hover:bg-amber-100 px-2.5 py-1.5 rounded-md font-bold mr-1.5 transition-all" title="Cetak Surat Pemakluman Letak Jawatan"><i class="fas fa-envelope-open-text"></i></button>` : ''}
                         <button onclick="restorePrefect('${p.id}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1.5 rounded-md font-bold mr-1.5 transition-all" title="Aktifkan Semula"><i class="fas fa-undo"></i> Pulihkan</button>
                         <button onclick="deletePrefectPermanently('${p.id}')" class="bg-red-50 text-red-600 hover:bg-red-100 px-2.5 py-1.5 rounded-md font-bold transition-all" title="Padam Kekal"><i class="fas fa-trash"></i></button>
                     </td>
