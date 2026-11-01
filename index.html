@@ -12679,41 +12679,38 @@
             const tarikhLetak = p.tarikhArkib ? formatTarikhSuratPanjang(p.tarikhArkib) : kosong;
             const tarikhLantik = p.tarikhLantikan ? formatTarikhSuratPanjang(p.tarikhLantikan) : '';
             const namaGuru = getGuruPengawasName();
-            const sel = 'border:1px solid black; padding:5px 8px;';
-            const baris = (label, nilai) => `<tr><th style="${sel} width:32%; text-align:left; background:#f3f4f6;">${label}</th><td style="${sel}">${nilai}</td></tr>`;
+            const jawatanTeks = namaAsasJawatan(p.jawatan) || p.jawatan || 'Pengawas';
+            // Sebab dihadkan supaya surat KEKAL SATU MUKA SURAT walaupun catatan sangat panjang.
+            let sebab = String(p.sebabArkib || '').replace(/\s+/g, ' ').trim();
+            if (sebab.length > 300) sebab = sebab.slice(0, 297).trim() + '...';
+            const sel = 'border:1px solid black; padding:3px 7px;';
+            const th = `${sel} width:18%; text-align:left; background:#f3f4f6;`;
 
+            // Susun atur PADAT (satu muka surat A4): fon 10pt, jarak baris 1.4, jadual rekod 2 lajur.
             let html = getPrintHeader();
-            html += `<div style="text-align:right; margin-bottom:8px; font-size:10pt;">Tarikh: ${tarikhSurat}</div>
-                <div style="margin-bottom:14px; line-height:1.45; font-size:10.5pt;">
-                    <b>Kepada:</b><br>
-                    Ibu Bapa/Penjaga kepada <b>${escapeHtml(p.nama)}</b><br>
-                    ${p.ibubapa ? `Nama Ibu Bapa/Penjaga: ${escapeHtml(p.ibubapa)}<br>` : ''}
-                    Kelas: ${escapeHtml(p.kelas || '-')}
+            html += `<div style="font-size:10pt; line-height:1.4;">
+                <div style="text-align:right; margin-bottom:4px;">Tarikh: ${tarikhSurat}</div>
+                <div style="margin-bottom:6px;">
+                    <b>Kepada:</b> Ibu Bapa/Penjaga kepada <b>${escapeHtml(p.nama)}</b> (Kelas: ${escapeHtml(p.kelas || '-')})${p.ibubapa ? `<br>Nama Ibu Bapa/Penjaga: ${escapeHtml(p.ibubapa)}` : ''}
                 </div>
-                <hr style="border:0.5px solid black; margin-bottom:10px;">
-                <h3 style="text-decoration:underline; font-weight:bold; text-transform:uppercase; font-size:11pt; margin:0 0 12px 0; text-align:center;">Pemakluman Penerimaan Letak Jawatan Pengawas Sekolah</h3>
-                <div style="line-height:1.5; text-align:justify; font-size:10.5pt;">
-                    <p style="margin:0 0 8px 0;">Tuan/Puan,</p>
-                    <p style="margin:0 0 8px 0;">Dengan segala hormatnya, perkara di atas adalah dirujuk.</p>
-                    <p style="margin:0 0 8px 0;">1. Dimaklumkan bahawa anak/jagaan tuan/puan, <b>${escapeHtml(p.nama)}</b>, telah meletakkan jawatan sebagai <b>${escapeHtml(namaAsasJawatan(p.jawatan) || p.jawatan || 'Pengawas')}</b> dan peletakan jawatan tersebut telah diterima serta direkodkan oleh pihak sekolah berkuat kuasa mulai <b>${tarikhLetak}</b>. Butiran rekod adalah seperti berikut:</p>
-                    <table style="width:100%; border-collapse:collapse; margin:6px 0 10px 0; font-size:10pt;">
-                        ${baris('Nama Pengawas', escapeHtml(p.nama))}
-                        ${baris('No. Kad Pengenalan', escapeHtml(p.ic || '-'))}
-                        ${baris('Kelas', escapeHtml(p.kelas || '-'))}
-                        ${baris('Jawatan Terakhir', escapeHtml(namaAsasJawatan(p.jawatan) || p.jawatan || '-'))}
-                        ${tarikhLantik ? baris('Tarikh Dilantik', tarikhLantik) : ''}
-                        ${baris('Tarikh Berkuat Kuasa', tarikhLetak)}
-                        ${p.sebabArkib ? baris('Sebab/Catatan', escapeHtml(p.sebabArkib).replace(/\n/g, '<br>')) : ''}
+                <hr style="border:0.5px solid black; margin:0 0 6px 0;">
+                <h3 style="text-decoration:underline; font-weight:bold; text-transform:uppercase; font-size:10.5pt; margin:0 0 8px 0; text-align:center;">Pemakluman Penerimaan Letak Jawatan Pengawas Sekolah</h3>
+                <div style="text-align:justify;">
+                    <p style="margin:0 0 6px 0;">Tuan/Puan, dengan segala hormatnya perkara di atas adalah dirujuk.</p>
+                    <p style="margin:0 0 6px 0;">1. Dimaklumkan bahawa anak/jagaan tuan/puan, <b>${escapeHtml(p.nama)}</b>${p.ic ? ` (No. K/P: ${escapeHtml(p.ic)})` : ''}, telah meletakkan jawatan sebagai <b>${escapeHtml(jawatanTeks)}</b> dan peletakan jawatan tersebut telah diterima serta direkodkan berkuat kuasa mulai <b>${tarikhLetak}</b>.</p>
+                    <table style="width:100%; border-collapse:collapse; margin:0 0 6px 0; font-size:9.5pt;">
+                        <tr><th style="${th}">Tarikh Dilantik</th><td style="${sel} width:32%;">${tarikhLantik || '-'}</td><th style="${th}">Berkuat Kuasa</th><td style="${sel}">${tarikhLetak}</td></tr>
+                        ${sebab ? `<tr><th style="${th}">Sebab/Catatan</th><td style="${sel}" colspan="3">${escapeHtml(sebab)}</td></tr>` : ''}
                     </table>
-                    <p style="margin:0 0 8px 0;">2. Sehubungan itu, status murid berkenaan telah ditukar daripada pengawas aktif kepada tidak aktif, dan segala tugas serta tanggungjawab sebagai pengawas sekolah adalah ditamatkan mulai tarikh tersebut.</p>
-                    <p style="margin:0 0 8px 0;">3. Murid berkenaan dimohon memulangkan sebarang kelengkapan pengawas (seperti lencana, tanda nama dan lain-lain) yang masih dalam simpanan kepada Guru Pengawas sekiranya belum berbuat demikian.</p>
-                    <p style="margin:0 0 8px 0;">4. Pihak sekolah merakamkan setinggi-tinggi penghargaan atas sumbangan dan khidmat bakti yang telah dicurahkan sepanjang tempoh berkhidmat sebagai pengawas${tarikhLantik ? ` (sejak ${tarikhLantik})` : ''}. Semoga murid berkenaan terus cemerlang dalam pelajaran dan sahsiah.</p>
-                    <p style="margin:10px 0 0 0;">Sekian, untuk makluman tuan/puan. Terima kasih.</p>
+                    <p style="margin:0 0 6px 0;">2. Sehubungan itu, status murid berkenaan telah ditukar kepada tidak aktif dan segala tugas serta tanggungjawab sebagai pengawas ditamatkan mulai tarikh tersebut. Murid dimohon memulangkan sebarang kelengkapan pengawas (seperti lencana dan tanda nama) kepada Guru Pengawas sekiranya belum berbuat demikian.</p>
+                    <p style="margin:0 0 6px 0;">3. Pihak sekolah merakamkan setinggi-tinggi penghargaan atas sumbangan dan khidmat bakti sepanjang tempoh berkhidmat sebagai pengawas${tarikhLantik ? ` (sejak ${tarikhLantik})` : ''}. Semoga murid berkenaan terus cemerlang dalam pelajaran dan sahsiah.</p>
+                    <p style="margin:6px 0 0 0;">Sekian, untuk makluman tuan/puan. Terima kasih.</p>
                 </div>
-                <div class="signature-box" style="margin-top:34px; display:flex; justify-content:space-between;">
-                    <div><div class="sig-line" style="border-top:1px solid black; width:220px; text-align:center; padding-top:4px; margin-top:34px; font-size:10pt;">Dikeluarkan Oleh<br><br><b>${escapeHtml(namaGuru)}</b><br>Guru Pengawas</div></div>
-                    <div><div class="sig-line" style="border-top:1px solid black; width:220px; text-align:center; padding-top:4px; margin-top:34px; font-size:10pt;">Perakuan Penerimaan<br><br>Nama Ibu Bapa/Penjaga: ${p.ibubapa ? `<b>${escapeHtml(p.ibubapa)}</b>` : kosong}<br>Tarikh: ${kosong}</div></div>
-                </div>`;
+                <div class="signature-box" style="margin-top:14px; display:flex; justify-content:space-between;">
+                    <div><div class="sig-line" style="border-top:1px solid black; width:210px; text-align:center; padding-top:3px; margin-top:26px; font-size:9.5pt;">Dikeluarkan Oleh<br><b>${escapeHtml(namaGuru)}</b><br>Guru Pengawas</div></div>
+                    <div><div class="sig-line" style="border-top:1px solid black; width:210px; text-align:center; padding-top:3px; margin-top:26px; font-size:9.5pt;">Perakuan Penerimaan<br>Nama: ${p.ibubapa ? `<b>${escapeHtml(p.ibubapa)}</b>` : kosong}<br>Tarikh: ${kosong}</div></div>
+                </div>
+            </div>`;
             executePrint(html, 'portrait');
         }
 
