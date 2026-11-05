@@ -422,10 +422,6 @@
             </form>
             
             <div class="mt-4 pt-4 border-t border-gray-100 text-center">
-                <button type="button" onclick="syncDataAtLogin()" id="login-sync-btn" class="text-xs text-brand-blue hover:text-blue-800 font-semibold flex items-center justify-center gap-1 mx-auto transition-colors duration-150">
-                    <i class="fas fa-cloud-download-alt"></i> Muat Turun Data Akaun dari Google Sheets
-                </button>
-
                 <p class="mt-3 text-[8px] text-slate-400 tracking-wide select-none">&copy; ARF2026</p>
             </div>
         </div>
@@ -6577,7 +6573,7 @@
             if (saizDbEl) {
                 saizDbEl.innerHTML = `<i class="fas fa-spinner fa-spin text-slate-400"></i>`;
                 try {
-                    const resSaiz = await fetch(`${scriptUrl}?action=saizPangkalanData`);
+                    const resSaiz = await fetch(`${scriptUrl}?action=saizPangkalanData&token=${encodeURIComponent(state.sessionToken || '')}`);
                     const dataSaiz = await resSaiz.json();
                     if (dataSaiz.status === 'success') {
                         const warnaAras = { kosong: 'text-slate-400', baik: 'text-emerald-600', amaran: 'text-amber-600', kritikal: 'text-red-600' };
@@ -6673,7 +6669,7 @@
         function semakKonflikSync(scriptUrl) {
             return new Promise(async (resolve) => {
                 try {
-                    const res = await fetch(`${scriptUrl}?action=checkTimestamp`);
+                    const res = await fetch(`${scriptUrl}?action=checkTimestamp&token=${encodeURIComponent(state.sessionToken || '')}`);
                     const data = await res.json();
                     if (data.status !== 'success' || !data.masaKemaskiniPelayan) {
                         resolve(true); // tidak dapat semak -- teruskan sahaja, jangan sekat pengguna
@@ -6897,17 +6893,11 @@
             return _terapkanDataDaripadaPelayan_(hasilLogin.state, hasilLogin.masaKemaskiniPelayan, tunjukMesej, mesejBerjaya);
         }
 
-        // KESELAMATAN (PEMBETULAN): pelayan (Code.gs handlePull) kini memulangkan state
-        // yang DIBERSIHKAN (tanpa kata laluan/hash & tanpa No.IC/telefon/emel guru) bagi
-        // permintaan TANPA token sesi sah -- lihat _bersihkanStateUntukPullTanpaSesi_() di
-        // Code_GS.txt. Sertakan "state.sessionToken" di sini (jika pengguna SUDAH log
-        // masuk & token sedia ada dlm memori) supaya pull SELEPAS log masuk terus dapat
-        // state PENUH seperti sedia ada -- pull SEBELUM log masuk (cth. butang "Muat
-        // Turun Data Akaun" di skrin log masuk) kekal menerima versi terhad, memandangkan
-        // pengguna belum disahkan pada ketika itu. NOTA: selepas pembetulan prestasi di
-        // atas, laluan ini (fetch `pull` berasingan) TIDAK LAGI dipanggil serta-merta
-        // selepas log masuk berjaya -- ia kekal digunakan utk pull SEBELUM log masuk & pull
-        // manual lain (Tetapan & Segerak, selepas Restore Sandaran, jaring keselamatan).
+        // KESELAMATAN: `pull` MEMERLUKAN token sesi sah -- tanpa token pelayan menolak (tiada data
+        // dipulangkan). Log masuk sendiri sudah memulangkan `state` yg sesuai dgn peranan
+        // (guru biasa & pengawas tidak menerima hash kata laluan; `passwordEnc` tidak dihantar
+        // kpd sesiapa), jadi tiada lagi pull sebelum log masuk. Jika token luput, pelayan
+        // memulangkan ralat dan state tempatan TIDAK ditimpa.
         async function pullDataForLogin(tunjukMesej, mesejBerjaya) {
             const scriptUrl = state.settings.scriptUrl;
             if (!scriptUrl || scriptUrl.trim() === '') {
@@ -6996,7 +6986,7 @@
                 return;
             }
             try {
-                const res = await fetch(`${scriptUrl}?action=listBackups`);
+                const res = await fetch(`${scriptUrl}?action=listBackups&token=${encodeURIComponent(state.sessionToken || '')}`);
                 const data = await res.json();
                 loadingEl.classList.add('hidden');
                 if (data.status !== 'success') {
@@ -15526,7 +15516,7 @@
 
             try {
                 // 1) Senarai fail arkib tahun-tahun lepas
-                const resSenarai = await fetch(`${scriptUrl}?action=listArkibTahunan`);
+                const resSenarai = await fetch(`${scriptUrl}?action=listArkibTahunan&token=${encodeURIComponent(state.sessionToken || '')}`);
                 const dataSenarai = await resSenarai.json();
                 if (dataSenarai.status !== 'success') {
                     throw new Error(dataSenarai.message || "Gagal mengambil senarai arkib tahunan.");
@@ -15535,7 +15525,7 @@
 
                 // 2) Ambil statistik ringkasan SETIAP fail arkib (selari)
                 const statistikArkib = await Promise.all(senaraiArkib.map(async (a) => {
-                    const res = await fetch(`${scriptUrl}?action=statistikArkibTahun&fileId=${encodeURIComponent(a.fileId)}`);
+                    const res = await fetch(`${scriptUrl}?action=statistikArkibTahun&fileId=${encodeURIComponent(a.fileId)}&token=${encodeURIComponent(state.sessionToken || '')}`);
                     const d = await res.json();
                     return d.status === 'success' ? d.ringkasan : null;
                 }));
