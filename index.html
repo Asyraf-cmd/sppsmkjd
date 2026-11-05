@@ -478,22 +478,23 @@
             <ul class="space-y-0.5 px-2">
                 <li id="nav-li-dashboard"><div onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-home w-6"></i> Dashboard</div></li>
 
-                <!-- Divider 1a: Pendaftaran & Akaun -->
+                <!-- Divider 1a: Pengurusan Pengawas (kitaran hidup pengawas) -->
                 <li class="pt-3 pb-1 px-3">
                     <p id="divider-pendaftaran-akaun" onclick="toggleSidebarGroup('pendaftaran-akaun')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
                         <span class="flex-1 h-px bg-blue-800"></span>
-                        Pendaftaran &amp; Akaun
+                        Pengurusan Pengawas
                         <i id="chevron-pendaftaran-akaun" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
                         <span class="flex-1 h-px bg-blue-800"></span>
                     </p>
                 </li>
 
-                <li id="nav-li-pendaftaran" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('pendaftaran')" id="nav-pendaftaran" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-users w-6"></i> Pendaftaran Pengawas</div></li>
                 <li id="nav-li-permohonan-pengawas" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('permohonan-pengawas')" id="nav-permohonan-pengawas" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-inbox w-6 opacity-85 text-brand-yellow"></i> Permohonan Pengawas</div></li>
+                <li id="nav-li-pendaftaran" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('pendaftaran')" id="nav-pendaftaran" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-users w-6 opacity-85 text-brand-yellow"></i> Pendaftaran Pengawas</div></li>
                 <li id="nav-li-perjanjian" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('perjanjian')" id="nav-perjanjian" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-file-signature w-6 opacity-85 text-brand-yellow"></i> Perjanjian &amp; Aku Janji</div></li>
-                <li id="nav-li-akses-pengawas" class="super-admin-only sidebar-group-pendaftaran-akaun"><div onclick="switchTab('akses-pengawas')" id="nav-akses-pengawas" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-6 opacity-85 text-brand-yellow"></i> Akses Pengawas</div></li>
-                <li id="nav-li-arkib" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('arkib')" id="nav-arkib" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-archive w-6 opacity-85 text-brand-yellow"></i> Arkib Pengawas</div></li>
+                <li id="nav-li-akses-pengawas" class="super-admin-only sidebar-group-pendaftaran-akaun"><div onclick="switchTab('akses-pengawas')" id="nav-akses-pengawas" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-6 opacity-85 text-brand-yellow"></i> Akaun Pengawas</div></li>
                 <li id="nav-li-carta-organisasi-lengkap" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('carta-organisasi-lengkap')" id="nav-carta-organisasi-lengkap" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-diagram-project w-6 opacity-85 text-brand-yellow"></i> Carta Organisasi Lengkap</div></li>
+                <li id="nav-li-arkib" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('arkib')" id="nav-arkib" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-archive w-6 opacity-85 text-brand-yellow"></i> Pengawas Tidak Aktif</div></li>
+                <li id="nav-li-reset-tahunan" class="super-admin-only sidebar-group-pendaftaran-akaun"><div onclick="switchTab('reset-tahunan')" id="nav-reset-tahunan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-check w-6 opacity-85 text-brand-yellow"></i> Reset Tahunan</div></li>
 
                 <!-- Divider 1b: Operasi & Tugasan Harian -->
                 <li class="pt-3 pb-1 px-3">
@@ -553,29 +554,19 @@
                 <li id="nav-li-laporan" class="sidebar-group-mesyuarat-laporan"><div onclick="switchTab('laporan')" id="nav-laporan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chart-bar w-6 opacity-85 text-brand-yellow"></i> Laporan Pengawas</div></li>
                 <li id="nav-li-sejarah-laporan" class="sidebar-group-mesyuarat-laporan"><div onclick="switchTab('sejarah-laporan')" id="nav-sejarah-laporan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-history w-6 opacity-85 text-brand-yellow"></i> Sejarah Laporan dan Minit Mesyuarat</div></li>
 
-                <!-- Divider: Kewangan Pengawas -->
+                <!-- Divider: Pentadbiran (Kewangan & Guru) -->
                 <li class="pt-3 pb-1 px-3">
                     <p id="divider-kewangan" onclick="toggleSidebarGroup('kewangan')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
                         <span class="flex-1 h-px bg-blue-800"></span>
-                        Kewangan Pengawas
+                        Pentadbiran
                         <i id="chevron-kewangan" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
                         <span class="flex-1 h-px bg-blue-800"></span>
                     </p>
                 </li>
                 <li id="nav-li-kewangan" class="sidebar-group-kewangan"><div onclick="switchTab('kewangan')" id="nav-kewangan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-wallet w-6 opacity-85 text-brand-yellow"></i> Kewangan Pengawas</div></li>
 
-                <!-- Divider 2: Pengurusan Guru -->
-                <li class="pt-3 pb-1 px-3 super-admin-only">
-                    <p id="divider-guru" onclick="toggleSidebarGroup('guru')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
-                        <span class="flex-1 h-px bg-blue-800"></span>
-                        Pengurusan Guru
-                        <i id="chevron-guru" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
-                        <span class="flex-1 h-px bg-blue-800"></span>
-                    </p>
-                </li>
-
-                <li id="nav-li-pendaftaran-guru" class="super-admin-only sidebar-group-guru"><div onclick="switchTab('pendaftaran-guru')" id="nav-pendaftaran-guru" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-tie w-6 opacity-85 text-brand-yellow"></i> Pendaftaran Guru</div></li>
-                <li id="nav-li-guru" class="super-admin-only sidebar-group-guru"><div onclick="switchTab('guru')" id="nav-guru" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chalkboard-teacher w-6 opacity-85 text-brand-yellow"></i> Akses Guru</div></li>
+                <li id="nav-li-pendaftaran-guru" class="super-admin-only sidebar-group-kewangan"><div onclick="switchTab('pendaftaran-guru')" id="nav-pendaftaran-guru" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-tie w-6 opacity-85 text-brand-yellow"></i> Pendaftaran Guru</div></li>
+                <li id="nav-li-guru" class="super-admin-only sidebar-group-kewangan"><div onclick="switchTab('guru')" id="nav-guru" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chalkboard-teacher w-6 opacity-85 text-brand-yellow"></i> Akaun Guru</div></li>
 
                 <!-- Divider 3: Tetapan Sistem -->
                 <li class="pt-3 pb-1 px-3 super-admin-only">
@@ -589,19 +580,20 @@
 
                 <li id="nav-li-tetapan-group-header" class="admin-guru-only-block">
                     <div onclick="toggleTetapanSidebarGroup()" id="nav-tetapan-group-header" class="nav-btn flex items-center justify-between px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button">
-                        <span class="flex items-center"><i class="fas fa-sliders w-6 opacity-85 text-brand-yellow"></i> Tetapan Sistem</span>
+                        <span class="flex items-center"><i class="fas fa-sliders w-6 opacity-85 text-brand-yellow"></i> Semua Tetapan</span>
                         <i id="tetapan-group-chevron" class="fas fa-chevron-down text-xs opacity-60 transition-transform duration-200"></i>
                     </div>
                 </li>
-                <li id="nav-li-tetapan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan')" id="nav-tetapan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-cog w-5 opacity-75 text-brand-yellow/80"></i> Tetapan & Segerak</div></li>
-                <li id="nav-li-tetapan-akses" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-akses')" id="nav-tetapan-akses" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Akses Tab</div></li>
+                <li class="sidebar-sublabel sidebar-group-tetapan tetapan-subgroup-item pt-2 pb-0.5 px-3"><p class="text-[11px] font-semibold text-blue-300/60 pl-5">Organisasi pengawas</p></li>
                 <li id="nav-li-tetapan-jawatan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-jawatan')" id="nav-tetapan-jawatan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-id-badge w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Jawatan</div></li>
                 <li id="nav-li-tetapan-bidang-tugas" class="sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-bidang-tugas')" id="nav-tetapan-bidang-tugas" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-file-signature w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Bidang Tugas Pengawas</div></li>
                 <li id="nav-li-tetapan-lokasi" class="sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-lokasi')" id="nav-tetapan-lokasi" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-map-marker-alt w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Lokasi Bertugas</div></li>
                 <li id="nav-li-tetapan-kelas" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-kelas')" id="nav-tetapan-kelas" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chalkboard w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Kelas</div></li>
                 <li id="nav-li-tetapan-minggu" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-minggu')" id="nav-tetapan-minggu" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-week w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Minggu</div></li>
+                <li class="sidebar-sublabel super-admin-only sidebar-group-tetapan tetapan-subgroup-item pt-2 pb-0.5 px-3"><p class="text-[11px] font-semibold text-blue-300/60 pl-5">Sistem</p></li>
+                <li id="nav-li-tetapan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan')" id="nav-tetapan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-cog w-5 opacity-75 text-brand-yellow/80"></i> Tetapan & Segerak</div></li>
+                <li id="nav-li-tetapan-akses" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-akses')" id="nav-tetapan-akses" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-5 opacity-75 text-brand-yellow/80"></i> Kebenaran Tab</div></li>
                 <li id="nav-li-log-aktiviti" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('log-aktiviti')" id="nav-log-aktiviti" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-history w-5 opacity-75 text-brand-yellow/80"></i> Log Aktiviti Sistem</div></li>
-                <li id="nav-li-reset-tahunan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('reset-tahunan')" id="nav-reset-tahunan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-check w-5 opacity-75 text-brand-yellow/80"></i> Reset Tahunan</div></li>
             </ul>
         </nav>
         <div class="p-4 border-t border-blue-950">
@@ -2953,7 +2945,7 @@
             <!-- TAB: Akses Pengawas -->
             <div id="tab-akses-pengawas" class="tab-content hidden">
                 <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
-                    <h2 class="text-2xl font-bold text-slate-800">Pengurusan Akses Pengawas</h2>
+                    <h2 class="text-2xl font-bold text-slate-800">Pengurusan Akaun Pengawas</h2>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="printSemuaAksesPengawas()" class="bg-slate-600 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 transition-all"><i class="fas fa-print"></i> Cetak Semua (Pukal)</button>
                         <button onclick="showForm('form-akses-pengawas'); document.getElementById('aksesPengawasForm').reset(); document.getElementById('akses-pengawas-id').value=''; aturUIKataLaluan('akses', true);" class="bg-brand-green hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 transition"><i class="fas fa-user-shield"></i> Daftar Akses Pengawas</button>
@@ -3024,7 +3016,7 @@
             <!-- TAB: Arkib Pengawas -->
             <div id="tab-arkib" class="tab-content hidden">
                 <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
-                    <h2 class="text-2xl font-bold text-slate-800">Arkib Pengawas</h2>
+                    <h2 class="text-2xl font-bold text-slate-800">Pengawas Tidak Aktif</h2>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Senarai pengawas yang berpindah, dilucutkan jawatan, letak jawatan atau bertukar sesi</p>
                 </div>
 
@@ -3254,7 +3246,7 @@
             <div id="tab-tetapan-akses" class="tab-content hidden">
                 <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
                     <div>
-                        <h2 class="text-2xl font-bold text-slate-800">Tetapan Akses Tab</h2>
+                        <h2 class="text-2xl font-bold text-slate-800">Kebenaran Tab</h2>
                         <p class="text-xs text-slate-500 mt-1"><i class="fas fa-lock mr-1"></i> Hanya boleh diakses oleh Admin Utama (Super Admin). Tandakan tab yang boleh diakses oleh Guru dan setiap jawatan Pengawas -- tidak perlu lagi ubah kod untuk tukar akses.</p>
                     </div>
                 </div>
@@ -3688,7 +3680,7 @@
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5 text-sm space-y-2">
                     <div><i class="fas fa-archive text-slate-400 mr-1.5"></i>Rekod kesalahan, kehadiran, laporan mingguan & minit mesyuarat tahun <b id="rt-confirm-tahun-lama"></b> akan diarkibkan ke fail Google Drive.</div>
                     <div><i class="fas fa-user-check text-emerald-500 mr-1.5"></i><b id="rt-confirm-kekal-count">0</b> pengawas akan dikekalkan (kelas/jawatan dikemas kini).</div>
-                    <div><i class="fas fa-user-times text-red-500 mr-1.5"></i><b id="rt-confirm-tamat-count">0</b> pengawas akan ditandakan Tamat Perkhidmatan & dipindah ke Arkib Pengawas.</div>
+                    <div><i class="fas fa-user-times text-red-500 mr-1.5"></i><b id="rt-confirm-tamat-count">0</b> pengawas akan ditandakan Tamat Perkhidmatan & dipindah ke Pengawas Tidak Aktif.</div>
                     <div><i class="fas fa-broom text-amber-500 mr-1.5"></i>Log disiplin & kehadiran akan dimulakan bersih untuk tahun <b id="rt-confirm-tahun-baharu"></b>.</div>
                     <div><i class="fas fa-shield-alt text-brand-blue mr-1.5"></i>Rekod Surat, Surat Tunjuk Sebab, Kemenjadian & Penilaian Prestasi <b>TIDAK</b> akan dipadam.</div>
                 </div>
@@ -4729,12 +4721,12 @@
                 : '';
 
             // PENAMBAHAN (Item #3): jika jawatan ini mempunyai TETAPAN AKSES TAB TERSENDIRI
-            // (tab "Tetapan Akses Tab") yg berbeza drpd lalai sistem, amaran tambahan diberi --
+            // (tab "Kebenaran Tab") yg berbeza drpd lalai sistem, amaran tambahan diberi --
             // supaya Admin sedar konfigurasi akses berkenaan akan turut "hilang senyap" (tiada lagi
             // baris tersendiri utk jawatan ini dlm Tetapan Akses Tab) apabila jawatan ini dipadam.
             const aksesTabSemasa = state.settings.aksesTab || {};
             if (jenis !== 'guru' && Array.isArray(aksesTabSemasa[namaSasaran])) {
-                amaranPengguna += ` Amaran tambahan: jawatan ini mempunyai TETAPAN AKSES TAB tersendiri (tab "Tetapan Akses Tab") -- konfigurasi akses berkenaan akan turut tidak lagi dipaparkan/diguna pakai selepas jawatan ini dipadam.`;
+                amaranPengguna += ` Amaran tambahan: jawatan ini mempunyai TETAPAN AKSES TAB tersendiri (tab "Kebenaran Tab") -- konfigurasi akses berkenaan akan turut tidak lagi dipaparkan/diguna pakai selepas jawatan ini dipadam.`;
             }
             // Item #1/#2: jika jawatan ini ada override tier/kunci teras, beritahu ia akan turut dibuang.
             if (jenis !== 'guru' && getJawatanTierOverride()[namaSasaran]) {
@@ -5095,7 +5087,7 @@
             { id: 'sejarah-laporan-disiplin', label: 'Sejarah Laporan - Disiplin' },
             { id: 'sejarah-laporan-aktiviti', label: 'Sejarah Laporan - Aktiviti Pengawas' },
             { id: 'kewangan', label: 'Kewangan Pengawas' },
-            { id: 'arkib', label: 'Arkib Pengawas' },
+            { id: 'arkib', label: 'Pengawas Tidak Aktif' },
             { id: 'carta-organisasi-lengkap', label: 'Carta Organisasi Lengkap' },
             { id: 'tetapan-bidang-tugas', label: 'Tetapan Bidang Tugas Pengawas' }
         ];
@@ -6175,7 +6167,7 @@
         //  toggleSidebarPin() supaya konsisten dgn seluruh sistem.
         // =========================================================================
         const TETAPAN_GROUP_EXPANDED_KEY = 'sppSmkjdTetapanGroupExpandedV1';
-        const TETAPAN_GROUP_TAB_IDS = ['tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'tetapan-minggu', 'log-aktiviti', 'reset-tahunan'];
+        const TETAPAN_GROUP_TAB_IDS = ['tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'tetapan-minggu', 'log-aktiviti'];
 
         function setTetapanSidebarGroupExpanded(expanded) {
             document.querySelectorAll('.tetapan-subgroup-item').forEach(li => {
@@ -7758,7 +7750,7 @@
 
         // --- SIDEBAR BOLEH DILIPAT (Collapsible Sections) ---
         const SIDEBAR_GROUP_STORAGE_KEY = 'spp_smkjd_sidebar_groups';
-        const SIDEBAR_GROUPS = ['pendaftaran-akaun', 'operasi-harian', 'disiplin', 'pencapaian', 'mesyuarat-laporan', 'kewangan', 'guru', 'tetapan'];
+        const SIDEBAR_GROUPS = ['pendaftaran-akaun', 'operasi-harian', 'disiplin', 'pencapaian', 'mesyuarat-laporan', 'kewangan', 'tetapan'];
 
         function getSidebarGroupState() {
             try {
@@ -7989,6 +7981,19 @@
         // kelihatan bagi peranan semasa (cth: pengawas biasa yang tiada akses ke mana-mana tab
         // dalam kumpulan "Mesyuarat & Laporan" tidak sepatutnya nampak tajuk kosong itu langsung).
         function hideEmptyDividers() {
+            // Label sub-kumpulan (cth. "Organisasi pengawas" / "Sistem" dalam Tetapan): sembunyikan jika
+            // tiada item di bawahnya kelihatan bagi peranan semasa. Dijalankan DAHULU supaya pengiraan
+            // divider kumpulan di bawah turut mengambil kira label yang sudah disembunyikan.
+            document.querySelectorAll('.sidebar-sublabel').forEach(lbl => {
+                if (lbl.classList.contains('super-admin-only') && lbl.style.display === 'none') return;
+                let ada = false;
+                let n = lbl.nextElementSibling;
+                while (n && !n.classList.contains('sidebar-sublabel')) {
+                    if (n.id && n.id.indexOf('nav-li-') === 0 && n.style.display !== 'none') { ada = true; break; }
+                    n = n.nextElementSibling;
+                }
+                lbl.style.display = ada ? '' : 'none';
+            });
             SIDEBAR_GROUPS.forEach(nama => {
                 const divider = document.getElementById(`divider-${nama}`);
                 if (!divider) return;
@@ -9578,11 +9583,9 @@
             if (!p[field]) p[field] = {};
             p[field][itemKey] = !!checked;
 
-            // EDIT rekod pengawas sedia ada -- guna fallback push penuh selaras dgn corak
-            // edit/padam rekod lain (lihat markNeedsFullSync() -- Google Sheets beroperasi
-            // "append sahaja" bagi delta, jadi perubahan MEDAN pada rekod sedia ada perlu
-            // push penuh supaya kekal selaras).
-            markNeedsFullSync(`Kemaskini Senarai Semak ${_checklistModalMode === 'offboarding' ? 'Offboarding' : 'Onboarding'}: ${p.nama}`);
+            // Simpan sebagai delta 'updatePrefect' (bukan markNeedsFullSync): push penuh hanya
+            // dibenarkan utk Admin, jadi guru/pengawas yg menanda senarai semak akan tersekat.
+            queueDelta('updatePrefect', p, `Kemaskini Senarai Semak ${_checklistModalMode === 'offboarding' ? 'Offboarding' : 'Onboarding'}: ${p.nama}`);
             saveStateToLocal();
             markUnsynced();
 
@@ -9926,8 +9929,12 @@
 
             if(idInput) {
                 const idx = state.pengawas.findIndex(x => normalizeId(x.id) === normalizeId(idInput));
-                if(idx > -1) state.pengawas[idx] = p;
-                queueDelta('updatePrefect', p);
+                // PEMBETULAN: GABUNG medan borang ke atas rekod sedia ada (bukan ganti). Sebelum ini rekod
+                // diganti dgn objek baharu yg hanya ada medan borang, jadi medan tambahan seperti senarai
+                // semak Onboarding/Offboarding hilang setiap kali pengawas diedit.
+                const pGabung = Object.assign({}, idx > -1 ? state.pengawas[idx] : {}, p);
+                if(idx > -1) state.pengawas[idx] = pGabung;
+                queueDelta('updatePrefect', pGabung);
             } else {
                 state.pengawas.push(p);
                 queueDelta('addPrefect', p);
