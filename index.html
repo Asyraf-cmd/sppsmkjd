@@ -429,7 +429,10 @@ button[class*="bg-"]:not([class*="bg-white"]):not([class*="bg-slate-"]):not([cla
 
 /* Log masuk */
 #login-view{background:transparent!important}
-#login-view>div,#login-view .bg-white{background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(255,255,255,.58))!important;border:1px solid transparent!important;background-clip:padding-box;box-shadow:0 0 0 1px rgba(224,178,90,.55),0 30px 80px -24px rgba(11,33,82,.45)!important;backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);border-radius:24px}
+#login-view>div.relative{background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(255,255,255,.58))!important;border:1px solid transparent!important;background-clip:padding-box;box-shadow:0 0 0 1px rgba(224,178,90,.55),0 30px 80px -24px rgba(11,33,82,.45)!important;backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);border-radius:24px}
+
+#login-view>#login-bg-layer{background-color:#0b2152}
+#login-view>div.absolute.inset-0:not(#login-bg-layer){background:linear-gradient(160deg,rgba(11,33,82,.50),rgba(11,33,82,.30))!important}
 
 /* Skrol */
 *{scrollbar-width:thin;scrollbar-color:rgba(11,33,82,.3) transparent}
@@ -452,7 +455,6 @@ button[class*="bg-"]:not([class*="bg-white"]):not([class*="bg-slate-"]):not([cla
  #sidebar::before{background:#0b2152}.rounded-xl.bg-white,.rounded-2xl.bg-white{background:rgba(255,255,255,.95)!important}
 }
 }
-
 </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-screen flex overflow-hidden font-sans">
