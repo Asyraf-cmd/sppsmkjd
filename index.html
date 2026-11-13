@@ -24309,7 +24309,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         function bkNamaSekolah_() { return String((state.settings && (state.settings.schoolName || state.settings.namaSekolah)) || 'SMK JALAN DAMAI').toUpperCase(); }
         const BK_GAYA_ = "font-family:'Times New Roman',serif; font-size:11pt; line-height:1.4; color:#000;";
         function bkKepala_(tajuk) {
-            return '<div style="text-align:center; margin-bottom:12px;"><div style="font-weight:bold; font-size:12pt;">' + m2Esc_(bkNamaSekolah_()) + '</div><div style="font-weight:bold; font-size:12.5pt; margin-top:3px;">BORANG PENGESAHAN PENGAWAS PERCUBAAN</div><div style="font-size:10.5pt;">' + tajuk + '</div></div>';
+            // Header seragam dengan surat/cetakan lain (logo + nama sekolah + Lembaga Pengawas + alamat)
+            return getPrintHeader() + '<div style="text-align:center; margin:6px 0 12px;"><div style="font-weight:bold; font-size:12.5pt;">BORANG PENGESAHAN PENGAWAS PERCUBAAN</div><div style="font-size:10.5pt;">' + tajuk + '</div></div>';
         }
         function bkBaris_(l, v) { return '<tr><td style="width:34%; padding:5px 6px; border:1px solid #000; font-weight:bold;">' + l + '</td><td style="padding:5px 6px; border:1px solid #000;">' + (v === '' || v == null ? '&nbsp;' : m2Esc_(v)) + '</td></tr>'; }
         function bkKotak_(t, n) { return '<div style="border:1px solid #000; min-height:' + (n || 40) + 'px; padding:5px 7px; white-space:pre-line;">' + m2Esc_(t || '') + '</div>'; }
