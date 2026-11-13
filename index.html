@@ -5633,7 +5633,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             // Pengawas, beritahu ia akan menjadi entri "anak yatim" (bukan dipadam automatik --
             // teks bidang tugas dikekalkan, tapi dropdown akan tanda ia tiada lagi dlm Tetapan
             // Jawatan) supaya Admin sedar & boleh betulkan/padam entri berkenaan jika perlu.
-            if (jenis !== 'guru' && _namaJawatanDigunakanBidangTugas_(jenis === 'pengawasPagi' ? 'Pagi' : 'Petang').includes(namaSasaran)) {
+            if (jenis !== 'guru' && (function() { try { const idJ = getIdJawatanPengawas_(jenis, namaSasaran); return !!idJ && _idJawatanDigunakanBidangTugas_(jenis === 'pengawasPagi' ? 'Pagi' : 'Petang').includes(idJ); } catch (e) { return false; } })()) {
                 amaranPengguna += ` Amaran tambahan: jawatan ini mempunyai entri di tab "Tetapan Bidang Tugas Pengawas" -- entri berkenaan akan ditandakan sbg tiada lagi sepadan (bukan dipadam automatik).`;
             }
 
@@ -23471,6 +23471,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             { k: 'Sekolah Ganti', kelas: 'bg-emerald-100 text-emerald-800 border-emerald-200', cuti: false, ganti: true },
             { k: 'Acara Sekolah', kelas: 'bg-blue-100 text-blue-800 border-blue-200', cuti: false, acara: true }
         ];
+        function kalSenarai_() { return (Array.isArray(state.kalendarSekolah) ? state.kalendarSekolah : []).filter(function(e) { return e && e.mula; }); }
         function kalInfoJenis_(k) { return KAL_JENIS_.find(function(j) { return j.k === k; }) || KAL_JENIS_[5]; }
         function kalRehatHari_() { return (state.settings && state.settings.hariRehatMinggu) === 'jum-sab' ? [5, 6] : [0, 6]; }
         function kalHariRehat_(t) {
@@ -23478,7 +23479,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             return !isNaN(d) && kalRehatHari_().indexOf(d.getDay()) !== -1;
         }
         function kalDiTarikh_(t, sesi) {
-            return (state.kalendarSekolah || []).filter(function(e) {
+            return kalSenarai_().filter(function(e) {
                 if (!e || !e.mula) return false;
                 const tamat = e.tamat || e.mula;
                 if (t < e.mula || t > tamat) return false;
@@ -23492,7 +23493,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             const ganti = e.find(function(x) { return kalInfoJenis_(x.jenis).ganti; });
             if (ganti) return { sekolah: true, jenisHari: 'Hari Persekolahan', nama: ganti.nama, label: 'Sekolah Ganti', ganti: true, acara: acara, tersuai: true };
             const cuti = e.find(function(x) { return kalInfoJenis_(x.jenis).cuti; });
-            if (cuti) return { sekolah: false, jenisHari: cuti.jenis, nama: cuti.nama, label: cuti.jenis, acara: acara, tersuai: true };
+            if (cuti) { const jn = KAL_JENIS_.some(function(j) { return j.k === cuti.jenis; }) ? cuti.jenis : 'Cuti Lain'; return { sekolah: false, jenisHari: jn, nama: cuti.nama, label: jn, acara: acara, tersuai: true }; }
             if (kalHariRehat_(t)) return { sekolah: false, jenisHari: 'Hujung Minggu', nama: 'Hujung minggu', label: 'Hujung Minggu', acara: acara, hujungMinggu: true, tersuai: true };
             return { sekolah: true, jenisHari: 'Hari Persekolahan', nama: '', label: 'Hari Persekolahan', acara: acara, tersuai: !!acara.length };
         }
@@ -23561,7 +23562,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
 
             // Senarai entri tahun dipilih
             const tb = m2El_('kal-senarai');
-            const senarai = (state.kalendarSekolah || []).filter(function(e) {
+            const senarai = kalSenarai_().filter(function(e) {
                 return String(e.mula || '').slice(0, 4) === String(tahun) || String(e.tamat || '').slice(0, 4) === String(tahun);
             }).sort(function(a, b) { return String(a.mula).localeCompare(String(b.mula)); });
             tb.innerHTML = senarai.length ? senarai.map(function(e) {
@@ -23596,7 +23597,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             kalKosongBorang_(); kalRender(); kalRefreshKehadiran_();
         }
         function kalEdit(id) {
-            const e = (state.kalendarSekolah || []).find(function(x) { return String(x.id) === String(id); }); if (!e) return;
+            const e = kalSenarai_().find(function(x) { return String(x.id) === String(id); }); if (!e) return;
             m2El_('kal-id').value = e.id; m2El_('kal-jenis').value = e.jenis; m2El_('kal-nama').value = e.nama || '';
             m2El_('kal-mula').value = e.mula || ''; m2El_('kal-tamat').value = e.tamat || e.mula || '';
             m2El_('kal-sesi').value = e.sesi || 'Semua'; m2El_('kal-catatan').value = e.catatan || '';
@@ -23606,7 +23607,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         }
         function kalPadam(id) {
             if (state.currentUser !== 'admin') return;
-            const e = (state.kalendarSekolah || []).find(function(x) { return String(x.id) === String(id); }); if (!e) return;
+            const e = kalSenarai_().find(function(x) { return String(x.id) === String(id); }); if (!e) return;
             showCustomConfirm('Padam Entri Kalendar', 'Padam "' + e.nama + '" (' + e.jenis + ', ' + kalRentang_(e) + ')?', function() {
                 state.kalendarSekolah = state.kalendarSekolah.filter(function(x) { return String(x.id) !== String(id); });
                 queueDeleteRecord('kalendarSekolah', e.id, 'Padam kalendar: ' + e.jenis + ' - ' + e.nama);
@@ -23628,7 +23629,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 const m = bhg[0].match(/^(\d{4}-\d{2}-\d{2})(?:\s*(?:hingga|sehingga|to|-|~)\s*(\d{4}-\d{2}-\d{2}))?$/i);
                 if (!m || !bhg[1]) { ralat.push('Baris ' + (n + 1) + ': format tidak sah'); return; }
                 const mula = m[1], tamat = m[2] || m[1];
-                if (isNaN(new Date(mula + 'T00:00:00')) || isNaN(new Date(tamat + 'T00:00:00')) || tamat < mula) { ralat.push('Baris ' + (n + 1) + ': tarikh tidak sah'); return; }
+                if (!sgTarikhSah_(mula) || !sgTarikhSah_(tamat) || tamat < mula) { ralat.push('Baris ' + (n + 1) + ': tarikh tidak sah'); return; }
                 const jn = (bhg[2] || 'Cuti Umum').toLowerCase();
                 const j = KAL_JENIS_.find(function(x) { return x.k.toLowerCase() === jn; });
                 if (!j) { ralat.push('Baris ' + (n + 1) + ': jenis "' + bhg[2] + '" tiada dalam senarai'); return; }
@@ -23717,7 +23718,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             const info = kalLegendaKehadiran_(suffix);
             if (info) {
                 const awal = tahun + '-' + String(bulan + 1).padStart(2, '0') + '-01', akhir = tahun + '-' + String(bulan + 1).padStart(2, '0') + '-' + String(jumlahHari).padStart(2, '0');
-                const bulanIni = (state.kalendarSekolah || []).filter(function(e) {
+                const bulanIni = kalSenarai_().filter(function(e) {
                     return e.mula <= akhir && (e.tamat || e.mula) >= awal && (!e.sesi || e.sesi === 'Semua' || e.sesi === sesi);
                 }).sort(function(a, b) { return String(a.mula).localeCompare(String(b.mula)); });
                 info.innerHTML = '<div class="flex flex-wrap items-center gap-x-4 gap-y-1 mb-2 text-[10px] text-slate-500">'
@@ -23866,7 +23867,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     else if (p.tarikhLantikan && k.tarikh < p.tarikhLantikan) tambah('amaran', 'Kehadiran', k.tarikh, label + ': ' + p.nama + ' direkod sebelum tarikh lantikan', 'sejarah-kehadiran');
                 });
             });
-            const kal = state.kalendarSekolah || [];
+            const kal = kalSenarai_();
             kal.forEach(function(e, i) {
                 const tamat = e.tamat || e.mula;
                 if (!sgTarikhSah_(e.mula) || !sgTarikhSah_(tamat)) { tambah('ralat', 'Kalendar', e.mula, (e.nama || '-') + ': tarikh tidak sah', 'tetapan-kalendar'); return; }
