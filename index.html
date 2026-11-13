@@ -831,6 +831,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             <ul class="space-y-0.5 px-2">
                 <li id="nav-li-dashboard"><div onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-home w-6"></i> Dashboard</div></li>
                 <li id="nav-li-pengumuman"><div onclick="switchTab('pengumuman')" id="nav-pengumuman" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-bullhorn w-6"></i> Pengumuman <span id="pgm-lencana" class="hidden ml-auto bg-red-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none">0</span></div></li>
+                <li id="nav-li-tindakan-perlu" class="admin-or-guru"><div onclick="switchTab('tindakan-perlu')" id="nav-tindakan-perlu" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-list-check w-6"></i> Tindakan Perlu</div></li>
                 <li id="nav-li-borang-kenaikan" class="admin-or-guru"><div onclick="switchTab('borang-kenaikan')" id="nav-borang-kenaikan" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-user-check w-6"></i> Pengesahan Percubaan</div></li>
                 <li id="nav-li-borang-saya" style="display:none"><div onclick="switchTab('borang-saya')" id="nav-borang-saya" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-file-pen w-6"></i> Borang Pengesahan Saya</div></li>
 
@@ -3979,14 +3980,32 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         <p class="text-xs text-slate-500 mt-1">Buka borang untuk pengawas percubaan, isi bahagian guru, semak jawapan murid, kemudian naikkan ke Pengawas Biasa.</p>
                     </div>
                 </div>
+                <div id="bk-tempoh-kad" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-slate-100 mb-4 flex flex-wrap items-end gap-3">
+                    <div><label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Tempoh percubaan lalai (bulan)</label>
+                    <input type="number" id="bk-tempoh-bulan" min="1" max="24" class="border border-slate-200 p-2 rounded-lg text-sm bg-white w-28"></div>
+                    <div><label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Markah lulus minimum (%)</label>
+                    <input type="number" id="bk-markah-lulus" min="0" max="100" class="border border-slate-200 p-2 rounded-lg text-sm bg-white w-28"></div>
+                    <button type="button" onclick="pcSimpanLalai()" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-xl text-sm">Simpan</button>
+                    <p class="text-[11px] text-slate-500" style="flex:1 1 240px"><i class="fas fa-lock mr-1"></i>Hanya Admin. Tempoh dikira dari tarikh lantikan bagi pengawas yang tempohnya tidak ditetapkan sendiri. Markah lulus 0 = tiada (amaran jika guru mengesahkan pengawas di bawah paras ini).</p>
+                </div>
+                <div id="bk-pipeline" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-2 mb-4"></div>
                 <div id="bk-amaran-soalan" class="hidden mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">Admin belum menetapkan soalan di Tetapan &gt; Tetapan Soalan Kenaikan.</div>
+                <div id="bk-pukal-bar" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-3 mb-3 flex flex-wrap items-center gap-2 text-sm">
+                    <span class="font-semibold text-brand-blue"><span id="bk-pukal-bil">0</span> dipilih</span>
+                    <button type="button" onclick="bkPukalBuka()" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50">Buka Rekod</button>
+                    <button type="button" onclick="bkPukalCetak('soalan')" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50"><i class="fas fa-print mr-1"></i>Borang Murid</button>
+                    <button type="button" onclick="bkPukalCetak('guru')" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50"><i class="fas fa-print mr-1"></i>Borang Guru</button>
+                    <button type="button" onclick="bkPukalSurat()" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50"><i class="fas fa-envelope mr-1"></i>Surat Keputusan</button>
+                    <button type="button" onclick="bkPukalKosongkan()" class="ml-auto text-xs font-bold text-slate-500 hover:underline">Kosongkan pilihan</button>
+                </div>
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-6">
                     <div class="overflow-x-auto"><table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b border-slate-100"><tr class="text-[11px] uppercase tracking-wider text-slate-500"><th class="px-4 py-3">Pengawas</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Markah</th><th class="px-4 py-3">Pengesahan Guru</th><th class="px-4 py-3 text-right">Tindakan</th></tr></thead>
+                        <thead class="bg-slate-50 border-b border-slate-100"><tr class="text-[11px] uppercase tracking-wider text-slate-500"><th class="px-3 py-3 w-8"><input type="checkbox" id="bk-pilih-semua" onchange="bkPilihSemua(this.checked)" aria-label="Pilih semua"></th><th class="px-4 py-3">Pengawas</th><th class="px-4 py-3">Tempoh Percubaan</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Markah</th><th class="px-4 py-3">Pengesahan Guru</th><th class="px-4 py-3 text-right">Tindakan</th></tr></thead>
                         <tbody id="bk-senarai" class="divide-y divide-slate-100"></tbody>
                     </table></div>
                 </div>
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100"><h3 class="font-bold text-slate-800 mb-2">Sejarah Kenaikan</h3><ul id="bk-sejarah"></ul></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mt-6"><div class="flex flex-wrap items-center justify-between gap-2 mb-2"><h3 class="font-bold text-slate-800">Penurunan Jawatan ke Percubaan</h3><button type="button" onclick="bkTurun()" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-700 border border-red-200 text-xs font-bold hover:bg-red-100"><i class="fas fa-arrow-down mr-1"></i>Turunkan Pengawas Biasa</button></div><ul id="bk-turun"></ul></div>
             </div>
 
             <!-- ===================== TAB: Borang Pengesahan Saya (Pengawas) ===================== -->
@@ -3996,6 +4015,18 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     <p class="text-xs text-slate-500 mt-1">Borang pengesahan Pengawas Percubaan ke Pengawas Biasa.</p></div>
                 </div>
                 <div id="bs-isi" style="max-width:820px"></div>
+            </div>
+
+            <!-- ===================== TAB: Tindakan Perlu (Guru/Admin) ===================== -->
+            <div id="tab-tindakan-perlu" class="tab-content hidden">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Tindakan Perlu</h2>
+                        <p class="text-xs text-slate-500 mt-1">Senarai perkara tertunggak yang memerlukan perhatian guru: tempoh percubaan, borang pengesahan, permohonan dan awasan pengawas.</p>
+                    </div>
+                    <button type="button" onclick="tpRender()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-xl text-sm"><i class="fas fa-rotate mr-1.5"></i>Muat semula</button>
+                </div>
+                <div id="tp-isi"></div>
             </div>
 
             <div id="tab-carta-organisasi-lengkap" class="tab-content hidden">
@@ -7480,6 +7511,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             return {
                 ambangDemeritAmaran: state.settings.ambangDemeritAmaran || 5,
                 kunciRekodHari: parseInt(state.settings.kunciRekodHari) || 0,
+                tempohPercubaanBulan: parseInt(state.settings.tempohPercubaanBulan) || 3,
+                markahLulusKenaikan: parseInt(state.settings.markahLulusKenaikan) || 0,
                 aksesTabV: parseInt(state.settings.aksesTabV) || 0,
                 hariRehatMinggu: state.settings.hariRehatMinggu === 'jum-sab' ? 'jum-sab' : 'sab-ahd',
                 ambangKelulusanPerbelanjaan: state.settings.ambangKelulusanPerbelanjaan || 100,
@@ -7584,6 +7617,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             // JANGAN sentuh tetapan sulit/setempat (scriptUrl, kata laluan, log sync tempatan)
             if (remoteState.sharedSettings) {
                 state.settings.kunciRekodHari = parseInt(remoteState.sharedSettings.kunciRekodHari) || 0;
+                state.settings.tempohPercubaanBulan = parseInt(remoteState.sharedSettings.tempohPercubaanBulan) || 3;
+                state.settings.markahLulusKenaikan = parseInt(remoteState.sharedSettings.markahLulusKenaikan) || 0;
                 state.settings.aksesTabV = parseInt(remoteState.sharedSettings.aksesTabV) || 0;
                 state.settings.hariRehatMinggu = remoteState.sharedSettings.hariRehatMinggu === 'jum-sab' ? 'jum-sab' : 'sab-ahd';
                 if (remoteState.sharedSettings.ambangDemeritAmaran) {
@@ -9117,7 +9152,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             let jawatan = '';
 
             // Hide all tab elements in sidebar first
-            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'kewangan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'dokumen-rasmi', 'pengumuman', 'laporan-ringkas', 'semakan-sistem', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'tetapan-kalendar', 'tetapan-soalan', 'borang-kenaikan', 'borang-saya', 'log-aktiviti'];
+            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'kewangan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'dokumen-rasmi', 'pengumuman', 'laporan-ringkas', 'semakan-sistem', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'tetapan-kalendar', 'tetapan-soalan', 'tindakan-perlu', 'borang-kenaikan', 'borang-saya', 'log-aktiviti'];
             navTabs.forEach(nav => {
                 const el = document.getElementById(`nav-li-${nav}`);
                 if (el) el.style.display = 'none';
@@ -23316,6 +23351,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             const dari = sj.length ? sj[sj.length - 1].hingga : (data.tarikhLantikan || '');
             sj.push({ jawatan: lama, dari: dari, hingga: getRealTimeTodayStr() });
             data.sejarahJawatan = sj;
+            // Diturunkan (atau ditukar) ke Pengawas Percubaan: mulakan semula tempoh percubaan dari hari ini
+            if (namaAsasJawatan(data.jawatan || '') === 'Pengawas Percubaan' && !/^Turunkan ke Percubaan/.test(String(label || ''))) { data.percubaanMula = getRealTimeTodayStr(); data.percubaanTamat = ''; }
         }
 
         // =====================================================================
@@ -24162,11 +24199,139 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             sqkSimpanKePelayan_('Muat Soalan Contoh Kenaikan');
         }
 
+
+        // =====================================================================
+        //  TEMPOH PERCUBAAN, PERINGKAT (PIPELINE) & JEJAK
+        // =====================================================================
+        const PC_AMARAN_HARI_ = 30;
+        function pcBulanLalai_() { const n = parseInt(state.settings && state.settings.tempohPercubaanBulan); return (n >= 1 && n <= 24) ? n : 3; }
+        let BK_FILTER_ = 'semua';
+        function pcTgl_(t) { t = String(t || '').slice(0, 10); return /^\d{4}-\d{2}-\d{2}$/.test(t) ? t : ''; }
+        function pcTambahBulan_(tgl, n) {
+            const d = new Date(tgl + 'T00:00:00'); if (isNaN(d.getTime())) return '';
+            const hari = d.getDate(); d.setMonth(d.getMonth() + n); if (d.getDate() !== hari) d.setDate(0);
+            return formatDateLocalYMD(d);
+        }
+        // Tempoh percubaan: mula = percubaanMula || tarikhLantikan; tamat = percubaanTamat || mula + 3 bulan
+        function pcTempoh_(p) {
+            const mula = pcTgl_(p && p.percubaanMula) || pcTgl_(p && p.tarikhLantikan);
+            const tamat = pcTgl_(p && p.percubaanTamat) || (mula ? pcTambahBulan_(mula, pcBulanLalai_()) : '');
+            let baki = null;
+            if (tamat) baki = Math.round((new Date(tamat + 'T00:00:00') - new Date(getRealTimeTodayStr() + 'T00:00:00')) / 86400000);
+            return { mula: mula, tamat: tamat, baki: baki, ditetapkan: !!pcTgl_(p && p.percubaanTamat) };
+        }
+        function pcStatusTempoh_(t) {
+            if (t.baki === null || isNaN(t.baki)) return 'tiada';
+            if (t.baki < 0) return 'tamat';
+            return t.baki <= PC_AMARAN_HARI_ ? 'hampir' : 'dalam';
+        }
+        function pcPeringkat_(p, b) {
+            if (!b) return 'percubaan';
+            const st = bkStatus_(b), kp = b.guru && b.guru.pengesahan && b.guru.pengesahan.keputusan;
+            if (st === 'Dinaikkan') return 'dinaikkan';
+            if (kp === 'Tidak Disahkan') return 'gagal';
+            if (st === 'Disahkan') return 'sedia';
+            if (st === 'Menunggu Guru') return 'pengesahan';
+            return 'markah';
+        }
+        function pcTeksTempoh_(t) {
+            if (!t.tamat) return '<span class="text-slate-400">-</span>';
+            const s = pcStatusTempoh_(t);
+            const kelas = s === 'tamat' ? 'bg-red-100 text-red-700 border-red-200' : s === 'hampir' ? 'bg-amber-100 text-amber-800 border-amber-200' : 'bg-slate-100 text-slate-600 border-slate-200';
+            const teks = s === 'tamat' ? 'Tamat ' + Math.abs(t.baki) + ' hari lalu' : (t.baki === 0 ? 'Tamat hari ini' : t.baki + ' hari lagi');
+            return '<div class="text-[11px] text-slate-600">' + m2Esc_(bkTarikhPendek_(t.mula)) + ' - ' + m2Esc_(bkTarikhPendek_(t.tamat)) + '</div><span class="inline-block mt-0.5 px-2 py-0.5 rounded-full border text-[10px] font-bold ' + kelas + '">' + teks + '</span>';
+        }
+        const PC_PERINGKAT_ = [
+            { k: 'permohonan', label: 'Permohonan menunggu', ikon: 'fa-inbox' },
+            { k: 'percubaan', label: 'Dalam percubaan (borang belum dibuka)', ikon: 'fa-hourglass-half' },
+            { k: 'markah', label: 'Menunggu markah', ikon: 'fa-pen' },
+            { k: 'pengesahan', label: 'Menunggu pengesahan guru', ikon: 'fa-user-clock' },
+            { k: 'sedia', label: 'Sedia dinaikkan', ikon: 'fa-circle-check' },
+            { k: 'gagal', label: 'Tidak berjaya', ikon: 'fa-circle-xmark' },
+            { k: 'dinaikkan', label: 'Telah dinaikkan', ikon: 'fa-award' }
+        ];
+        function pcBilPermohonanMenunggu_() { return (state.permohonanPengawas || []).filter(function(m) { return m && (m.status || 'Menunggu') === 'Menunggu'; }).length; }
+        function pcRenderPipeline_(kira, bilDinaikkan) {
+            const el = m2El_('bk-pipeline'); if (!el) return;
+            const n = Object.assign({}, kira, { permohonan: pcBilPermohonanMenunggu_(), dinaikkan: bilDinaikkan });
+            el.innerHTML = PC_PERINGKAT_.map(function(x, i) {
+                const aktif = BK_FILTER_ === x.k;
+                return '<button type="button" onclick="bkTapis(\'' + x.k + '\')" class="text-left p-3 rounded-xl border ' + (aktif ? 'border-brand-blue bg-blue-50' : 'border-slate-200 bg-white hover:bg-slate-50') + '">'
+                    + '<div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500"><span>' + (i + 1) + '</span><i class="fas ' + x.ikon + '"></i></div>'
+                    + '<div class="text-2xl font-bold text-slate-800 leading-tight">' + (n[x.k] || 0) + '</div><div class="text-[11px] text-slate-600 leading-snug">' + x.label + '</div></button>';
+            }).join('');
+        }
+        function pcPaparLalai_() {
+            const kad = m2El_('bk-tempoh-kad'); if (!kad) return;
+            kad.classList.toggle('hidden', state.currentUser !== 'admin');
+            const e = m2El_('bk-tempoh-bulan'); if (e && document.activeElement !== e) e.value = pcBulanLalai_();
+            const l = m2El_('bk-markah-lulus'); if (l && document.activeElement !== l) l.value = (typeof bkMarkahLulus_ === 'function') ? bkMarkahLulus_() : 0;
+        }
+        function pcSimpanLalai() {
+            if (state.currentUser !== 'admin') return;
+            const v = parseInt(m2Nilai_('bk-tempoh-bulan'));
+            if (isNaN(v) || v < 1 || v > 24) { showCustomAlert('Masukkan bilangan bulan antara 1 hingga 24.', 'error'); return; }
+            const lulus = parseInt(m2Nilai_('bk-markah-lulus') || '0');
+            if (isNaN(lulus) || lulus < 0 || lulus > 100) { showCustomAlert('Markah lulus mesti antara 0 hingga 100 (0 = tiada).', 'error'); return; }
+            state.settings.tempohPercubaanBulan = v; state.settings.markahLulusKenaikan = lulus;
+            queueDelta('updateSettings', { kunci: 'sharedSettings', nilai: buildSharedSettingsPayload() }, 'Tetapkan tempoh percubaan lalai: ' + v + ' bulan; markah lulus: ' + lulus + '%');
+            saveStateToLocal(); markUnsynced(); bkRender();
+            showCustomAlert('Tempoh percubaan lalai: ' + v + ' bulan; markah lulus: ' + (lulus ? lulus + '%' : 'tiada') + '. Tempoh terpakai kepada pengawas yang tempohnya tidak ditetapkan sendiri. Tekan Push untuk berkongsi tetapan ini.', 'success');
+        }
+        function bkTapis(k) {
+            if (k === 'permohonan') { switchTab('permohonan-pengawas'); return; }
+            if (k === 'dinaikkan') { const e = m2El_('bk-sejarah'); if (e && e.scrollIntoView) e.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+            BK_FILTER_ = (BK_FILTER_ === k) ? 'semua' : k; bkRender();
+        }
+        function pcUbahTempoh(pId) {
+            const p = m2Pengawas_(pId); if (!p) return;
+            const t = pcTempoh_(p), inp = 'w-full border border-slate-200 p-2 rounded-lg text-sm bg-white', lab = 'block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1';
+            bkBukaOverlay_('Tempoh Percubaan: ' + p.nama,
+                '<input type="hidden" id="pct-id" value="' + m2Esc_(p.id) + '">'
+                + '<p class="text-xs text-slate-500 mb-3">Lalai: bermula pada tarikh lantikan dan tamat ' + pcBulanLalai_() + ' bulan kemudian. Ubah jika tempoh berbeza.</p>'
+                + '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4"><div><label class="' + lab + '">Mula</label><input type="date" id="pct-mula" class="' + inp + '" value="' + m2Esc_(t.mula) + '"></div>'
+                + '<div><label class="' + lab + '">Tamat</label><input type="date" id="pct-tamat" class="' + inp + '" value="' + m2Esc_(t.tamat) + '"></div></div>'
+                + '<div class="flex flex-wrap gap-2 justify-end"><button type="button" onclick="pcSimpanTempoh(true)" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200">Pulihkan lalai</button>'
+                + '<button type="button" onclick="pcSimpanTempoh(false)" class="px-5 py-2 rounded-xl bg-brand-blue text-white font-bold text-sm hover:bg-blue-800">Simpan</button></div>');
+        }
+        function pcSimpanTempoh(lalai) {
+            const p = m2Pengawas_(m2Nilai_('pct-id')); if (!p) return;
+            const mula = lalai ? '' : m2Nilai_('pct-mula'), tamat = lalai ? '' : m2Nilai_('pct-tamat');
+            if (!lalai && (!mula || !tamat || tamat < mula)) { showCustomAlert('Isi tarikh mula dan tamat; tarikh tamat tidak boleh sebelum tarikh mula.', 'error'); return; }
+            p.percubaanMula = mula; p.percubaanTamat = tamat;
+            queueDelta('updatePrefect', p, 'Tetapkan tempoh percubaan: ' + p.nama);
+            saveStateToLocal(); markUnsynced(); bkTutupOverlay(); bkRender();
+            try { if (typeof tpRender === 'function') tpRender(); } catch (e) { }
+        }
+        // Jejak (garis masa) seorang pengawas dalam proses pengesahan
+        function bkJejak(pId) {
+            const p = m2Pengawas_(pId); if (!p) return;
+            const percubaanKini = bkIsPercubaan_(p);
+            const b = bkSenarai_().filter(function(x) { return normalizeId(x.pId) === normalizeId(pId) && !(percubaanKini && x.dinaikkanPada); }).sort(function(a, c) { return String(c.dibukaPada).localeCompare(String(a.dibukaPada)); })[0];
+            const mohon = (state.permohonanPengawas || []).find(function(m) { return m && m.pengawasIdLantikan !== undefined && normalizeId(m.pengawasIdLantikan) === normalizeId(pId); });
+            const t = pcTempoh_(p), mk = b && b.guru && b.guru.markah, pg = b && b.guru && b.guru.pengesahan;
+            const tg = function(x) { return x ? bkTarikhPendek_(String(x).slice(0, 10)) : ''; };
+            const langkah = [
+                { ok: !!mohon, teks: 'Permohonan diterima', ket: mohon ? tg(mohon.tarikhMohon) + (mohon.sumber ? ' (' + mohon.sumber + ')' : '') : 'Tiada rekod permohonan' },
+                { ok: !!p.tarikhLantikan, teks: 'Dilantik sebagai pengawas percubaan', ket: tg(p.tarikhLantikan) },
+                { ok: true, teks: 'Dinaikkan kemudian diturunkan semula ke percubaan', ket: tg(p.percubaanMula), tunjuk: !!(percubaanKini && (bkSenarai_().some(function(x) { return normalizeId(x.pId) === normalizeId(pId) && x.dinaikkanPada; }) || (p.sejarahJawatan || []).some(function(h) { return namaAsasJawatan(h.jawatan || '') !== 'Pengawas Percubaan'; }))) },
+                { ok: !!t.tamat, teks: 'Tempoh percubaan', ket: t.tamat ? tg(t.mula) + ' - ' + tg(t.tamat) : 'Belum ditetapkan' },
+                { ok: !!b, teks: 'Rekod borang pengesahan dibuka', ket: b ? tg(b.dibukaPada) : '' },
+                { ok: !!(mk && mk.disiplin != null && mk.tanggungjawab != null), teks: 'Markah borang soalan dimasukkan', ket: (mk && mk.disiplin != null) ? 'Disiplin ' + mk.disiplin + (mk.penuhDisiplin != null ? '/' + mk.penuhDisiplin : '') + ', Tanggungjawab ' + mk.tanggungjawab + (mk.penuhTanggungjawab != null ? '/' + mk.penuhTanggungjawab : '') : '' },
+                { ok: !!(pg && pg.keputusan), teks: 'Pengesahan guru', ket: pg && pg.keputusan ? pg.keputusan + (pg.guru ? ' oleh ' + pg.guru : '') + (pg.tarikh ? ' (' + tg(pg.tarikh) + ')' : '') : '' },
+                { ok: !!(b && b.dinaikkanPada), teks: 'Dinaikkan menjadi Pengawas Biasa', ket: b ? tg(b.dinaikkanPada) : '' }
+            ];
+            bkBukaOverlay_('Jejak: ' + p.nama, '<ol class="space-y-3">' + langkah.filter(function(l) { return l.tunjuk === undefined || l.tunjuk; }).map(function(l) {
+                return '<li class="flex gap-3"><span class="mt-0.5 ' + (l.ok ? 'text-emerald-600' : 'text-slate-300') + '"><i class="fas ' + (l.ok ? 'fa-circle-check' : 'fa-circle') + '"></i></span><div><div class="text-sm font-semibold ' + (l.ok ? 'text-slate-800' : 'text-slate-400') + '">' + l.teks + '</div>' + (l.ket ? '<div class="text-xs text-slate-500">' + m2Esc_(l.ket) + '</div>' : '') + '</div></li>';
+            }).join('') + '</ol>');
+        }
+
         // =====================================================================
         //  T2. PENGURUSAN BORANG (Guru / Admin)
         // =====================================================================
         function bkRender() {
             const tb = m2El_('bk-senarai'); if (!tb) return;
+            pcPaparLalai_(); bkTurunRender_();
             const aktifPercubaan = (state.pengawas || []).filter(function(p) { return (p.status || 'Aktif') === 'Aktif' && bkIsPercubaan_(p); });
             const baris = [];
             aktifPercubaan.forEach(function(p) {
@@ -24180,18 +24345,29 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 if (b.dinaikkanPada || sudahTerpapar[b.id]) return;
                 baris.push({ p: m2Pengawas_(b.pId) || { id: b.pId, nama: b.nama, kelas: b.kelas, jawatan: '(bukan Percubaan lagi)' }, b: b });
             });
+            // Pengawas yang telah ditamatkan (tidak berjaya) dan suratnya sudah dicetak tidak perlu dipaparkan lagi
+            for (let q = baris.length - 1; q >= 0; q--) { const pp = baris[q].p; if ((pp.status || 'Aktif') !== 'Aktif' && pp.keputusanPercubaan && pp.keputusanPercubaan.suratPada) baris.splice(q, 1); }
+            baris.forEach(function(r) { r.stage = pcPeringkat_(r.p, r.b); r.t = pcTempoh_(r.p); });
+            const kiraP = {}; baris.forEach(function(r) { kiraP[r.stage] = (kiraP[r.stage] || 0) + 1; });
+            pcRenderPipeline_(kiraP, sejarah.length);
+            baris.sort(function(x, y) { return (x.t.tamat || '9999').localeCompare(y.t.tamat || '9999') || String(x.p.nama).localeCompare(String(y.p.nama)); });
+            const lihat = BK_FILTER_ === 'semua' ? baris : baris.filter(function(r) { return r.stage === BK_FILTER_; });
+            BK_LIHAT_ = lihat.map(function(r) { return String(r.p.id); });
+            Object.keys(BK_PILIH_).forEach(function(k) { if (!baris.some(function(r) { return String(r.p.id) === k; })) delete BK_PILIH_[k]; });
             const tMurid = function(b) {
                 const mk = b && b.guru && b.guru.markah;
                 if (!mk || mk.disiplin == null || mk.tanggungjawab == null) return '<span class="text-slate-400">Belum</span>';
                 const f = function(v, p) { return v + (p == null ? '' : '/' + p); };
-                return '<span class="text-slate-700">Disiplin ' + f(mk.disiplin, mk.penuhDisiplin) + ' &middot; Tanggungjawab ' + f(mk.tanggungjawab, mk.penuhTanggungjawab) + '</span>';
+                const pc = bkPeratusMarkah_(mk), bawah = bkDiBawahLulus_(mk);
+                return '<span class="text-slate-700">Disiplin ' + f(mk.disiplin, mk.penuhDisiplin) + ' &middot; Tanggungjawab ' + f(mk.tanggungjawab, mk.penuhTanggungjawab) + '</span>'
+                    + (pc !== null ? '<div class="text-[11px] font-bold ' + (bawah ? 'text-red-600' : 'text-slate-500') + '">' + pc + '%' + (bawah ? ' (di bawah paras lulus)' : '') + '</div>' : '');
             };
             const tGuru = function(b) {
                 const pg = b && b.guru && b.guru.pengesahan;
                 if (!pg || !pg.keputusan) return '<span class="text-slate-400">Belum</span>';
                 return '<span class="' + (pg.keputusan === 'Disahkan' ? 'text-emerald-600' : 'text-amber-600') + ' font-semibold">' + m2Esc_(pg.keputusan) + '</span>';
             };
-            tb.innerHTML = baris.length ? baris.map(function(r) {
+            tb.innerHTML = lihat.length ? lihat.map(function(r) {
                 const st = bkStatus_(r.b), p = r.p, id = r.b ? escapeJsStr(r.b.id) : '';
                 const aksi = [];
                 if (!r.b) aksi.push('<button type="button" onclick="bkBuka(\'' + escapeJsStr(p.id) + '\')" class="px-2.5 py-1 rounded-lg bg-brand-blue text-white text-xs font-bold hover:bg-blue-800">Buka Rekod</button>');
@@ -24200,19 +24376,27 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     aksi.push('<button type="button" onclick="bkCetak(\'' + id + '\',\'soalan\')" class="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200" title="Cetak borang soalan murid"><i class="fas fa-print mr-1"></i>Murid</button>');
                     aksi.push('<button type="button" onclick="bkCetak(\'' + id + '\',\'guru\')" class="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200" title="Cetak borang guru"><i class="fas fa-print mr-1"></i>Guru</button>');
                     aksi.push('<button type="button" onclick="bkCetak(\'' + id + '\',\'skema\')" class="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200" title="Cetak skema jawapan">Skema</button>');
+                    const kp_ = r.b.guru && r.b.guru.pengesahan && r.b.guru.pengesahan.keputusan;
+                    if (kp_ === 'Disahkan' || kp_ === 'Tidak Disahkan') aksi.push('<button type="button" onclick="bkSurat(\'' + id + '\')" class="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200" title="Surat keputusan"><i class="fas fa-envelope mr-1"></i>Surat</button>');
+                    if (kp_ === 'Tidak Disahkan' && (p.status || 'Aktif') === 'Aktif') aksi.push('<button type="button" onclick="bkTamat(\'' + id + '\')" class="px-2.5 py-1 rounded-lg bg-red-600 text-white text-xs font-bold hover:bg-red-700" title="Tamatkan percubaan dan sediakan surat">Tamatkan</button>');
                     if (st === 'Disahkan') aksi.push('<button type="button" onclick="bkNaikkan(\'' + id + '\')" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700">Naikkan</button>');
                     aksi.push('<button type="button" onclick="bkPadam(\'' + id + '\')" class="px-2 py-1 text-red-600 text-xs font-bold hover:underline">Padam</button>');
                 }
-                return '<tr class="hover:bg-slate-50"><td class="px-4 py-3"><div class="text-sm font-semibold text-slate-800">' + m2Esc_(p.nama) + '</div><div class="text-[11px] text-slate-500">' + m2Esc_(p.kelas || '') + '</div></td>'
+                aksi.push('<button type="button" onclick="bkJejak(\'' + escapeJsStr(p.id) + '\')" class="px-2 py-1 text-slate-600 text-xs font-bold hover:underline" title="Jejak proses">Jejak</button>');
+                aksi.push('<button type="button" onclick="pcUbahTempoh(\'' + escapeJsStr(p.id) + '\')" class="px-2 py-1 text-slate-600 text-xs font-bold hover:underline" title="Tetapkan tempoh percubaan">Tempoh</button>');
+                const amaranNaik = (r.b && st === 'Disahkan') ? bkSemakSebelumNaik_(p) : [];
+                return '<tr class="hover:bg-slate-50"><td class="px-3 py-3 w-8"><input type="checkbox" class="bk-pilih" ' + (BK_PILIH_[String(p.id)] ? 'checked ' : '') + 'onchange="bkPilihToggle(\'' + escapeJsStr(p.id) + '\', this.checked)" aria-label="Pilih ' + m2Esc_(p.nama) + '"></td><td class="px-4 py-3"><div class="text-sm font-semibold text-slate-800">' + m2Esc_(p.nama) + (amaranNaik.length ? ' <span class="text-amber-600 text-xs" title="' + m2Esc_(amaranNaik.join('; ')) + '"><i class="fas fa-triangle-exclamation"></i> ' + amaranNaik.length + '</span>' : '') + '</div><div class="text-[11px] text-slate-500">' + m2Esc_(p.kelas || '') + '</div></td>'
+                    + '<td class="px-4 py-3">' + pcTeksTempoh_(r.t) + '</td>'
                     + '<td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full border text-[10px] font-bold ' + BK_KELAS_STATUS_[st] + '">' + m2Esc_(BK_TEKS_STATUS_[st] || st) + '</span></td>'
                     + '<td class="px-4 py-3 text-xs">' + tMurid(r.b) + '</td><td class="px-4 py-3 text-xs">' + tGuru(r.b) + '</td>'
                     + '<td class="px-4 py-3 text-right"><div class="flex flex-wrap gap-1.5 justify-end">' + aksi.join('') + '</div></td></tr>';
-            }).join('') : keadaanKosongHTML(5, 'fa-user-clock', 'Tiada Pengawas Percubaan aktif', 'Pengawas berjawatan "Pengawas Percubaan" akan disenaraikan di sini.');
+            }).join('') : keadaanKosongHTML(7, 'fa-user-clock', baris.length ? 'Tiada pengawas pada peringkat ini' : 'Tiada Pengawas Percubaan aktif', baris.length ? 'Klik semula peringkat yang dipilih untuk memaparkan semua.' : 'Pengawas berjawatan "Pengawas Percubaan" akan disenaraikan di sini.');
             const sj = m2El_('bk-sejarah');
             if (sj) sj.innerHTML = sejarah.length ? sejarah.map(function(b) {
                 return '<li class="flex flex-wrap items-center justify-between gap-2 py-2 border-b border-slate-100 text-sm"><span><b>' + m2Esc_(b.nama) + '</b> <span class="text-xs text-slate-500">' + m2Esc_(b.kelas || '') + ' &middot; dinaikkan ' + m2Esc_(bkTarikhPendek_(String(b.dinaikkanPada).slice(0, 10))) + '</span></span>'
-                    + '<span><button type="button" onclick="bkCetak(\'' + escapeJsStr(b.id) + '\',\'guru\')" class="text-xs font-bold text-brand-blue hover:underline mr-3">Cetak</button><button type="button" onclick="bkPadam(\'' + escapeJsStr(b.id) + '\')" class="text-xs font-bold text-red-600 hover:underline">Padam</button></span></li>';
+                    + '<span><button type="button" onclick="bkSurat(\'' + escapeJsStr(b.id) + '\')" class="text-xs font-bold text-brand-blue hover:underline mr-3">Surat</button><button type="button" onclick="bkCetak(\'' + escapeJsStr(b.id) + '\',\'guru\')" class="text-xs font-bold text-brand-blue hover:underline mr-3">Cetak</button><button type="button" onclick="bkPadam(\'' + escapeJsStr(b.id) + '\')" class="text-xs font-bold text-red-600 hover:underline">Padam</button></span></li>';
             }).join('') : '<li class="text-xs text-slate-400 py-2">Belum ada.</li>';
+            bkPukalKemaskini_();
             const s = bkSoalan_();
             const am = m2El_('bk-amaran-soalan');
             if (am) am.classList.toggle('hidden', (s.disiplin.length + s.tanggungjawab.length) > 0);
@@ -24260,7 +24444,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 + '<div><label class="' + lab + '">Tanggungjawab (penuh)</label><input type="number" min="0" id="bkg-mk-tp" class="' + inp + '" value="' + v(mk.penuhTanggungjawab, s.tanggungjawab.length) + '"></div></div></div>'
                 + '<div class="mb-5 p-4 rounded-xl border border-slate-100 bg-slate-50"><h4 class="font-bold text-sm text-slate-700 mb-3">Pengesahan guru pengawas</h4>'
                 + '<div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="' + lab + '">Keputusan</label><select id="bkg-pg-keputusan" class="' + inp + '"><option value="">-- Pilih --</option>' + ['Disahkan', 'Ditangguhkan', 'Tidak Disahkan'].map(function(j) { return '<option value="' + j + '"' + (pg.keputusan === j ? ' selected' : '') + '>' + j + '</option>'; }).join('') + '</select></div>'
-                + '<div><label class="' + lab + '">Nama guru pengawas</label><input id="bkg-pg-guru" class="' + inp + '" value="' + v(pg.guru, bkNamaGuruSemasa_()) + '"></div>'
+                + '<div><label class="' + lab + '">Guru pengawas (berdaftar)</label>' + bkPilihanGuruHTML_('bkg-pg-guru', pg.guru || bkNamaGuruSemasa_()) + '</div>'
                 + '<div><label class="' + lab + '">Tarikh</label><input type="date" id="bkg-pg-tarikh" class="' + inp + '" value="' + v(pg.tarikh, getRealTimeTodayStr()) + '"></div></div>'
                 + '<p class="text-[11px] text-slate-500 mt-2">Naikkan hanya dibenarkan apabila kedua-dua markah diisi dan keputusan ialah "Disahkan".</p></div>'
                 + '<div class="flex flex-wrap gap-2 justify-end"><button type="button" onclick="bkTutupOverlay()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200">Batal</button>'
@@ -24273,15 +24457,23 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             const md = num('bkg-mk-d'), mdp = num('bkg-mk-dp'), mt = num('bkg-mk-t'), mtp = num('bkg-mk-tp');
             if ([md, mdp, mt, mtp].some(function(x) { return x !== null && isNaN(x); })) { showCustomAlert('Markah mesti nombor 0 atau lebih.', 'error'); return; }
             if ((md !== null && mdp !== null && md > mdp) || (mt !== null && mtp !== null && mt > mtp)) { showCustomAlert('Markah tidak boleh melebihi markah penuh.', 'error'); return; }
-            const pg = { keputusan: m2Nilai_('bkg-pg-keputusan'), guru: (m2Nilai_('bkg-pg-guru') || '').trim(), tarikh: m2Nilai_('bkg-pg-tarikh'), ulasan: ((b.guru || {}).pengesahan || {}).ulasan || '' };
+            const pg = { keputusan: m2Nilai_('bkg-pg-keputusan'), guru: (bkGuruDipilih_('bkg-pg-guru') || { nama: (((b.guru || {}).pengesahan || {}).guru || '') }).nama, tarikh: m2Nilai_('bkg-pg-tarikh'), ulasan: ((b.guru || {}).pengesahan || {}).ulasan || '' };
             if (pg.keputusan === 'Disahkan' && (md === null || mt === null)) { showCustomAlert('Isi kedua-dua markah sebelum memilih "Disahkan".', 'error'); return; }
             if (pg.keputusan && !pg.guru) { showCustomAlert('Sila isi nama guru pengawas.', 'error'); return; }
-            const g = Object.assign({}, b.guru || {}, { markah: { disiplin: md, penuhDisiplin: mdp, tanggungjawab: mt, penuhTanggungjawab: mtp }, pengesahan: pg });
-            if (!g.demerit) g.demerit = { tarikh: getRealTimeTodayStr(), jumlah: bkKiraDemerit_(b.pId, getRealTimeTodayStr()) };
-            b.guru = g; b.status = bkStatus_(b);
-            queueDelta('simpanBorangKenaikan', { rekod: { id: b.id, pId: b.pId, nama: b.nama, kelas: b.kelas, guru: g } }, 'Kemaskini Markah Borang Pengesahan: ' + b.nama);
-            saveStateToLocal(); markUnsynced(); bkTutupOverlay(); bkRender();
-            showCustomAlert('Markah disimpan.', 'success');
+            const markah = { disiplin: md, penuhDisiplin: mdp, tanggungjawab: mt, penuhTanggungjawab: mtp };
+            const terus = function() {
+                const g = Object.assign({}, b.guru || {}, { markah: markah, pengesahan: pg });
+                if (!g.demerit) g.demerit = { tarikh: getRealTimeTodayStr(), jumlah: bkKiraDemerit_(b.pId, getRealTimeTodayStr()) };
+                b.guru = g; b.status = bkStatus_(b);
+                queueDelta('simpanBorangKenaikan', { rekod: { id: b.id, pId: b.pId, nama: b.nama, kelas: b.kelas, guru: g } }, 'Kemaskini Markah Borang Pengesahan: ' + b.nama);
+                saveStateToLocal(); markUnsynced(); bkTutupOverlay(); bkRender();
+                showCustomAlert('Markah disimpan.', 'success');
+            };
+            if (pg.keputusan === 'Disahkan' && bkDiBawahLulus_(markah)) {
+                showCustomConfirm('Markah Di Bawah Paras Lulus', 'Markah ' + bkPeratusMarkah_(markah) + '% adalah di bawah paras lulus ' + bkMarkahLulus_() + '% yang ditetapkan Admin. Tetap sahkan pengawas ini?', terus);
+                return;
+            }
+            terus();
         }
 
         // ---------- Naikkan ke Pengawas Biasa ----------
@@ -24295,13 +24487,18 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 const jenis = getSesiPengawas(p) === 'Pagi' ? 'pengawasPagi' : 'pengawasPetang';
                 if (getSenaraiJawatanByJenis(jenis).indexOf(jawatanBaharu) === -1) { showCustomAlert('Jawatan "' + jawatanBaharu + '" tiada dalam Tetapan Jawatan. Sila tambah dahulu atau ubah jawatan secara manual.', 'error'); return; }
             } catch (e) { /* teruskan */ }
-            showCustomConfirm('Naikkan ke Pengawas Biasa', p.nama + ' akan dinaikkan daripada "' + p.jawatan + '" kepada "' + jawatanBaharu + '". Teruskan?', function() {
+            const amaran = bkSemakSebelumNaik_(p);
+            if (bkDiBawahLulus_(b.guru && b.guru.markah)) amaran.push('Markah ' + bkPeratusMarkah_(b.guru.markah) + '% di bawah paras lulus ' + bkMarkahLulus_() + '%');
+            const teksAmaran = amaran.length ? '\n\nAMARAN semasa tempoh percubaan:\n- ' + amaran.join('\n- ') + '\n\nPastikan anda telah mempertimbangkannya.' : '';
+            showCustomConfirm('Naikkan ke Pengawas Biasa', p.nama + ' akan dinaikkan daripada "' + p.jawatan + '" kepada "' + jawatanBaharu + '". Teruskan?' + teksAmaran, function() {
                 p.jawatan = jawatanBaharu;
+                bkTetapKeputusan_(p, 'berjaya');
                 b.dinaikkanPada = new Date().toISOString();
                 queueDelta('simpanBorangKenaikan', { rekod: { id: b.id, pId: b.pId, nama: b.nama, kelas: b.kelas, guru: b.guru || {}, dinaikkan: true } }, 'Naikkan ke Pengawas Biasa: ' + p.nama);
                 queueDelta('updatePrefect', p, 'Naikkan ke Pengawas Biasa: ' + p.nama);
                 saveStateToLocal(); markUnsynced(); renderAll(); bkRender();
                 showCustomAlert(p.nama + ' telah dinaikkan menjadi Pengawas Biasa.', 'success');
+                bkSurat(b.id);
             });
         }
 
@@ -24367,6 +24564,158 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         function bkCetak(id, jenis) {
             const b = bkCari_(id); if (!b) return;
             executePrint(jenis === 'soalan' ? bkCetakSoalanHTML_(b) : jenis === 'skema' ? bkCetakSkemaHTML_() : bkCetakGuruHTML_(b), 'portrait');
+        }
+
+        // Senarai guru berdaftar untuk pilihan penandatangan
+        function bkGuruBerdaftar_() {
+            return (state.pendaftaranGuru || []).filter(function(g) { return g && g.nama; }).map(function(g) {
+                let jaw = ''; try { jaw = String(getJawatanCetakGuru(g) || ''); } catch (e) {}
+                return { nama: String(g.nama), jawatan: jaw };
+            });
+        }
+        function bkPilihanGuruHTML_(id, terpilih, tambahanKosong) {
+            const senarai = bkGuruBerdaftar_(); let ada = false;
+            const opt = senarai.map(function(g, i) {
+                const pilih = terpilih && g.nama.toLowerCase() === String(terpilih).toLowerCase(); if (pilih) ada = true;
+                return '<option value="' + i + '"' + (pilih ? ' selected' : '') + '>' + m2Esc_(g.nama) + (g.jawatan ? ' - ' + m2Esc_(g.jawatan) : '') + '</option>';
+            }).join('');
+            return '<select id="' + id + '" class="w-full border border-slate-200 p-2 rounded-lg text-sm bg-white"><option value="">' + (tambahanKosong || '-- Pilih guru --') + '</option>' + opt + '</select>';
+        }
+        function bkGuruDipilih_(id) {
+            const v = m2Nilai_(id); if (v === '') return null;
+            return bkGuruBerdaftar_()[parseInt(v)] || null;
+        }
+
+        // ---------- Surat keputusan (berjaya / tidak berjaya) ----------
+        // Susun atur sama seperti surat Dokumen Rasmi (dokBungkus_/dokPenerima_/dokTajuk_/dokPara_).
+        function bkSurat(id) {
+            const b = bkCari_(id), p = b ? m2Pengawas_(b.pId) : null;
+            if (!b || !p) { showCustomAlert('Rekod pengawas tidak ditemui.', 'error'); return; }
+            const kp = (b.guru && b.guru.pengesahan && b.guru.pengesahan.keputusan) || '';
+            const jenis = kp === 'Tidak Disahkan' ? 'gagal' : 'berjaya';
+            const inp = 'w-full border border-slate-200 p-2 rounded-lg text-sm bg-white';
+            const lab = 'block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1';
+            const hari = getRealTimeTodayStr();
+            const html = '<input type="hidden" id="bks-id" value="' + m2Esc_(b.id) + '">'
+                + '<p class="text-sm mb-4"><b>' + m2Esc_(p.nama) + '</b> (' + m2Esc_(p.kelas || '') + ')' + (kp ? ' &middot; Keputusan pengesahan: <b>' + m2Esc_(kp) + '</b>' : ' &middot; <span class="text-amber-700">Keputusan belum dipilih; sila pilih jenis surat.</span>') + '</p>'
+                + '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">'
+                + '<div><label class="' + lab + '">Jenis surat</label><select id="bks-jenis" class="' + inp + '"><option value="berjaya"' + (jenis === 'berjaya' ? ' selected' : '') + '>Berjaya - diterima menjadi pengawas sekolah</option><option value="gagal"' + (jenis === 'gagal' ? ' selected' : '') + '>Tidak berjaya</option></select></div>'
+                + '<div><label class="' + lab + '">Tarikh surat</label><input type="date" id="bks-tarikh" class="' + inp + '" value="' + hari + '"></div>'
+                + '<div><label class="' + lab + '">Berkuat kuasa mulai</label><input type="date" id="bks-kuatkuasa" class="' + inp + '" value="' + hari + '"></div>'
+                + '<div class="sm:col-span-2"><label class="' + lab + '">Penandatangan: Guru Penasihat Pengawas</label>' + bkPilihanGuruHTML_('bks-tt', bkNamaGuruPenasihat_(), '-- Kosong (tulis tangan) --') + '</div>'
+                + '<div class="sm:col-span-2"><label class="' + lab + '">Catatan tambahan (pilihan)</label><textarea id="bks-tambahan" rows="2" class="' + inp + '"></textarea></div></div>'
+                + '<div class="flex flex-wrap gap-2 justify-end mt-4"><button type="button" onclick="bkTutupOverlay()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200">Tutup</button>'
+                + '<button type="button" onclick="bkCetakSurat()" class="px-5 py-2 rounded-xl bg-brand-blue text-white font-bold text-sm hover:bg-blue-800"><i class="fas fa-print mr-1.5"></i>Cetak Surat</button></div>';
+            bkBukaOverlay_('Surat Keputusan Pengesahan Pengawas Percubaan', html);
+        }
+        function bkCetakSurat() {
+            const b = bkCari_(m2Nilai_('bks-id')), p = b ? m2Pengawas_(b.pId) : null; if (!b || !p) return;
+            const snap = bkSnapSurat_('bks'), jenis = m2Nilai_('bks-jenis') === 'gagal' ? 'gagal' : 'berjaya';
+            bkTandaSurat_(p, jenis, snap.tarikhSurat);
+            saveStateToLocal(); markUnsynced(); bkRender();
+            executePrint(bkBinaSuratKeputusan_(jenis, p, snap, b), 'portrait');
+        }
+
+        // ---------- Turunkan Pengawas Biasa ke Percubaan + surat pemakluman ----------
+        // Disimpan pada rekod pengawas: p.penurunan = [{tarikh, daripada, kepada, sebab}]
+        function bkTurunRender_() {
+            const el = m2El_('bk-turun'); if (!el) return;
+            const baris = [];
+            (state.pengawas || []).forEach(function(p) { (Array.isArray(p.penurunan) ? p.penurunan : []).forEach(function(x, i) { baris.push({ p: p, x: x, i: i }); }); });
+            baris.sort(function(a, b) { return String(b.x.tarikh || '').localeCompare(String(a.x.tarikh || '')); });
+            el.innerHTML = baris.length ? baris.map(function(r) {
+                return '<li class="flex flex-wrap items-center justify-between gap-2 py-2 border-b border-slate-100 text-sm"><span><b>' + m2Esc_(r.p.nama) + '</b> <span class="text-xs text-slate-500">' + m2Esc_(r.p.kelas || '') + ' &middot; ' + m2Esc_(bkTarikhPendek_(r.x.tarikh)) + ' &middot; ' + m2Esc_(namaAsasJawatan(r.x.daripada || '')) + ' &rarr; Pengawas Percubaan</span><br><span class="text-xs text-slate-500">Sebab: ' + m2Esc_(r.x.sebab || '-') + '</span></span>'
+                    + '<button type="button" onclick="bkSuratTurun(\'' + escapeJsStr(r.p.id) + '\',' + r.i + ')" class="text-xs font-bold text-brand-blue hover:underline">Surat</button></li>';
+            }).join('') : '<li class="text-xs text-slate-400 py-2">Belum ada.</li>';
+        }
+        function bkTurun() {
+            if (state.currentUser !== 'admin' && state.currentUser !== 'guru') return;
+            const calon = (state.pengawas || []).filter(function(p) { return (p.status || 'Aktif') === 'Aktif' && namaAsasJawatan(p.jawatan || '') === 'Pengawas Biasa'; })
+                .sort(function(a, b) { return String(a.kelas || '').localeCompare(String(b.kelas || '')) || String(a.nama).localeCompare(String(b.nama)); });
+            const inp = 'w-full border border-slate-200 p-2 rounded-lg text-sm bg-white', lab = 'block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1';
+            if (!calon.length) { showCustomAlert('Tiada Pengawas Biasa aktif untuk diturunkan.', 'error'); return; }
+            bkBukaOverlay_('Turunkan Pengawas Biasa ke Percubaan',
+                '<p class="text-xs text-slate-500 mb-3">Jawatan ditukar kepada Pengawas Percubaan, tempoh percubaan dimulakan semula, dan surat pemakluman boleh dicetak.</p>'
+                + '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3"><div class="sm:col-span-2"><label class="' + lab + '">Pengawas</label><select id="bkt-p" class="' + inp + '"><option value="">-- Pilih pengawas --</option>'
+                + calon.map(function(p) { return '<option value="' + m2Esc_(p.id) + '">' + m2Esc_((p.kelas ? p.kelas + ' - ' : '') + p.nama) + '</option>'; }).join('') + '</select></div>'
+                + '<div><label class="' + lab + '">Berkuat kuasa mulai</label><input type="date" id="bkt-tarikh" class="' + inp + '" value="' + getRealTimeTodayStr() + '"></div>'
+                + '<div><label class="' + lab + '">Tempoh percubaan (bulan)</label><input type="number" min="1" max="24" id="bkt-bulan" class="' + inp + '" value="' + pcBulanLalai_() + '"></div>'
+                + '<div class="sm:col-span-2"><label class="' + lab + '">Sebab penurunan jawatan</label><textarea id="bkt-sebab" rows="3" maxlength="500" class="' + inp + '" placeholder="Cth: Kerap tidak hadir bertugas dan melanggar peraturan disiplin pengawas."></textarea></div></div>'
+                + '<div class="flex flex-wrap gap-2 justify-end"><button type="button" onclick="bkTutupOverlay()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200">Batal</button>'
+                + '<button type="button" onclick="bkTurunSimpan()" class="px-5 py-2 rounded-xl bg-red-600 text-white font-bold text-sm hover:bg-red-700">Turunkan</button></div>');
+        }
+        function bkTurunSimpan() {
+            const p = m2Pengawas_(m2Nilai_('bkt-p'));
+            const tarikh = m2Nilai_('bkt-tarikh'), bulan = parseInt(m2Nilai_('bkt-bulan')), sebab = (m2Nilai_('bkt-sebab') || '').trim();
+            if (!p) { showCustomAlert('Sila pilih pengawas.', 'error'); return; }
+            if (!tarikh) { showCustomAlert('Sila isi tarikh berkuat kuasa.', 'error'); return; }
+            if (isNaN(bulan) || bulan < 1 || bulan > 24) { showCustomAlert('Tempoh percubaan mesti 1 hingga 24 bulan.', 'error'); return; }
+            if (sebab.length < 5) { showCustomAlert('Sila nyatakan sebab penurunan jawatan.', 'error'); return; }
+            const baharu = String(p.jawatan || '').replace(/Biasa/i, 'Percubaan');
+            if (baharu === p.jawatan) { showCustomAlert('Pengawas ini bukan berjawatan Pengawas Biasa.', 'error'); return; }
+            try {
+                const jenis = getSesiPengawas(p) === 'Pagi' ? 'pengawasPagi' : 'pengawasPetang';
+                if (getSenaraiJawatanByJenis(jenis).indexOf(baharu) === -1) { showCustomAlert('Jawatan "' + baharu + '" tiada dalam Tetapan Jawatan. Sila tambah dahulu.', 'error'); return; }
+            } catch (e) { /* teruskan */ }
+            showCustomConfirm('Turunkan ke Percubaan', p.nama + ' akan diturunkan daripada "' + p.jawatan + '" kepada "' + baharu + '". Teruskan?', function() {
+                const lama = p.jawatan;
+                p.penurunan = (Array.isArray(p.penurunan) ? p.penurunan : []).concat([{ tarikh: tarikh, daripada: lama, kepada: baharu, sebab: sebab, direkod: new Date().toISOString() }]);
+                p.jawatan = baharu; p.percubaanMula = tarikh; p.percubaanTamat = pcTambahBulan_(tarikh, bulan);
+                queueDelta('updatePrefect', p, 'Turunkan ke Percubaan: ' + p.nama);
+                saveStateToLocal(); markUnsynced(); bkTutupOverlay(); renderAll(); bkRender();
+                showCustomAlert(p.nama + ' telah diturunkan ke Pengawas Percubaan. Cetak surat pemakluman daripada senarai Penurunan Jawatan.', 'success');
+                bkSuratTurun(p.id, p.penurunan.length - 1);
+            });
+        }
+        function bkNamaGuruPenasihat_() {
+            try { const n = String(getGuruPengawasName() || ''); return /^\(/.test(n) ? '' : n; } catch (e) { return ''; }
+        }
+        function bkSuratTurun(pId, idx) {
+            const p = m2Pengawas_(pId), x = p && Array.isArray(p.penurunan) ? p.penurunan[idx] : null;
+            if (!p || !x) { showCustomAlert('Rekod penurunan tidak ditemui.', 'error'); return; }
+            const inp = 'w-full border border-slate-200 p-2 rounded-lg text-sm bg-white', lab = 'block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1';
+            bkBukaOverlay_('Surat Penurunan Jawatan',
+                '<input type="hidden" id="bku-p" value="' + m2Esc_(p.id) + '"><input type="hidden" id="bku-i" value="' + idx + '">'
+                + '<p class="text-sm mb-4"><b>' + m2Esc_(p.nama) + '</b> (' + m2Esc_(p.kelas || '') + ')</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">'
+                + '<div><label class="' + lab + '">Tarikh surat</label><input type="date" id="bku-tarikh" class="' + inp + '" value="' + getRealTimeTodayStr() + '"></div>'
+                + '<div><label class="' + lab + '">Penandatangan: Guru Penasihat Pengawas</label>' + bkPilihanGuruHTML_('bku-tt', bkNamaGuruPenasihat_(), '-- Kosong (tulis tangan) --') + '</div>'
+                + '<div class="sm:col-span-2"><label class="' + lab + '">Catatan tambahan (pilihan)</label><textarea id="bku-tambahan" rows="2" class="' + inp + '"></textarea></div></div>'
+                + '<div class="flex flex-wrap gap-2 justify-end mt-4"><button type="button" onclick="bkTutupOverlay()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200">Tutup</button>'
+                + '<button type="button" onclick="bkCetakSuratTurun()" class="px-5 py-2 rounded-xl bg-brand-blue text-white font-bold text-sm hover:bg-blue-800"><i class="fas fa-print mr-1.5"></i>Cetak Surat</button></div>');
+        }
+        // Format sama seperti surat Amaran/Gantung Tugas/Lucut (modul Surat): kepala surat sekolah, tarikh, "Kepada", PERKARA, badan surat, tandatangan.
+        function bkBinaSuratTurun_(p, x, snap) {
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { }
+            const tm = pcTempoh_(p), tt = snap.penandatangan || {};
+            const namaTT = tt.nama ? escapeHtml(tt.nama) : '_______________________';
+            const bodyStyle = 'style="line-height:1.4; text-align:justify; font-size:10pt; margin-top:5px;"';
+            const sigBox = 'style="margin-top:20px; display:flex; justify-content:space-between;"';
+            const sigLine = 'style="border-top:1px solid black; width:180px; text-align:center; padding-top:5px; margin-top:35px; font-size:9pt;"';
+            const sebab = String(x.sebab || '').trim();
+            let n = 1;
+            let h = getPrintHeader();
+            h += '<div style="text-align:right; margin-bottom:10px; font-size:10pt;">Tarikh: ' + escapeHtml(formatTarikhSuratPanjang(snap.tarikhSurat || getRealTimeTodayStr())) + '</div>';
+            h += '<div style="margin-bottom:20px; line-height: 1.4;"><b>Kepada Pengawas Terlibat:</b><br>Nama: <b>' + escapeHtml(p.nama) + '</b><br>Kelas: ' + escapeHtml(p.kelas || '') + '<br>Jawatan: ' + escapeHtml(namaAsasJawatan(p.jawatan || '') + (sesiP ? ' (Sesi ' + sesiP + ')' : '')) + '</div>';
+            h += '<hr style="border: 0.5px solid black; margin-bottom: 10px;">';
+            h += '<h3 style="text-decoration:underline; font-weight:bold; text-transform:uppercase; font-size:11pt; margin: 0 0 10px 0;">PERKARA: PEMAKLUMAN PENURUNAN JAWATAN KEPADA PENGAWAS PERCUBAAN</h3>';
+            h += '<div class="letter-content" ' + bodyStyle + '>';
+            h += '<p style="margin: 0 0 8px 0;">Saudara / Saudari,</p>';
+            h += '<p style="margin: 0 0 8px 0;">Dengan dukacitanya dimaklumkan bahawa jawatan kamu, <b>' + escapeHtml(p.nama) + '</b>, sebagai <b>' + escapeHtml(namaAsasJawatan(x.daripada || '')) + '</b> Lembaga Pengawas' + (sesiP ? ' Sesi ' + sesiP : '') + ' telah <b>DITURUNKAN KEPADA PENGAWAS PERCUBAAN BERKUATKUASA MULAI ' + escapeHtml(formatTarikhSuratPanjang(x.tarikh)).toUpperCase() + '</b>.</p>';
+            h += '<p style="margin: 0 0 8px 0;">' + (++n) + '. <b>Sebab penurunan jawatan:</b> ' + escapeHtml(sebab) + (/[.!?]$/.test(sebab) ? '' : '.') + '</p>';
+            if (tm.tamat) h += '<p style="margin: 0 0 8px 0;">' + (++n) + '. Tempoh percubaan kamu bermula pada <b>' + escapeHtml(formatTarikhSuratPanjang(tm.mula)) + '</b> hingga <b>' + escapeHtml(formatTarikhSuratPanjang(tm.tamat)) + '</b>. Prestasi, disiplin dan kehadiran kamu akan dinilai semula, dan kamu boleh dipertimbangkan untuk disahkan semula sebagai pengawas sekiranya menunjukkan penambahbaikan.</p>';
+            h += '<p style="margin: 0 0 8px 0;">' + (++n) + '. Kamu dikehendaki memulangkan sebarang kelengkapan yang berkaitan dengan jawatan terdahulu (seperti lencana atau tanda nama jawatan) kepada guru pengawas.</p>';
+            if (snap.tambahan) h += '<p style="margin: 0 0 8px 0;">' + (++n) + '. ' + escapeHtml(snap.tambahan) + '</p>';
+            h += '<p style="margin: 0 0 8px 0;">Harap maklum dan sila ambil tindakan sewajarnya.</p></div>';
+            h += '<div class="signature-box" ' + sigBox + '>'
+                + '<div><div class="sig-line" ' + sigLine + '>Disahkan Oleh<br><b>' + namaTT + '</b><br>Guru Penasihat Pengawas' + (sesiP ? ' Sesi ' + sesiP : '') + '</div></div>'
+                + '<div><div class="sig-line" ' + sigLine + '>Tandatangan Pengawas Terlibat<br><br>Nama: <b>' + escapeHtml(p.nama) + '</b></div></div></div>';
+            return h;
+        }
+        function bkCetakSuratTurun() {
+            const p = m2Pengawas_(m2Nilai_('bku-p')), x = p && Array.isArray(p.penurunan) ? p.penurunan[parseInt(m2Nilai_('bku-i'))] : null; if (!p || !x) return;
+            const snap = { penandatangan: (function() { const g = bkGuruDipilih_('bku-tt'); return g ? { nama: g.nama, jawatan: 'Guru Penasihat Pengawas' } : { nama: '', jawatan: 'Guru Penasihat Pengawas' }; })(),
+                tarikhSurat: m2Nilai_('bku-tarikh') || getRealTimeTodayStr(), tambahan: (m2Nilai_('bku-tambahan') || '').trim(), jawatan: '' };
+            executePrint(bkBinaSuratTurun_(p, x, snap), 'portrait');
         }
 
         // =====================================================================
@@ -24448,6 +24797,347 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 return r;
             };
         })();
+        // =====================================================================
+        //  U. TINDAKAN PERLU (papan tugas guru/admin) -- mengumpulkan perkara tertunggak
+        //     dalam satu halaman: tempoh percubaan, borang pengesahan, permohonan, awasan.
+        // =====================================================================
+        const TP_TAHAP_ = {
+            1: { label: 'Segera', bar: 'border-red-500', chip: 'bg-red-100 text-red-700 border-red-200', ikon: 'fa-triangle-exclamation' },
+            2: { label: 'Perlu tindakan', bar: 'border-amber-400', chip: 'bg-amber-100 text-amber-800 border-amber-200', ikon: 'fa-bell' },
+            3: { label: 'Awasan', bar: 'border-blue-400', chip: 'bg-blue-100 text-blue-800 border-blue-200', ikon: 'fa-eye' }
+        };
+        function tpKira_() {
+            const item = [], admin = state.currentUser === 'admin';
+            const tambah = function(tahap, tajuk, butir, aksi) { item.push({ tahap: tahap, tajuk: tajuk, butir: butir, aksi: aksi || [] }); };
+            const sj = function(x) { return escapeJsStr(String(x)); };
+            const btn = function(label, js) { return { label: label, js: js }; };
+            const aktif = (state.pengawas || []).filter(function(p) { return (p.status || 'Aktif') === 'Aktif' && bkIsPercubaan_(p); });
+            aktif.forEach(function(p) {
+                const b = bkSenarai_().find(function(x) { return normalizeId(x.pId) === normalizeId(p.id) && !x.dinaikkanPada; });
+                const t = pcTempoh_(p), st = pcStatusTempoh_(t), pr = pcPeringkat_(p, b);
+                const nama = p.nama + (p.kelas ? ' (' + p.kelas + ')' : '');
+                const ket = t.tamat ? 'Tempoh percubaan ' + (st === 'tamat' ? 'tamat ' + Math.abs(t.baki) + ' hari lalu' : (t.baki === 0 ? 'tamat hari ini' : 'tamat dalam ' + t.baki + ' hari')) + ' (' + bkTarikhPendek_(t.tamat) + ').' : '';
+                const tamat = st === 'tamat';
+                if (pr === 'percubaan') {
+                    if (tamat) tambah(1, nama + ': tempoh percubaan sudah tamat', ket + ' Borang pengesahan belum dibuka.', [btn('Buka Borang', "tpAksi('buka','" + sj(p.id) + "')"), btn('Ubah Tempoh', "pcUbahTempoh('" + sj(p.id) + "')")]);
+                    else if (st === 'hampir') tambah(2, nama + ': tempoh percubaan hampir tamat', ket + ' Sila buka borang pengesahan.', [btn('Buka Borang', "tpAksi('buka','" + sj(p.id) + "')"), btn('Ubah Tempoh', "pcUbahTempoh('" + sj(p.id) + "')")]);
+                } else if (pr === 'markah') {
+                    tambah(tamat ? 1 : 2, nama + ': menunggu markah borang soalan', (tamat ? ket + ' ' : '') + 'Cetak borang soalan, minta murid menjawab, kemudian masukkan markah.', [btn('Isi Markah', "tpAksi('markah','" + sj(b.id) + "')"), btn('Cetak Borang Murid', "bkCetak('" + sj(b.id) + "','soalan')")]);
+                } else if (pr === 'pengesahan') {
+                    tambah(tamat ? 1 : 2, nama + ': menunggu pengesahan guru', (tamat ? ket + ' ' : '') + 'Markah telah dimasukkan; pilih keputusan pengesahan.', [btn('Sahkan', "tpAksi('markah','" + sj(b.id) + "')")]);
+                } else if (pr === 'sedia') {
+                    const amaranNaik = bkSemakSebelumNaik_(p);
+                    tambah(1, nama + ': disahkan, sedia dinaikkan', 'Naikkan ke Pengawas Biasa dan cetak surat pemakluman.' + (amaranNaik.length ? ' AMARAN dalam tempoh percubaan: ' + amaranNaik.join('; ') + '.' : '') + (bkDiBawahLulus_(b.guru && b.guru.markah) ? ' Markah di bawah paras lulus.' : ''), [btn('Naikkan', "tpAksi('naik','" + sj(b.id) + "')"), btn('Surat', "bkSurat('" + sj(b.id) + "')")]);
+                } else if (pr === 'gagal') {
+                    tambah(2, nama + ': tidak berjaya disahkan', 'Tamatkan percubaan (pindah ke Arkib) dan cetak surat pemakluman.', [btn('Tamatkan', "tpAksi('tamat','" + sj(b.id) + "')"), btn('Surat', "bkSurat('" + sj(b.id) + "')")]);
+                }
+            });
+            // Borang aktif bagi pengawas yang bukan lagi Percubaan/aktif tetapi belum diselesaikan
+            bkSenarai_().forEach(function(b) {
+                if (b.dinaikkanPada) return;
+                const p = m2Pengawas_(b.pId);
+                if (p && (p.status || 'Aktif') === 'Aktif' && bkIsPercubaan_(p)) return;
+                if (p && p.keputusanPercubaan) return;
+                tambah(3, b.nama + ': borang pengesahan tidak lagi sepadan', 'Pengawas ini bukan lagi Pengawas Percubaan aktif; borang masih terbuka.', [btn('Lihat', "tpAksi('tab','borang-kenaikan')"), btn('Padam', "bkPadam('" + sj(b.id) + "')")]);
+            });
+            // Surat keputusan (berjaya / tidak berjaya) yang belum dicetak
+            const hadSurat = pcTambahBulan_(getRealTimeTodayStr(), -2);
+            (state.pengawas || []).forEach(function(p) {
+                const k = p.keputusanPercubaan; if (!k || k.suratPada || String(k.tarikh || '') < hadSurat) return;
+                const b = bkBorangUntukPengawas_(p.id); if (!b) return;
+                tambah(2, p.nama + (p.kelas ? ' (' + p.kelas + ')' : '') + ': surat keputusan belum dicetak', k.keputusan === 'berjaya' ? 'Telah dinaikkan; surat pemakluman belum dicetak.' : 'Percubaan telah ditamatkan; surat pemakluman belum dicetak.', [btn('Cetak Surat', "bkSurat('" + sj(b.id) + "')")]);
+            });
+            // Permohonan menunggu
+            const mm = (state.permohonanPengawas || []).filter(function(m) { return m && (m.status || 'Menunggu') === 'Menunggu'; });
+            if (mm.length) {
+                let tertua = 0; const hari = new Date(getRealTimeTodayStr() + 'T00:00:00');
+                mm.forEach(function(m) { const d = new Date(m.tarikhMohon); if (!isNaN(d.getTime())) tertua = Math.max(tertua, Math.round((hari - d) / 86400000)); });
+                tambah(tertua > 14 ? 1 : 2, mm.length + ' permohonan pengawas menunggu semakan', tertua > 0 ? 'Yang tertua telah menunggu ' + tertua + ' hari.' : 'Sila nilai dan terima atau tolak.', [btn('Buka Permohonan', "tpAksi('tab','permohonan-pengawas')")]);
+            }
+            // Soalan belum ditetapkan
+            const sl = bkSoalan_();
+            if (aktif.length && !sl.disiplin.length && !sl.tanggungjawab.length) {
+                tambah(2, 'Soalan borang pengesahan belum ditetapkan', admin ? 'Tetapkan soalan disiplin dan tanggungjawab sebelum mencetak borang murid.' : 'Minta Admin menetapkan soalan di Tetapan Soalan Kenaikan.', admin ? [btn('Tetapkan Soalan', "tpAksi('tab','tetapan-soalan')")] : []);
+            }
+            // Awasan pengawas (kehadiran/demerit) -- daripada kiraan papan pemuka sedia ada
+            try {
+                const r = brsKira_();
+                r.senarai.slice(0, 15).forEach(function(x) { tambah(3, x.nama + (x.kelas ? ' (' + x.kelas + ')' : '') + ': perlu perhatian', x.sebab.join('; ') + '.', [btn('Profil Disiplin', "tpAksi('tab','profil-disiplin')")]); });
+                if (r.senarai.length > 15) tambah(3, '+' + (r.senarai.length - 15) + ' pengawas lagi perlu perhatian', 'Lihat senarai penuh di Papan Pemuka.', [btn('Papan Pemuka', "tpAksi('tab','dashboard')")]);
+            } catch (e) { /* abaikan */ }
+            item.sort(function(a, b) { return a.tahap - b.tahap; });
+            return item;
+        }
+        function tpAksi(jenis, id) {
+            if (jenis === 'tab') { switchTab(id); return; }
+            if (jenis === 'buka') { switchTab('borang-kenaikan'); bkBuka(id); return; }
+            switchTab('borang-kenaikan');
+            if (jenis === 'markah') bkIsiGuru(id);
+            else if (jenis === 'naik') bkNaikkan(id);
+            else if (jenis === 'tamat') bkTamat(id);
+        }
+        function tpRender() {
+            if (state.currentUser === 'prefect') return;
+            const senarai = tpKira_();
+            tpKemaskiniBadge_(senarai);
+            const el = m2El_('tp-isi'); if (!el) return;
+            const kira = { 1: 0, 2: 0, 3: 0 }; senarai.forEach(function(x) { kira[x.tahap]++; });
+            const chip = [1, 2, 3].map(function(k) { const T = TP_TAHAP_[k]; return '<span class="px-3 py-1.5 rounded-full border text-xs font-bold ' + T.chip + '"><i class="fas ' + T.ikon + ' mr-1.5"></i>' + T.label + ': ' + kira[k] + '</span>'; }).join('');
+            if (!senarai.length) {
+                el.innerHTML = '<div class="bg-white p-8 rounded-2xl border border-slate-100 text-center"><div class="text-3xl text-emerald-500 mb-2"><i class="fas fa-circle-check"></i></div><div class="font-bold text-slate-800">Tiada tindakan tertunggak</div><div class="text-sm text-slate-500 mt-1">Semua perkara terkini telah diuruskan.</div></div>';
+                return;
+            }
+            el.innerHTML = '<div class="flex flex-wrap gap-2 mb-4">' + chip + '</div><ul class="space-y-2">' + senarai.map(function(x) {
+                const T = TP_TAHAP_[x.tahap];
+                return '<li class="bg-white rounded-xl border border-slate-100 border-l-4 ' + T.bar + ' p-3 md:p-4 flex flex-wrap items-center justify-between gap-3">'
+                    + '<div class="min-w-0" style="flex:1 1 260px"><div class="text-sm font-bold text-slate-800">' + m2Esc_(x.tajuk) + '</div><div class="text-xs text-slate-500 mt-0.5">' + m2Esc_(x.butir) + '</div></div>'
+                    + '<div class="flex flex-wrap gap-1.5">' + x.aksi.map(function(a, i) { return '<button type="button" onclick="' + a.js.replace(/"/g, '&quot;') + '" class="px-3 py-1.5 rounded-lg text-xs font-bold ' + (i === 0 ? 'bg-brand-blue text-white hover:bg-blue-800' : 'bg-slate-100 text-slate-700 hover:bg-slate-200') + '">' + m2Esc_(a.label) + '</button>'; }).join('') + '</div></li>';
+            }).join('') + '</ul>';
+        }
+        function tpKemaskiniBadge_(senarai) {
+            try {
+                const d = document.querySelector('#nav-li-tindakan-perlu .nav-btn'); if (!d) return;
+                const n = (senarai || (state.currentUser === 'prefect' ? [] : tpKira_())).filter(function(x) { return x.tahap <= 2; }).length;
+                const lama = d.querySelector('.tp-badge'); if (lama) lama.remove();
+                if (n > 0) { const s = document.createElement('span'); s.className = 'tp-badge ml-auto bg-red-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none'; s.textContent = n > 99 ? '99+' : String(n); d.appendChild(s); }
+            } catch (e) { /* abaikan */ }
+        }
+        (function() {
+            const asalBk = bkRender;
+            bkRender = function() { const r = asalBk.apply(this, arguments); try { tpKemaskiniBadge_(); } catch (e) { } return r; };
+            const asalUi = updateUIRoles;
+            updateUIRoles = function() { const r = asalUi.apply(this, arguments); try { tpKemaskiniBadge_(); } catch (e) { } return r; };
+        })();
+        // =====================================================================
+        //  V. PENGESAHAN PERCUBAAN (lanjutan): semakan sebelum lantikan, cetak pukal,
+        //     tamat percubaan (tidak berjaya), surat keputusan format biasa, semakan data.
+        // =====================================================================
+        // ---------- 8. Semakan sebelum lantikan ----------
+        function bkSemakSebelumNaik_(p) {
+            const w = [], t = pcTempoh_(p), mula = t.mula || '0000-00-00', hari = getRealTimeTodayStr();
+            const jenisSurat = { amaran1: 'Surat Amaran 1', amaran2: 'Surat Amaran 2', gantung: 'Surat Gantung Tugas', lucut: 'Surat Lucut Jawatan' };
+            (state.suratLog || []).forEach(function(s) {
+                if (!s || normalizeId(s.pId) !== normalizeId(p.id) || !jenisSurat[s.jenis]) return;
+                const tg = String(s.tarikh || '').slice(0, 10);
+                if (tg >= mula) w.push(jenisSurat[s.jenis] + ' bertarikh ' + bkTarikhPendek_(tg));
+            });
+            try { if (getGantungAktifPadaTarikh(p.id, hari)) w.push('Sedang digantung tugas'); } catch (e) { }
+            let dem = 0;
+            (state.kesalahan || []).forEach(function(k) {
+                if (!k || k.kategori === 'Lembaga' || normalizeId(k.pId) !== normalizeId(p.id)) return;
+                if (String(k.tarikh || '').slice(0, 10) >= mula) dem += parseInt(k.demerit) || 0;
+            });
+            const ambang = parseInt(state.settings && state.settings.ambangDemeritAmaran) || 5;
+            if (dem >= ambang) w.push('Demerit ' + dem + ' mata dalam tempoh percubaan (ambang amaran ' + ambang + ')');
+            return w;
+        }
+
+        // ---------- Markah lulus ----------
+        function bkMarkahLulus_() { const n = parseInt(state.settings && state.settings.markahLulusKenaikan); return (n >= 1 && n <= 100) ? n : 0; }
+        function bkPeratusMarkah_(mk) {
+            if (!mk || mk.disiplin == null || mk.tanggungjawab == null || mk.penuhDisiplin == null || mk.penuhTanggungjawab == null) return null;
+            const penuh = mk.penuhDisiplin + mk.penuhTanggungjawab; if (!penuh) return null;
+            return Math.round((mk.disiplin + mk.tanggungjawab) / penuh * 1000) / 10;
+        }
+        function bkDiBawahLulus_(mk) { const l = bkMarkahLulus_(), p = bkPeratusMarkah_(mk); return !!l && p !== null && p < l; }
+
+        // ---------- Rekod keputusan percubaan pada pengawas ----------
+        function bkTetapKeputusan_(p, keputusan) {
+            p.keputusanPercubaan = { keputusan: keputusan, tarikh: getRealTimeTodayStr(), suratPada: '' };
+        }
+        function bkTandaSurat_(p, jenis, tarikh) {
+            const lama = p.keputusanPercubaan || {};
+            p.keputusanPercubaan = { keputusan: jenis, tarikh: lama.tarikh || tarikh, suratPada: tarikh || getRealTimeTodayStr() };
+            queueDelta('updatePrefect', p, 'Cetak surat keputusan percubaan: ' + p.nama);
+        }
+
+        // ---------- Tamat percubaan (tidak berjaya) ----------
+        function bkTamat(id) {
+            const b = bkCari_(id), p = b ? m2Pengawas_(b.pId) : null;
+            if (!b || !p) { showCustomAlert('Rekod pengawas tidak ditemui.', 'error'); return; }
+            const kp = b.guru && b.guru.pengesahan && b.guru.pengesahan.keputusan;
+            if (kp !== 'Tidak Disahkan') { showCustomAlert('Pilih keputusan "Tidak Disahkan" dalam Isi Markah dahulu.', 'error'); return; }
+            showCustomConfirm('Tamatkan Percubaan', p.nama + ' akan ditamatkan (status "Dilucutkan Jawatan" dan dipindahkan ke Arkib) kerana tidak berjaya pengesahan. Selepas itu surat pemakluman akan disediakan. Teruskan?', function() {
+                const hari = getRealTimeTodayStr();
+                p.status = 'Dilucutkan Jawatan'; p.tarikhArkib = hari; p.sebabArkib = 'Tidak berjaya pengesahan Pengawas Percubaan';
+                bkTetapKeputusan_(p, 'gagal');
+                queueDelta('updatePrefect', p, 'Tamatkan percubaan (tidak berjaya): ' + p.nama);
+                saveStateToLocal(); markUnsynced(); renderAll(); bkRender();
+                bkSurat(b.id);
+            });
+        }
+
+        // ---------- 1. Surat keputusan (format biasa seperti Surat Amaran/Gantung Tugas) ----------
+        function bkSnapSurat_(awalan) {
+            const g = bkGuruDipilih_(awalan + '-tt');
+            return { penandatangan: { nama: g ? g.nama : '', jawatan: 'Guru Penasihat Pengawas' },
+                tarikhSurat: m2Nilai_(awalan + '-tarikh') || getRealTimeTodayStr(), kuatkuasa: m2Nilai_(awalan + '-kuatkuasa') || getRealTimeTodayStr(),
+                tambahan: (m2Nilai_(awalan + '-tambahan') || '').trim() };
+        }
+        function bkSuratStd_(p, snap, perkara, paras) {
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { }
+            const tt = snap.penandatangan || {}, namaTT = tt.nama ? escapeHtml(tt.nama) : '_______________________';
+            const sigLine = 'style="border-top:1px solid black; width:180px; text-align:center; padding-top:5px; margin-top:35px; font-size:9pt;"';
+            let h = getPrintHeader();
+            h += '<div style="text-align:right; margin-bottom:10px; font-size:10pt;">Tarikh: ' + escapeHtml(formatTarikhSuratPanjang(snap.tarikhSurat || getRealTimeTodayStr())) + '</div>';
+            h += '<div style="margin-bottom:20px; line-height: 1.4;"><b>Kepada Pengawas Terlibat:</b><br>Nama: <b>' + escapeHtml(p.nama) + '</b><br>Kelas: ' + escapeHtml(p.kelas || '') + '<br>Jawatan: ' + escapeHtml(namaAsasJawatan(p.jawatan || '') + (sesiP ? ' (Sesi ' + sesiP + ')' : '')) + '</div>';
+            h += '<hr style="border: 0.5px solid black; margin-bottom: 10px;">';
+            h += '<h3 style="text-decoration:underline; font-weight:bold; text-transform:uppercase; font-size:11pt; margin: 0 0 10px 0;">PERKARA: ' + escapeHtml(perkara) + '</h3>';
+            h += '<div class="letter-content" style="line-height:1.4; text-align:justify; font-size:10pt; margin-top:5px;"><p style="margin: 0 0 8px 0;">Saudara / Saudari,</p>';
+            paras.forEach(function(x) { h += '<p style="margin: 0 0 8px 0;">' + x + '</p>'; });
+            h += '</div><div class="signature-box" style="margin-top:20px; display:flex; justify-content:space-between;">'
+                + '<div><div class="sig-line" ' + sigLine + '>Disahkan Oleh<br><b>' + namaTT + '</b><br>Guru Penasihat Pengawas' + (sesiP ? ' Sesi ' + sesiP : '') + '</div></div>'
+                + '<div><div class="sig-line" ' + sigLine + '>Tandatangan Pengawas Terlibat<br><br>Nama: <b>' + escapeHtml(p.nama) + '</b></div></div></div>';
+            return h;
+        }
+        function bkBinaSuratKeputusan_(jenis, p, snap, b) {
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { }
+            const tgl = escapeHtml(formatTarikhSuratPanjang(snap.kuatkuasa)).toUpperCase();
+            const ulasan = b && b.guru && b.guru.pengesahan && b.guru.pengesahan.ulasan ? String(b.guru.pengesahan.ulasan).trim() : '';
+            let n = 1; const paras = [];
+            if (jenis === 'berjaya') {
+                paras.push('Dengan sukacitanya dimaklumkan bahawa kamu, <b>' + escapeHtml(p.nama) + '</b>, telah <b>BERJAYA</b> melepasi tempoh percubaan dan ujian pengesahan pengawas, dan <b>DITERIMA MENJADI PENGAWAS SEKOLAH</b> Lembaga Pengawas' + (sesiP ? ' Sesi ' + sesiP : '') + ' berkuatkuasa mulai <b>' + tgl + '</b>.');
+                paras.push((++n) + '. Sebagai pengawas sekolah, kamu dikehendaki terus menjalankan tugas dengan jujur, amanah dan bertanggungjawab, mematuhi peraturan sekolah serta Perjanjian &amp; Aku Janji Pengawas, dan menjadi contoh teladan dari segi disiplin, kehadiran, kekemasan dan akhlak.');
+                paras.push((++n) + '. Pihak sekolah mengucapkan tahniah dan berharap kamu terus memberikan khidmat bakti yang cemerlang.');
+            } else {
+                paras.push('Dengan dukacitanya dimaklumkan bahawa berdasarkan penilaian dan ujian pengesahan yang telah dijalankan, kamu, <b>' + escapeHtml(p.nama) + '</b>, <b>TIDAK BERJAYA</b> disahkan sebagai Pengawas Sekolah Lembaga Pengawas' + (sesiP ? ' Sesi ' + sesiP : '') + '. Tempoh percubaan kamu <b>TAMAT BERKUATKUASA MULAI ' + tgl + '</b>.');
+                if (ulasan) paras.push((++n) + '. <b>Ulasan guru:</b> ' + escapeHtml(ulasan) + (/[.!?]$/.test(ulasan) ? '' : '.'));
+                paras.push((++n) + '. Kamu dikehendaki memulangkan sebarang kelengkapan pengawas yang masih ada pada kamu (seperti lencana dan tanda nama) kepada guru pengawas.');
+                paras.push((++n) + '. Pihak sekolah merakamkan penghargaan atas komitmen kamu sepanjang tempoh percubaan. Kamu digalakkan terus menunjukkan disiplin dan sikap yang baik, dan boleh memohon semula pada masa akan datang apabila peluang dibuka.');
+            }
+            if (snap.tambahan) paras.push((++n) + '. ' + escapeHtml(snap.tambahan));
+            paras.push('Harap maklum dan terima kasih.');
+            return bkSuratStd_(p, snap, jenis === 'berjaya' ? 'PEMAKLUMAN KEPUTUSAN PENGAWAS PERCUBAAN: DITERIMA MENJADI PENGAWAS SEKOLAH' : 'PEMAKLUMAN KEPUTUSAN PENGAWAS PERCUBAAN: TIDAK BERJAYA', paras);
+        }
+        function bkBorangUntukPengawas_(pId) {
+            return bkSenarai_().filter(function(x) { return normalizeId(x.pId) === normalizeId(pId); })
+                .sort(function(a, c) { return (a.dinaikkanPada ? 1 : 0) - (c.dinaikkanPada ? 1 : 0) || String(c.dibukaPada).localeCompare(String(a.dibukaPada)); })[0] || null;
+        }
+        function bkJenisKeputusan_(b) {
+            const kp = b && b.guru && b.guru.pengesahan && b.guru.pengesahan.keputusan;
+            return kp === 'Disahkan' ? 'berjaya' : (kp === 'Tidak Disahkan' ? 'gagal' : '');
+        }
+
+        // ---------- 2. Pilihan & cetak pukal ----------
+        let BK_PILIH_ = {}, BK_LIHAT_ = [];
+        function bkPilihToggle(pId, ya) { if (ya) BK_PILIH_[String(pId)] = true; else delete BK_PILIH_[String(pId)]; bkPukalKemaskini_(); }
+        function bkPilihSemua(ya) {
+            BK_LIHAT_.forEach(function(id) { if (ya) BK_PILIH_[String(id)] = true; else delete BK_PILIH_[String(id)]; });
+            document.querySelectorAll('#bk-senarai input.bk-pilih').forEach(function(c) { c.checked = !!ya; });
+            bkPukalKemaskini_();
+        }
+        function bkPilihTerpilih_() { return Object.keys(BK_PILIH_).map(function(id) { return m2Pengawas_(id); }).filter(Boolean); }
+        function bkPukalKemaskini_() {
+            const bar = m2El_('bk-pukal-bar'); if (!bar) return;
+            const n = Object.keys(BK_PILIH_).length;
+            bar.classList.toggle('hidden', n === 0);
+            const c = m2El_('bk-pukal-bil'); if (c) c.textContent = n;
+            const sa = m2El_('bk-pilih-semua'); if (sa) sa.checked = BK_LIHAT_.length > 0 && BK_LIHAT_.every(function(id) { return BK_PILIH_[String(id)]; });
+        }
+        function bkPukalKosongkan() { BK_PILIH_ = {}; document.querySelectorAll('#bk-senarai input.bk-pilih').forEach(function(c) { c.checked = false; }); bkPukalKemaskini_(); }
+        function bkPukalCetak(jenis) {
+            const ps = bkPilihTerpilih_().sort(function(a, b) { return String(a.kelas || '').localeCompare(String(b.kelas || '')) || String(a.nama).localeCompare(String(b.nama)); });
+            if (!ps.length) return;
+            const html = ps.map(function(p, i) {
+                const b = bkBorangUntukPengawas_(p.id) || { id: '', pId: p.id, nama: p.nama, kelas: p.kelas, guru: {}, murid: {} };
+                return (i ? '<div class="page-break"></div>' : '') + (jenis === 'soalan' ? bkCetakSoalanHTML_(b) : bkCetakGuruHTML_(b));
+            }).join('');
+            executePrint(html, 'portrait');
+        }
+        function bkPukalBuka() {
+            const ps = bkPilihTerpilih_().filter(function(p) { return (p.status || 'Aktif') === 'Aktif' && bkIsPercubaan_(p) && !bkSenarai_().some(function(x) { return normalizeId(x.pId) === normalizeId(p.id) && !x.dinaikkanPada; }); });
+            if (!ps.length) { showCustomAlert('Tiada pengawas terpilih yang memerlukan rekod borang baharu.', 'error'); return; }
+            showCustomConfirm('Buka Rekod Pukal', 'Buka rekod borang pengesahan untuk ' + ps.length + ' pengawas terpilih?', function() {
+                if (!Array.isArray(state.borangKenaikan)) state.borangKenaikan = [];
+                ps.forEach(function(p) {
+                    const b = { id: bkIdBaharu_('BK-'), pId: p.id, nama: p.nama, kelas: p.kelas, dibukaPada: new Date().toISOString(), murid: {}, guru: {}, status: 'Dibuka' };
+                    state.borangKenaikan.push(b);
+                    queueDelta('simpanBorangKenaikan', { rekod: { id: b.id, pId: b.pId, nama: b.nama, kelas: b.kelas, guru: {} } }, 'Buka Borang Pengesahan: ' + p.nama);
+                });
+                saveStateToLocal(); markUnsynced(); bkRender();
+                showCustomAlert(ps.length + ' rekod borang dibuka.', 'success');
+            });
+        }
+        function bkPukalSurat() {
+            const layak = bkPilihTerpilih_().map(function(p) { return { p: p, b: bkBorangUntukPengawas_(p.id) }; }).filter(function(r) { return bkJenisKeputusan_(r.b); });
+            if (!layak.length) { showCustomAlert('Tiada pengawas terpilih yang sudah mempunyai keputusan pengesahan (Disahkan / Tidak Disahkan).', 'error'); return; }
+            const inp = 'w-full border border-slate-200 p-2 rounded-lg text-sm bg-white', lab = 'block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1', hari = getRealTimeTodayStr();
+            const bil = { berjaya: 0, gagal: 0 }; layak.forEach(function(r) { bil[bkJenisKeputusan_(r.b)]++; });
+            bkBukaOverlay_('Cetak Surat Keputusan Pukal',
+                '<p class="text-sm mb-3">' + layak.length + ' surat akan dicetak: <b>' + bil.berjaya + '</b> berjaya, <b>' + bil.gagal + '</b> tidak berjaya.</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">'
+                + '<div><label class="' + lab + '">Tarikh surat</label><input type="date" id="bkp-tarikh" class="' + inp + '" value="' + hari + '"></div>'
+                + '<div><label class="' + lab + '">Berkuat kuasa mulai</label><input type="date" id="bkp-kuatkuasa" class="' + inp + '" value="' + hari + '"></div>'
+                + '<div class="sm:col-span-2"><label class="' + lab + '">Penandatangan: Guru Penasihat Pengawas</label>' + bkPilihanGuruHTML_('bkp-tt', bkNamaGuruPenasihat_(), '-- Kosong (tulis tangan) --') + '</div>'
+                + '<div class="sm:col-span-2"><label class="' + lab + '">Catatan tambahan (pilihan, semua surat)</label><textarea id="bkp-tambahan" rows="2" class="' + inp + '"></textarea></div></div>'
+                + '<div class="flex flex-wrap gap-2 justify-end"><button type="button" onclick="bkTutupOverlay()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200">Batal</button>'
+                + '<button type="button" onclick="bkPukalSuratCetak()" class="px-5 py-2 rounded-xl bg-brand-blue text-white font-bold text-sm hover:bg-blue-800"><i class="fas fa-print mr-1.5"></i>Cetak Semua</button></div>');
+        }
+        function bkPukalSuratCetak() {
+            const snap = bkSnapSurat_('bkp');
+            const layak = bkPilihTerpilih_().map(function(p) { return { p: p, b: bkBorangUntukPengawas_(p.id) }; }).filter(function(r) { return bkJenisKeputusan_(r.b); })
+                .sort(function(a, b) { return String(a.p.kelas || '').localeCompare(String(b.p.kelas || '')) || String(a.p.nama).localeCompare(String(b.p.nama)); });
+            if (!layak.length) return;
+            const html = layak.map(function(r, i) { return (i ? '<div class="page-break"></div>' : '') + bkBinaSuratKeputusan_(bkJenisKeputusan_(r.b), r.p, snap, r.b); }).join('');
+            layak.forEach(function(r) { bkTandaSurat_(r.p, bkJenisKeputusan_(r.b), snap.tarikhSurat); });
+            saveStateToLocal(); markUnsynced(); bkTutupOverlay(); bkRender();
+            executePrint(html, 'portrait');
+        }
+
+        // ---------- 9. Semakan data ganjil (dipanjangkan ke Semakan & Kualiti Data) ----------
+        function bkSemakData_() {
+            const isu = [], hari = getRealTimeTodayStr(), tab = 'borang-kenaikan';
+            const tambah = function(tahap, tarikh, teks) { isu.push({ tahap: tahap, kat: 'Pengesahan Percubaan', tarikh: tarikh || '', teks: teks, tab: tab }); };
+            const adaTgl = function(t) { return t !== undefined && t !== null && String(t) !== ''; };
+            const aktifPerP = {};
+            bkSenarai_().forEach(function(b) {
+                const p = m2Pengawas_(b.pId), nama = b.nama || (p && p.nama) || b.pId || '?';
+                const mk = b.guru && b.guru.markah, kp = b.guru && b.guru.pengesahan && b.guru.pengesahan.keputusan;
+                if (!p) { tambah('ralat', String(b.dibukaPada || '').slice(0, 10), 'Borang pengesahan merujuk pengawas yang tidak wujud (' + nama + ')'); return; }
+                if (!b.dinaikkanPada) {
+                    const k = normalizeId(b.pId); aktifPerP[k] = (aktifPerP[k] || 0) + 1;
+                    if (!bkIsPercubaan_(p) && (p.status || 'Aktif') === 'Aktif') tambah('amaran', String(b.dibukaPada || '').slice(0, 10), nama + ': borang pengesahan masih terbuka tetapi jawatan sudah bukan Pengawas Percubaan');
+                }
+                if (mk) {
+                    if (mk.disiplin != null && mk.penuhDisiplin != null && mk.disiplin > mk.penuhDisiplin) tambah('ralat', '', nama + ': markah disiplin melebihi markah penuh');
+                    if (mk.tanggungjawab != null && mk.penuhTanggungjawab != null && mk.tanggungjawab > mk.penuhTanggungjawab) tambah('ralat', '', nama + ': markah tanggungjawab melebihi markah penuh');
+                }
+                if (kp === 'Disahkan' && (!mk || mk.disiplin == null || mk.tanggungjawab == null)) tambah('ralat', '', nama + ': keputusan "Disahkan" tetapi markah belum lengkap');
+                if (b.dinaikkanPada && bkIsPercubaan_(p) && (p.status || 'Aktif') === 'Aktif' && !(Array.isArray(p.penurunan) && p.penurunan.length)) tambah('amaran', String(b.dinaikkanPada).slice(0, 10), nama + ': tercatat dinaikkan tetapi jawatan masih Pengawas Percubaan');
+            });
+            Object.keys(aktifPerP).forEach(function(k) { if (aktifPerP[k] > 1) { const p = m2Pengawas_(k); tambah('ralat', '', ((p && p.nama) || k) + ': ada ' + aktifPerP[k] + ' borang aktif (sepatutnya satu)'); } });
+            (state.pengawas || []).forEach(function(p) {
+                if ((p.status || 'Aktif') !== 'Aktif') return;
+                if (bkIsPercubaan_(p)) {
+                    const mulaSet = adaTgl(p.percubaanMula), tamatSet = adaTgl(p.percubaanTamat);
+                    if ((mulaSet && !sgTarikhSah_(p.percubaanMula)) || (tamatSet && !sgTarikhSah_(p.percubaanTamat))) { tambah('ralat', '', p.nama + ': tarikh tempoh percubaan tidak sah'); return; }
+                    const t = pcTempoh_(p);
+                    if (!t.mula && !tamatSet) tambah('amaran', '', p.nama + ': tiada tarikh lantikan atau tempoh percubaan, amaran tempoh tidak dapat dikira');
+                    else if (t.mula && t.tamat) {
+                        if (t.tamat < t.mula) tambah('ralat', t.tamat, p.nama + ': tarikh tamat percubaan lebih awal daripada tarikh mula');
+                        else {
+                            const hariTempoh = Math.round((new Date(t.tamat + 'T00:00:00') - new Date(t.mula + 'T00:00:00')) / 86400000);
+                            if (hariTempoh > 730) tambah('amaran', t.tamat, p.nama + ': tempoh percubaan melebihi 24 bulan (' + hariTempoh + ' hari)');
+                            else if (hariTempoh < 7) tambah('amaran', t.tamat, p.nama + ': tempoh percubaan kurang daripada 7 hari');
+                        }
+                        if (t.mula > hari && Math.round((new Date(t.mula + 'T00:00:00') - new Date(hari + 'T00:00:00')) / 86400000) > 30) tambah('amaran', t.mula, p.nama + ': tarikh mula percubaan lebih 30 hari pada masa hadapan');
+                    }
+                } else if (p.keputusanPercubaan && p.keputusanPercubaan.keputusan === 'berjaya' && bkIsPercubaan_(p)) {
+                    tambah('amaran', '', p.nama + ': keputusan berjaya direkod tetapi jawatan masih Pengawas Percubaan');
+                }
+                (Array.isArray(p.penurunan) ? p.penurunan : []).forEach(function(x) { if (!sgTarikhSah_(x && x.tarikh)) tambah('ralat', '', p.nama + ': rekod penurunan jawatan mempunyai tarikh tidak sah'); });
+            });
+            return isu;
+        }
+        (function() {
+            const asal = sgKumpul_;
+            sgKumpul_ = function() {
+                const r = asal.apply(this, arguments);
+                let tambahan = []; try { tambahan = bkSemakData_(); } catch (e) { }
+                const semua = r.concat(tambahan), urut = { ralat: 0, amaran: 1 };
+                semua.sort(function(x, y) { return (urut[x.tahap] - urut[y.tahap]) || String(y.tarikh).localeCompare(String(x.tarikh)); });
+                return semua;
+            };
+        })();
 
         // =====================================================================
         //  CANGKUK & PENDAFTARAN (pasang sekali sahaja)
@@ -24455,7 +25145,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         // ---- Kawalan akses pusat ----
         // Tab yang HANYA untuk Guru/Admin -- tidak pernah dipaparkan atau dibuka oleh akaun Pengawas (AJK),
         // walaupun Tetapan Akses Tab tersilap menandakannya.
-        const GURU_SAHAJA_TAB_ = ['borang-kenaikan', 'tetapan-soalan', 'kewangan', 'permohonan-pengawas', 'dokumen-rasmi', 'semakan-sistem', 'laporan-ringkas'];
+        const GURU_SAHAJA_TAB_ = ['tindakan-perlu', 'borang-kenaikan', 'tetapan-soalan', 'kewangan', 'permohonan-pengawas', 'dokumen-rasmi', 'semakan-sistem', 'laporan-ringkas'];
         const AKSES_BAHARU_GURU_ = ['dokumen-rasmi', 'laporan-ringkas', 'pengumuman', 'semakan-sistem'];
         function x6AksesDitetap_() { return (parseInt(state.settings && state.settings.aksesTabV) || 0) >= 2; }
         function tabDibenarkan_(tabId) {
@@ -24537,6 +25227,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     else if (tabId === 'tetapan-soalan') sqkRender();
                     else if (tabId === 'borang-kenaikan') bkRender();
                     else if (tabId === 'borang-saya') bsRender();
+                    else if (tabId === 'tindakan-perlu') tpRender();
                     else if (tabId === 'penilaian-prestasi') rpRender();
                     else if (tabId === 'tetapan') { sdrPapar_(); sdrSemak(false); }
                 } catch (e) { console.warn('Cangkuk tab gagal:', e); }
