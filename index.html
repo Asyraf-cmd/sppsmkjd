@@ -831,6 +831,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             <ul class="space-y-0.5 px-2">
                 <li id="nav-li-dashboard"><div onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-home w-6"></i> Dashboard</div></li>
                 <li id="nav-li-pengumuman"><div onclick="switchTab('pengumuman')" id="nav-pengumuman" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-bullhorn w-6"></i> Pengumuman <span id="pgm-lencana" class="hidden ml-auto bg-red-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none">0</span></div></li>
+                <li id="nav-li-borang-kenaikan" class="admin-or-guru"><div onclick="switchTab('borang-kenaikan')" id="nav-borang-kenaikan" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-user-check w-6"></i> Pengesahan Percubaan</div></li>
+                <li id="nav-li-borang-saya" style="display:none"><div onclick="switchTab('borang-saya')" id="nav-borang-saya" class="nav-btn flex items-center px-4 py-3 text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer font-medium" role="button"><i class="fas fa-file-pen w-6"></i> Borang Pengesahan Saya</div></li>
 
                 <!-- Divider 1a: Pengurusan Pengawas (kitaran hidup pengawas) -->
                 <li class="pt-3 pb-1 px-3">
@@ -948,6 +950,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 <li id="nav-li-tetapan-kelas" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-kelas')" id="nav-tetapan-kelas" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chalkboard w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Kelas</div></li>
                 <li id="nav-li-tetapan-minggu" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-minggu')" id="nav-tetapan-minggu" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-week w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Minggu</div></li>
                 <li id="nav-li-tetapan-kalendar" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-kalendar')" id="nav-tetapan-kalendar" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-days w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Kalendar</div></li>
+                <li id="nav-li-tetapan-soalan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-soalan')" id="nav-tetapan-soalan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-clipboard-question w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Soalan Kenaikan</div></li>
                 <li class="sidebar-sublabel super-admin-only sidebar-group-tetapan tetapan-subgroup-item pt-2 pb-0.5 px-3"><p class="text-[11px] font-semibold text-blue-300/60 pl-5">Sistem</p></li>
                 <li id="nav-li-tetapan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan')" id="nav-tetapan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-cog w-5 opacity-75 text-brand-yellow/80"></i> Tetapan & Segerak</div></li>
                 <li id="nav-li-tetapan-akses" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-akses')" id="nav-tetapan-akses" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-5 opacity-75 text-brand-yellow/80"></i> Kebenaran Tab</div></li>
@@ -3932,6 +3935,69 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 </div>
             </div>
 
+
+            <!-- ===================== TAB: Tetapan Soalan Kenaikan (Admin) ===================== -->
+            <div id="tab-tetapan-soalan" class="tab-content hidden">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Tetapan Soalan Kenaikan</h2>
+                        <p class="text-xs text-slate-500 mt-1"><i class="fas fa-lock mr-1"></i> Hanya Admin. Soalan objektif asas disiplin &amp; tanggungjawab pengawas untuk Borang Pengesahan Pengawas Percubaan.</p>
+                    </div>
+                    <button type="button" onclick="sqkMuatContoh()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-xl text-sm">Muat Soalan Contoh</button>
+                </div>
+                <div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                    <input type="hidden" id="sqk-idx">
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-3">
+                        <div><label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Bahagian</label>
+                            <select id="sqk-seksyen" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm bg-white"><option value="disiplin">Disiplin sekolah</option><option value="tanggungjawab">Tanggungjawab pengawas</option></select></div>
+                        <div class="sm:col-span-3"><label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Soalan</label>
+                            <input id="sqk-teks" maxlength="400" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm bg-white"></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+                        <label class="flex items-center gap-2 text-sm"><input type="radio" name="sqk-betul" value="0" checked> <input id="sqk-p0" maxlength="200" placeholder="Pilihan A" class="flex-1 border border-slate-200 p-2 rounded-lg text-sm bg-white"></label>
+                        <label class="flex items-center gap-2 text-sm"><input type="radio" name="sqk-betul" value="1"> <input id="sqk-p1" maxlength="200" placeholder="Pilihan B" class="flex-1 border border-slate-200 p-2 rounded-lg text-sm bg-white"></label>
+                        <label class="flex items-center gap-2 text-sm"><input type="radio" name="sqk-betul" value="2"> <input id="sqk-p2" maxlength="200" placeholder="Pilihan C (pilihan)" class="flex-1 border border-slate-200 p-2 rounded-lg text-sm bg-white"></label>
+                        <label class="flex items-center gap-2 text-sm"><input type="radio" name="sqk-betul" value="3"> <input id="sqk-p3" maxlength="200" placeholder="Pilihan D (pilihan)" class="flex-1 border border-slate-200 p-2 rounded-lg text-sm bg-white"></label>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mb-3">Tandakan butang radio pada jawapan yang betul. Jawapan betul tidak dihantar kepada akaun pengawas.</p>
+                    <div class="flex gap-2">
+                        <button type="button" id="sqk-btn-simpan" onclick="sqkSimpan()" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2.5 px-5 rounded-xl text-sm"><i class="fas fa-plus mr-1"></i>Tambah Soalan</button>
+                        <button type="button" id="sqk-btn-batal" onclick="sqkKosongBorang_()" class="hidden bg-slate-100 text-slate-700 font-bold py-2.5 px-5 rounded-xl text-sm">Batal</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100"><div class="flex justify-between mb-3"><h3 class="font-bold text-slate-800">Soalan Disiplin Sekolah</h3><span id="sqk-senarai-disiplin-bil" class="text-xs text-slate-500"></span></div><ul id="sqk-senarai-disiplin" class="space-y-2"></ul></div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100"><div class="flex justify-between mb-3"><h3 class="font-bold text-slate-800">Soalan Tanggungjawab Pengawas</h3><span id="sqk-senarai-tanggungjawab-bil" class="text-xs text-slate-500"></span></div><ul id="sqk-senarai-tanggungjawab" class="space-y-2"></ul></div>
+                </div>
+            </div>
+
+            <!-- ===================== TAB: Pengesahan Percubaan (Guru/Admin) ===================== -->
+            <div id="tab-borang-kenaikan" class="tab-content hidden">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Pengesahan Pengawas Percubaan</h2>
+                        <p class="text-xs text-slate-500 mt-1">Buka borang untuk pengawas percubaan, isi bahagian guru, semak jawapan murid, kemudian naikkan ke Pengawas Biasa.</p>
+                    </div>
+                </div>
+                <div id="bk-amaran-soalan" class="hidden mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">Admin belum menetapkan soalan di Tetapan &gt; Tetapan Soalan Kenaikan.</div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-6">
+                    <div class="overflow-x-auto"><table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b border-slate-100"><tr class="text-[11px] uppercase tracking-wider text-slate-500"><th class="px-4 py-3">Pengawas</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Markah</th><th class="px-4 py-3">Pengesahan Guru</th><th class="px-4 py-3 text-right">Tindakan</th></tr></thead>
+                        <tbody id="bk-senarai" class="divide-y divide-slate-100"></tbody>
+                    </table></div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100"><h3 class="font-bold text-slate-800 mb-2">Sejarah Kenaikan</h3><ul id="bk-sejarah"></ul></div>
+            </div>
+
+            <!-- ===================== TAB: Borang Pengesahan Saya (Pengawas) ===================== -->
+            <div id="tab-borang-saya" class="tab-content hidden">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
+                    <div><h2 class="text-2xl font-bold text-slate-800">Borang Pengesahan Saya</h2>
+                    <p class="text-xs text-slate-500 mt-1">Borang pengesahan Pengawas Percubaan ke Pengawas Biasa.</p></div>
+                </div>
+                <div id="bs-isi" style="max-width:820px"></div>
+            </div>
+
             <div id="tab-carta-organisasi-lengkap" class="tab-content hidden">
                 <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
                     <h2 class="text-2xl font-bold text-slate-800">Carta Organisasi Lengkap</h2>
@@ -5099,6 +5165,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             kewanganTransaksi: [], // Kewangan Pengawas - rekod pendapatan/perbelanjaan - disegerakkan ke Google Sheets
             yuranPengawas: [], // Kewangan Pengawas - status bayaran yuran setiap pengawas - disegerakkan ke Google Sheets
             kalendarSekolah: [], // Kalendar sekolah (cuti/sekolah ganti) - Admin sahaja boleh ubah
+            borangKenaikan: [], // Borang pengesahan Pengawas Percubaan
+            soalanKenaikan: { disiplin: [], tanggungjawab: [] },
             dokumenPengawasLog: [], // Sejarah surat lantikan/penghargaan/tamat-pelucutan yang dikeluarkan - disegerakkan ke Google Sheets
             pengumumanLog: [], // Pengumuman guru kepada pengawas - disegerakkan ke Google Sheets
             // --- DELTA SYNC QUEUE ---
@@ -7227,7 +7295,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         //  toggleSidebarPin() supaya konsisten dgn seluruh sistem.
         // =========================================================================
         const TETAPAN_GROUP_EXPANDED_KEY = 'sppSmkjdTetapanGroupExpandedV1';
-        const TETAPAN_GROUP_TAB_IDS = ['tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'tetapan-minggu', 'tetapan-kalendar', 'log-aktiviti'];
+        const TETAPAN_GROUP_TAB_IDS = ['tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'tetapan-minggu', 'tetapan-kalendar', 'tetapan-soalan', 'log-aktiviti'];
 
         function setTetapanSidebarGroupExpanded(expanded) {
             document.querySelectorAll('.tetapan-subgroup-item').forEach(li => {
@@ -7376,6 +7444,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     state.perhimpunanLog = parsed.perhimpunanLog || [];
                     state.bilikDisiplinLog = parsed.bilikDisiplinLog || [];
                     state.kalendarSekolah = parsed.kalendarSekolah || [];
+                    state.borangKenaikan = parsed.borangKenaikan || [];
+                    state.soalanKenaikan = parsed.soalanKenaikan || { disiplin: [], tanggungjawab: [] };
                     state.permohonanPengawas = parsed.permohonanPengawas || [];
                     state.kewanganTransaksi = parsed.kewanganTransaksi || [];
                     state.yuranPengawas = parsed.yuranPengawas || [];
@@ -7470,6 +7540,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 kewanganTransaksi: state.kewanganTransaksi || [],
                 yuranPengawas: state.yuranPengawas || [],
                 kalendarSekolah: state.kalendarSekolah || [],
+                borangKenaikan: state.borangKenaikan || [],
+                soalanKenaikan: state.soalanKenaikan || { disiplin: [], tanggungjawab: [] },
                 dokumenPengawasLog: state.dokumenPengawasLog || [],
                 pengumumanLog: state.pengumumanLog || [],
                 // Tetapan yang dikongsi merentasi SEMUA peranti (bukan tetapan sulit/setempat seperti
@@ -7503,6 +7575,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             state.kewanganTransaksi = remoteState.kewanganTransaksi || [];
             state.yuranPengawas = remoteState.yuranPengawas || [];
             state.kalendarSekolah = remoteState.kalendarSekolah || [];
+            state.borangKenaikan = remoteState.borangKenaikan || [];
+            state.soalanKenaikan = remoteState.soalanKenaikan || { disiplin: [], tanggungjawab: [] };
             state.dokumenPengawasLog = remoteState.dokumenPengawasLog || [];
             state.pengumumanLog = remoteState.pengumumanLog || [];
 
@@ -8875,7 +8949,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         //  PENGGUNA YANG SAMA sahaja (lihat pendingOwner). Log keluar manual yg disahkan
         //  pengguna ("tanpa menyimpan") membuang semuanya.
         // =========================================================================
-        const KOLEKSI_DATA_TEMPATAN_ = ['pengawas', 'kesalahan', 'kehadiranLog', 'minit', 'suratLog', 'laporanLog', 'profilDisiplinCatatan', 'teachers', 'studentAccounts', 'pendaftaranGuru', 'mingguSettings', 'jadualRehat', 'suratTunjukSebabLog', 'kemenjadianLog', 'penilaianPrestasiLog', 'perhimpunanLog', 'bilikDisiplinLog', 'auditLog', 'permohonanPengawas', 'kewanganTransaksi', 'yuranPengawas', 'dokumenPengawasLog', 'pengumumanLog', 'kalendarSekolah'];
+        const KOLEKSI_DATA_TEMPATAN_ = ['pengawas', 'kesalahan', 'kehadiranLog', 'minit', 'suratLog', 'laporanLog', 'profilDisiplinCatatan', 'teachers', 'studentAccounts', 'pendaftaranGuru', 'mingguSettings', 'jadualRehat', 'suratTunjukSebabLog', 'kemenjadianLog', 'penilaianPrestasiLog', 'perhimpunanLog', 'bilikDisiplinLog', 'auditLog', 'permohonanPengawas', 'kewanganTransaksi', 'yuranPengawas', 'dokumenPengawasLog', 'pengumumanLog', 'kalendarSekolah', 'borangKenaikan'];
         function kosongkanDataTempatan_() {
             KOLEKSI_DATA_TEMPATAN_.forEach(k => { state[k] = []; });
             state.pendingDeltas = [];
@@ -9043,7 +9117,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             let jawatan = '';
 
             // Hide all tab elements in sidebar first
-            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'kewangan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'dokumen-rasmi', 'pengumuman', 'laporan-ringkas', 'semakan-sistem', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'tetapan-kalendar', 'log-aktiviti'];
+            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'kewangan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'dokumen-rasmi', 'pengumuman', 'laporan-ringkas', 'semakan-sistem', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'tetapan-kalendar', 'tetapan-soalan', 'borang-kenaikan', 'borang-saya', 'log-aktiviti'];
             navTabs.forEach(nav => {
                 const el = document.getElementById(`nav-li-${nav}`);
                 if (el) el.style.display = 'none';
@@ -23901,6 +23975,478 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     + '<td class="px-4 py-2.5 text-right">' + (boleh ? '<button type="button" onclick="switchTab(\'' + escapeJsStr(x.tab) + '\')" class="text-xs font-bold text-brand-blue hover:underline">Buka</button>' : '') + '</td></tr>';
             }).join('') : keadaanKosongHTML(5, 'fa-circle-check', 'Tiada tarikh atau data ganjil ditemui', 'Tarikh, rujukan pengawas dan kehadiran konsisten dengan kalendar sekolah.');
         }
+        // =====================================================================
+        //  T. BORANG PENGESAHAN PENGAWAS PERCUBAAN (kenaikan ke Pengawas Biasa)
+        //     state.borangKenaikan = [{ id, pId, nama, kelas, status, dibukaPada, dinaikkanPada,
+        //         murid: { jawapanDisiplin[], jawapanTanggungjawab[], mengapa, masalah, tarikhHantar, skor* },
+        //         guru:  { demerit{tarikh,jumlah}, kehadiran{mula,tamat,hariHadir,jumlahHari}, komenGuruKelas{nama,komen},
+        //                  komenGuruMP[{nama,subjek,komen}], komenPengawas{nama,jawatan,komen}, pengesahan{keputusan,guru,tarikh,ulasan} } }]
+        //     state.soalanKenaikan = { disiplin: [{id,teks,pilihan[],betul}], tanggungjawab: [...] }  (betul: hanya Admin/Guru)
+        // =====================================================================
+        const BK_HURUF_ = ['A', 'B', 'C', 'D', 'E'];
+        const BK_SOALAN_CONTOH_ = {
+            disiplin: [
+                { teks: 'Apakah tindakan pertama anda apabila melihat murid berlari di kaki lima sekolah?', pilihan: ['Membiarkan sahaja', 'Menegur dengan sopan dan mengingatkan tentang keselamatan', 'Memarahinya dengan suara kuat', 'Mengejar dan menarik bajunya'], betul: 1 },
+                { teks: 'Seorang pengawas patut mematuhi peraturan sekolah kerana...', pilihan: ['Pengawas dikecualikan daripada peraturan', 'Pengawas menjadi contoh teladan kepada murid lain', 'Guru sentiasa memerhati', 'Supaya dapat markah tambahan'], betul: 1 },
+                { teks: 'Murid tidak mematuhi arahan selepas ditegur dua kali. Apakah tindakan yang betul?', pilihan: ['Bergaduh dengannya', 'Membiarkan sahaja', 'Mencatat dan melaporkan kepada guru disiplin', 'Menghukumnya sendiri'], betul: 2 },
+                { teks: 'Menggunakan telefon bimbit di sekolah tanpa kebenaran ialah...', pilihan: ['Dibenarkan semasa rehat', 'Pelanggaran peraturan sekolah', 'Dibenarkan jika senyap', 'Tidak mengapa jika tidak dilihat guru'], betul: 1 },
+                { teks: 'Pakaian seragam sekolah hendaklah dipakai...', pilihan: ['Mengikut citarasa sendiri', 'Dengan kemas dan lengkap mengikut peraturan sekolah', 'Hanya pada hari Isnin', 'Hanya semasa ada pemeriksaan'], betul: 1 }
+            ],
+            tanggungjawab: [
+                { teks: 'Tugas utama seorang pengawas ialah...', pilihan: ['Menghukum murid yang nakal', 'Membantu guru menjaga disiplin dan keselamatan murid', 'Mengawal kantin sahaja', 'Mencatat nama murid yang tidak disukai'], betul: 1 },
+                { teks: 'Jika anda tidak dapat hadir bertugas, anda perlu...', pilihan: ['Tidak perlu memberitahu sesiapa', 'Memaklumkan kepada guru pengawas atau ketua pengawas lebih awal', 'Meminta rakan menandatangani kehadiran', 'Datang lambat tanpa sebab'], betul: 1 },
+                { teks: 'Antara sifat penting seorang pengawas ialah...', pilihan: ['Sombong dan tegas', 'Amanah, adil dan berhemah', 'Pilih kasih', 'Suka mengarah'], betul: 1 },
+                { teks: 'Apabila ada murid mengadu masalah kepada anda, anda patut...', pilihan: ['Mentertawakannya', 'Mendengar dengan sabar dan merujuk kepada guru jika perlu', 'Menyebarkannya kepada rakan', 'Mengabaikannya'], betul: 1 },
+                { teks: 'Maklumat peribadi murid yang anda ketahui semasa bertugas hendaklah...', pilihan: ['Dikongsi di media sosial', 'Dirahsiakan dan tidak disebarkan', 'Diceritakan kepada semua rakan', 'Dijadikan bahan jenaka'], betul: 1 }
+            ]
+        };
+        function bkSoalan_() {
+            const s = state.soalanKenaikan || {};
+            return { disiplin: Array.isArray(s.disiplin) ? s.disiplin : [], tanggungjawab: Array.isArray(s.tanggungjawab) ? s.tanggungjawab : [] };
+        }
+        function bkIdBaharu_(awalan) { return awalan + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+        function bkSenarai_() { return Array.isArray(state.borangKenaikan) ? state.borangKenaikan.filter(Boolean) : []; }
+        function bkCari_(id) { return bkSenarai_().find(function(b) { return String(b.id) === String(id); }); }
+        function bkStatus_(b) {
+            if (!b) return 'Belum Dibuka';
+            if (b.dinaikkanPada) return 'Dinaikkan';
+            const mk = (b.guru && b.guru.markah) || {};
+            const hantar = mk.disiplin !== null && mk.disiplin !== undefined && mk.tanggungjawab !== null && mk.tanggungjawab !== undefined;
+            const sah = !!(b.guru && b.guru.pengesahan && b.guru.pengesahan.keputusan === 'Disahkan');
+            if (sah && hantar) return 'Disahkan';
+            if (hantar) return 'Menunggu Guru';
+            return 'Dibuka';
+        }
+        const BK_KELAS_STATUS_ = {
+            'Belum Dibuka': 'bg-slate-100 text-slate-600 border-slate-200',
+            'Dibuka': 'bg-amber-100 text-amber-800 border-amber-200',
+            'Menunggu Guru': 'bg-blue-100 text-blue-800 border-blue-200',
+            'Disahkan': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+            'Dinaikkan': 'bg-purple-100 text-purple-800 border-purple-200'
+        };
+        const BK_TEKS_STATUS_ = { 'Dibuka': 'Menunggu markah', 'Menunggu Guru': 'Menunggu pengesahan guru' };
+        function bkNamaGuruSemasa_() {
+            try {
+                const t = (state.teachers || []).find(function(x) { return x.username === state.currentTeacherUsername; });
+                return t ? (t.nama || '') : '';
+            } catch (e) { return ''; }
+        }
+        function bkIsPercubaan_(p) { return !!(p && /percubaan/i.test(String(p.jawatan || ''))); }
+        function bkTarikhPendek_(t) { try { return t ? formatTarikhPendek(t) : '-'; } catch (e) { return t || '-'; } }
+
+        // ---------- Pengiraan bantuan (Guru) ----------
+        function bkKiraDemerit_(pId, tarikh) {
+            let jumlah = 0;
+            (state.kesalahan || []).forEach(function(k) {
+                if (!k || k.kategori === 'Lembaga') return;
+                if (normalizeId(k.pId) !== normalizeId(pId)) return;
+                if (tarikh && k.tarikh && String(k.tarikh).slice(0, 10) > tarikh) return;
+                jumlah += parseInt(k.demerit) || 0;
+            });
+            return jumlah;
+        }
+        function bkKiraHariSekolah_(mula, tamat, sesi) {
+            if (!mula || !tamat || tamat < mula) return 0;
+            let n = 0;
+            const d = new Date(mula + 'T00:00:00'), akhir = new Date(tamat + 'T00:00:00');
+            for (let i = 0; d <= akhir && i < 800; i++, d.setDate(d.getDate() + 1)) {
+                const t = formatDateLocalYMD(d);
+                try { if (kalStatus_(t, sesi).sekolah) n++; } catch (e) { if ([0, 6].indexOf(d.getDay()) === -1) n++; }
+            }
+            return n;
+        }
+        function bkKehadiranTugas_(pId, mula, tamat) {
+            let hadir = 0, jumlah = 0;
+            (state.kehadiranLog || []).forEach(function(k) {
+                if (!k || (k.jenisHari && k.jenisHari !== 'Hari Persekolahan')) return;
+                const t = String(k.tarikh || '').slice(0, 10);
+                if ((mula && t < mula) || (tamat && t > tamat)) return;
+                const r = (k.rekod || []).find(function(x) { return normalizeId(x.pId) === normalizeId(pId); });
+                if (!r) return;
+                jumlah++; if (r.status === 'Hadir') hadir++;
+            });
+            return { hadir: hadir, jumlah: jumlah };
+        }
+
+        // ---------- Overlay ringkas ----------
+        function bkBukaOverlay_(judul, html) {
+            bkTutupOverlay();
+            const o = document.createElement('div');
+            o.id = 'bk-overlay';
+            o.setAttribute('style', 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:70;background:rgba(15,23,42,.55);overflow:auto;padding:16px');
+            o.innerHTML = '<div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-5 md:p-6" style="max-width:880px;margin:0 auto">'
+                + '<div class="flex items-start justify-between gap-3 mb-4 border-b border-slate-100 pb-3"><h3 class="font-bold text-lg text-slate-800">' + m2Esc_(judul) + '</h3>'
+                + '<button type="button" onclick="bkTutupOverlay()" class="text-slate-400 hover:text-slate-700 text-xl leading-none px-2" aria-label="Tutup">&times;</button></div>'
+                + '<div id="bk-overlay-isi">' + html + '</div></div>';
+            document.body.appendChild(o);
+        }
+        function bkTutupOverlay() { const o = document.getElementById('bk-overlay'); if (o) o.remove(); }
+
+        // =====================================================================
+        //  T1. TETAPAN SOALAN (Admin)
+        // =====================================================================
+        function sqkRender() {
+            if (!m2El_('tab-tetapan-soalan')) return;
+            const s = bkSoalan_();
+            [['disiplin', 'sqk-senarai-disiplin'], ['tanggungjawab', 'sqk-senarai-tanggungjawab']].forEach(function(par) {
+                const el = m2El_(par[1]); if (!el) return;
+                const arr = s[par[0]];
+                el.innerHTML = arr.length ? arr.map(function(q, i) {
+                    return '<li class="p-3 rounded-xl border border-slate-100 bg-slate-50"><div class="flex items-start justify-between gap-3"><div class="text-sm font-semibold text-slate-800">' + (i + 1) + '. ' + m2Esc_(q.teks) + '</div>'
+                        + '<div class="shrink-0 whitespace-nowrap"><button type="button" onclick="sqkEdit(\'' + par[0] + '\',' + i + ')" class="text-xs font-bold text-brand-blue hover:underline mr-3">Ubah</button><button type="button" onclick="sqkPadam(\'' + par[0] + '\',' + i + ')" class="text-xs font-bold text-red-600 hover:underline">Padam</button></div></div>'
+                        + '<ol class="mt-1.5 space-y-0.5 text-xs text-slate-600">' + q.pilihan.map(function(p, j) {
+                            return '<li class="' + (j === q.betul ? 'font-bold text-emerald-700' : '') + '">' + BK_HURUF_[j] + '. ' + m2Esc_(p) + (j === q.betul ? ' &#10003;' : '') + '</li>';
+                        }).join('') + '</ol></li>';
+                }).join('') : '<li class="text-xs text-slate-400 py-3">Belum ada soalan.</li>';
+                const t = m2El_(par[1] + '-bil'); if (t) t.textContent = arr.length + ' soalan';
+            });
+        }
+        function sqkKosongBorang_() {
+            ['sqk-teks', 'sqk-p0', 'sqk-p1', 'sqk-p2', 'sqk-p3', 'sqk-idx'].forEach(function(i) { const e = m2El_(i); if (e) e.value = ''; });
+            const r = document.querySelector('input[name="sqk-betul"][value="0"]'); if (r) r.checked = true;
+            const b = m2El_('sqk-btn-simpan'); if (b) b.innerHTML = '<i class="fas fa-plus mr-1"></i>Tambah Soalan';
+            const c = m2El_('sqk-btn-batal'); if (c) c.classList.add('hidden');
+        }
+        function sqkSimpanKePelayan_(label) {
+            queueDelta('simpanSoalanKenaikan', { soalan: JSON.parse(JSON.stringify(bkSoalan_())) }, label);
+            saveStateToLocal(); markUnsynced(); sqkRender();
+        }
+        function sqkSimpan() {
+            if (state.currentUser !== 'admin') { showCustomAlert('Hanya Admin boleh menetapkan soalan.', 'error'); return; }
+            const seksyen = m2Nilai_('sqk-seksyen') === 'tanggungjawab' ? 'tanggungjawab' : 'disiplin';
+            const teks = (m2Nilai_('sqk-teks') || '').trim();
+            const pilihan = [0, 1, 2, 3].map(function(i) { return (m2Nilai_('sqk-p' + i) || '').trim(); });
+            const radio = document.querySelector('input[name="sqk-betul"]:checked');
+            const betulAsal = radio ? parseInt(radio.value) : 0;
+            if (!teks) { showCustomAlert('Sila isi soalan.', 'error'); return; }
+            if (!pilihan[betulAsal]) { showCustomAlert('Jawapan yang betul mesti salah satu pilihan yang diisi.', 'error'); return; }
+            // Buang pilihan kosong & sesuaikan indeks jawapan betul
+            const bersih = []; let betul = 0;
+            pilihan.forEach(function(p, i) { if (p) { if (i === betulAsal) betul = bersih.length; bersih.push(p); } });
+            if (bersih.length < 2) { showCustomAlert('Sila isi sekurang-kurangnya 2 pilihan jawapan.', 'error'); return; }
+            if (!state.soalanKenaikan) state.soalanKenaikan = { disiplin: [], tanggungjawab: [] };
+            const arr = bkSoalan_()[seksyen]; state.soalanKenaikan[seksyen] = arr;
+            const idx = m2Nilai_('sqk-idx');
+            const q = { id: bkIdBaharu_('q'), teks: teks, pilihan: bersih, betul: betul };
+            if (idx !== '' && arr[parseInt(idx)]) { q.id = arr[parseInt(idx)].id || q.id; arr[parseInt(idx)] = q; } else { if (arr.length >= 30) { showCustomAlert('Maksimum 30 soalan setiap bahagian.', 'error'); return; } arr.push(q); }
+            sqkKosongBorang_();
+            sqkSimpanKePelayan_('Kemaskini Soalan Kenaikan (' + seksyen + ')');
+        }
+        function sqkEdit(seksyen, i) {
+            const q = bkSoalan_()[seksyen][i]; if (!q) return;
+            m2El_('sqk-seksyen').value = seksyen; m2El_('sqk-idx').value = i; m2El_('sqk-teks').value = q.teks;
+            [0, 1, 2, 3].forEach(function(j) { m2El_('sqk-p' + j).value = q.pilihan[j] || ''; });
+            const r = document.querySelector('input[name="sqk-betul"][value="' + q.betul + '"]'); if (r) r.checked = true;
+            m2El_('sqk-btn-simpan').innerHTML = '<i class="fas fa-floppy-disk mr-1"></i>Simpan Perubahan';
+            m2El_('sqk-btn-batal').classList.remove('hidden');
+            m2El_('sqk-teks').focus();
+        }
+        function sqkPadam(seksyen, i) {
+            if (state.currentUser !== 'admin') return;
+            const q = bkSoalan_()[seksyen][i]; if (!q) return;
+            showCustomConfirm('Padam Soalan', 'Padam soalan: "' + q.teks.slice(0, 80) + '"?\n\nBorang yang sudah dihantar murid tidak berubah, tetapi markah hanya dikira mengikut soalan semasa borang itu dihantar.', function() {
+                state.soalanKenaikan[seksyen] = bkSoalan_()[seksyen].filter(function(_, k) { return k !== i; });
+                sqkSimpanKePelayan_('Padam Soalan Kenaikan (' + seksyen + ')');
+            });
+        }
+        function sqkMuatContoh() {
+            if (state.currentUser !== 'admin') return;
+            const ada = bkSoalan_();
+            if (ada.disiplin.length || ada.tanggungjawab.length) {
+                showCustomAlert('Soalan sudah wujud. Padam soalan sedia ada dahulu jika mahu memuat soalan contoh.', 'error'); return;
+            }
+            state.soalanKenaikan = {
+                disiplin: BK_SOALAN_CONTOH_.disiplin.map(function(q) { return { id: bkIdBaharu_('q'), teks: q.teks, pilihan: q.pilihan.slice(), betul: q.betul }; }),
+                tanggungjawab: BK_SOALAN_CONTOH_.tanggungjawab.map(function(q) { return { id: bkIdBaharu_('q'), teks: q.teks, pilihan: q.pilihan.slice(), betul: q.betul }; })
+            };
+            sqkSimpanKePelayan_('Muat Soalan Contoh Kenaikan');
+        }
+
+        // =====================================================================
+        //  T2. PENGURUSAN BORANG (Guru / Admin)
+        // =====================================================================
+        function bkRender() {
+            const tb = m2El_('bk-senarai'); if (!tb) return;
+            const aktifPercubaan = (state.pengawas || []).filter(function(p) { return (p.status || 'Aktif') === 'Aktif' && bkIsPercubaan_(p); });
+            const baris = [];
+            aktifPercubaan.forEach(function(p) {
+                const b = bkSenarai_().find(function(x) { return normalizeId(x.pId) === normalizeId(p.id) && !x.dinaikkanPada; });
+                baris.push({ p: p, b: b });
+            });
+            const sejarah = bkSenarai_().filter(function(b) { return b.dinaikkanPada; });
+            const sudahTerpapar = {}; baris.forEach(function(r) { if (r.b) sudahTerpapar[r.b.id] = true; });
+            // Borang aktif bagi pengawas yang jawatannya sudah bukan Percubaan (cth. ditukar secara manual) tetap dipaparkan
+            bkSenarai_().forEach(function(b) {
+                if (b.dinaikkanPada || sudahTerpapar[b.id]) return;
+                baris.push({ p: m2Pengawas_(b.pId) || { id: b.pId, nama: b.nama, kelas: b.kelas, jawatan: '(bukan Percubaan lagi)' }, b: b });
+            });
+            const tMurid = function(b) {
+                const mk = b && b.guru && b.guru.markah;
+                if (!mk || mk.disiplin == null || mk.tanggungjawab == null) return '<span class="text-slate-400">Belum</span>';
+                const f = function(v, p) { return v + (p == null ? '' : '/' + p); };
+                return '<span class="text-slate-700">Disiplin ' + f(mk.disiplin, mk.penuhDisiplin) + ' &middot; Tanggungjawab ' + f(mk.tanggungjawab, mk.penuhTanggungjawab) + '</span>';
+            };
+            const tGuru = function(b) {
+                const pg = b && b.guru && b.guru.pengesahan;
+                if (!pg || !pg.keputusan) return '<span class="text-slate-400">Belum</span>';
+                return '<span class="' + (pg.keputusan === 'Disahkan' ? 'text-emerald-600' : 'text-amber-600') + ' font-semibold">' + m2Esc_(pg.keputusan) + '</span>';
+            };
+            tb.innerHTML = baris.length ? baris.map(function(r) {
+                const st = bkStatus_(r.b), p = r.p, id = r.b ? escapeJsStr(r.b.id) : '';
+                const aksi = [];
+                if (!r.b) aksi.push('<button type="button" onclick="bkBuka(\'' + escapeJsStr(p.id) + '\')" class="px-2.5 py-1 rounded-lg bg-brand-blue text-white text-xs font-bold hover:bg-blue-800">Buka Rekod</button>');
+                else {
+                    aksi.push('<button type="button" onclick="bkIsiGuru(\'' + id + '\')" class="px-2.5 py-1 rounded-lg bg-brand-blue text-white font-bold text-xs hover:bg-blue-800">Isi Markah</button>');
+                    aksi.push('<button type="button" onclick="bkCetak(\'' + id + '\',\'soalan\')" class="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200" title="Cetak borang soalan murid"><i class="fas fa-print mr-1"></i>Murid</button>');
+                    aksi.push('<button type="button" onclick="bkCetak(\'' + id + '\',\'guru\')" class="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200" title="Cetak borang guru"><i class="fas fa-print mr-1"></i>Guru</button>');
+                    aksi.push('<button type="button" onclick="bkCetak(\'' + id + '\',\'skema\')" class="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200" title="Cetak skema jawapan">Skema</button>');
+                    if (st === 'Disahkan') aksi.push('<button type="button" onclick="bkNaikkan(\'' + id + '\')" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700">Naikkan</button>');
+                    aksi.push('<button type="button" onclick="bkPadam(\'' + id + '\')" class="px-2 py-1 text-red-600 text-xs font-bold hover:underline">Padam</button>');
+                }
+                return '<tr class="hover:bg-slate-50"><td class="px-4 py-3"><div class="text-sm font-semibold text-slate-800">' + m2Esc_(p.nama) + '</div><div class="text-[11px] text-slate-500">' + m2Esc_(p.kelas || '') + '</div></td>'
+                    + '<td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full border text-[10px] font-bold ' + BK_KELAS_STATUS_[st] + '">' + m2Esc_(BK_TEKS_STATUS_[st] || st) + '</span></td>'
+                    + '<td class="px-4 py-3 text-xs">' + tMurid(r.b) + '</td><td class="px-4 py-3 text-xs">' + tGuru(r.b) + '</td>'
+                    + '<td class="px-4 py-3 text-right"><div class="flex flex-wrap gap-1.5 justify-end">' + aksi.join('') + '</div></td></tr>';
+            }).join('') : keadaanKosongHTML(5, 'fa-user-clock', 'Tiada Pengawas Percubaan aktif', 'Pengawas berjawatan "Pengawas Percubaan" akan disenaraikan di sini.');
+            const sj = m2El_('bk-sejarah');
+            if (sj) sj.innerHTML = sejarah.length ? sejarah.map(function(b) {
+                return '<li class="flex flex-wrap items-center justify-between gap-2 py-2 border-b border-slate-100 text-sm"><span><b>' + m2Esc_(b.nama) + '</b> <span class="text-xs text-slate-500">' + m2Esc_(b.kelas || '') + ' &middot; dinaikkan ' + m2Esc_(bkTarikhPendek_(String(b.dinaikkanPada).slice(0, 10))) + '</span></span>'
+                    + '<span><button type="button" onclick="bkCetak(\'' + escapeJsStr(b.id) + '\',\'guru\')" class="text-xs font-bold text-brand-blue hover:underline mr-3">Cetak</button><button type="button" onclick="bkPadam(\'' + escapeJsStr(b.id) + '\')" class="text-xs font-bold text-red-600 hover:underline">Padam</button></span></li>';
+            }).join('') : '<li class="text-xs text-slate-400 py-2">Belum ada.</li>';
+            const s = bkSoalan_();
+            const am = m2El_('bk-amaran-soalan');
+            if (am) am.classList.toggle('hidden', (s.disiplin.length + s.tanggungjawab.length) > 0);
+        }
+        function bkBuka(pId) {
+            if (state.currentUser !== 'admin' && state.currentUser !== 'guru') return;
+            const p = m2Pengawas_(pId); if (!p) return;
+            const s = bkSoalan_();
+            if (!s.disiplin.length && !s.tanggungjawab.length) {
+                showCustomAlert('Admin belum menetapkan soalan (Tetapan > Tetapan Soalan Kenaikan). Borang soalan murid akan kosong.', 'error');
+            }
+            showCustomConfirm('Buka Borang', 'Buka borang pengesahan untuk ' + p.nama + ' (' + (p.kelas || '') + ')? Cetak borang soalan untuk murid dan borang guru; guru hanya memasukkan markah ke dalam sistem.', function() {
+                const b = { id: bkIdBaharu_('BK-'), pId: p.id, nama: p.nama, kelas: p.kelas, dibukaPada: new Date().toISOString(), murid: {}, guru: {}, status: 'Dibuka' };
+                if (!Array.isArray(state.borangKenaikan)) state.borangKenaikan = [];
+                state.borangKenaikan.push(b);
+                queueDelta('simpanBorangKenaikan', { rekod: { id: b.id, pId: b.pId, nama: b.nama, kelas: b.kelas, guru: {} } }, 'Buka Borang Pengesahan: ' + p.nama);
+                saveStateToLocal(); markUnsynced(); bkRender();
+            });
+        }
+        function bkPadam(id) {
+            const b = bkCari_(id); if (!b) return;
+            showCustomConfirm('Padam Borang', 'Padam borang ' + b.nama + '? Jawapan murid & komen guru akan hilang.', function() {
+                state.borangKenaikan = bkSenarai_().filter(function(x) { return String(x.id) !== String(id); });
+                queueDelta('padamBorangKenaikan', { id: id }, 'Padam Borang Pengesahan: ' + b.nama);
+                saveStateToLocal(); markUnsynced(); bkRender();
+            });
+        }
+
+        // ---------- Markah (guru hanya memasukkan markah; borang dicetak & dijawab atas kertas) ----------
+        function bkIsiGuru(id) {
+            const b = bkCari_(id); if (!b) return;
+            const g = b.guru || {}, mk = g.markah || {}, pg = g.pengesahan || {}, s = bkSoalan_();
+            const inp = 'w-full border border-slate-200 p-2 rounded-lg text-sm bg-white';
+            const lab = 'block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1';
+            const v = function(x, d) { return m2Esc_(x == null ? (d == null ? '' : d) : x); };
+            const html = '<input type="hidden" id="bkg-id" value="' + m2Esc_(b.id) + '">'
+                + '<p class="text-xs text-slate-500 mb-4">Borang soalan dan borang guru dicetak &amp; diisi atas kertas. Di sini guru hanya memasukkan markah.</p>'
+                + '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5"><div><label class="' + lab + '">Nama</label><input class="' + inp + ' bg-slate-50" value="' + m2Esc_(b.nama) + '" readonly></div>'
+                + '<div><label class="' + lab + '">Kelas</label><input class="' + inp + ' bg-slate-50" value="' + m2Esc_(b.kelas || '') + '" readonly></div></div>'
+                + '<div class="mb-5 p-4 rounded-xl border border-slate-100 bg-slate-50"><h4 class="font-bold text-sm text-slate-700 mb-3">Markah borang soalan murid</h4>'
+                + '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">'
+                + '<div><label class="' + lab + '">Disiplin (markah)</label><input type="number" min="0" id="bkg-mk-d" class="' + inp + '" value="' + v(mk.disiplin) + '"></div>'
+                + '<div><label class="' + lab + '">Disiplin (penuh)</label><input type="number" min="0" id="bkg-mk-dp" class="' + inp + '" value="' + v(mk.penuhDisiplin, s.disiplin.length) + '"></div>'
+                + '<div><label class="' + lab + '">Tanggungjawab (markah)</label><input type="number" min="0" id="bkg-mk-t" class="' + inp + '" value="' + v(mk.tanggungjawab) + '"></div>'
+                + '<div><label class="' + lab + '">Tanggungjawab (penuh)</label><input type="number" min="0" id="bkg-mk-tp" class="' + inp + '" value="' + v(mk.penuhTanggungjawab, s.tanggungjawab.length) + '"></div></div></div>'
+                + '<div class="mb-5 p-4 rounded-xl border border-slate-100 bg-slate-50"><h4 class="font-bold text-sm text-slate-700 mb-3">Pengesahan guru pengawas</h4>'
+                + '<div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="' + lab + '">Keputusan</label><select id="bkg-pg-keputusan" class="' + inp + '"><option value="">-- Pilih --</option>' + ['Disahkan', 'Ditangguhkan', 'Tidak Disahkan'].map(function(j) { return '<option value="' + j + '"' + (pg.keputusan === j ? ' selected' : '') + '>' + j + '</option>'; }).join('') + '</select></div>'
+                + '<div><label class="' + lab + '">Nama guru pengawas</label><input id="bkg-pg-guru" class="' + inp + '" value="' + v(pg.guru, bkNamaGuruSemasa_()) + '"></div>'
+                + '<div><label class="' + lab + '">Tarikh</label><input type="date" id="bkg-pg-tarikh" class="' + inp + '" value="' + v(pg.tarikh, getRealTimeTodayStr()) + '"></div></div>'
+                + '<p class="text-[11px] text-slate-500 mt-2">Naikkan hanya dibenarkan apabila kedua-dua markah diisi dan keputusan ialah "Disahkan".</p></div>'
+                + '<div class="flex flex-wrap gap-2 justify-end"><button type="button" onclick="bkTutupOverlay()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200">Batal</button>'
+                + '<button type="button" onclick="bkSimpanGuru()" class="px-5 py-2 rounded-xl bg-brand-blue text-white font-bold text-sm hover:bg-blue-800"><i class="fas fa-floppy-disk mr-1.5"></i>Simpan</button></div>';
+            bkBukaOverlay_('Markah Borang Pengesahan', html);
+        }
+        function bkSimpanGuru() {
+            const b = bkCari_(m2Nilai_('bkg-id')); if (!b) return;
+            const num = function(id) { const t = (m2Nilai_(id) || '').trim(); if (t === '') return null; const x = parseInt(t); return isNaN(x) || x < 0 ? NaN : x; };
+            const md = num('bkg-mk-d'), mdp = num('bkg-mk-dp'), mt = num('bkg-mk-t'), mtp = num('bkg-mk-tp');
+            if ([md, mdp, mt, mtp].some(function(x) { return x !== null && isNaN(x); })) { showCustomAlert('Markah mesti nombor 0 atau lebih.', 'error'); return; }
+            if ((md !== null && mdp !== null && md > mdp) || (mt !== null && mtp !== null && mt > mtp)) { showCustomAlert('Markah tidak boleh melebihi markah penuh.', 'error'); return; }
+            const pg = { keputusan: m2Nilai_('bkg-pg-keputusan'), guru: (m2Nilai_('bkg-pg-guru') || '').trim(), tarikh: m2Nilai_('bkg-pg-tarikh'), ulasan: ((b.guru || {}).pengesahan || {}).ulasan || '' };
+            if (pg.keputusan === 'Disahkan' && (md === null || mt === null)) { showCustomAlert('Isi kedua-dua markah sebelum memilih "Disahkan".', 'error'); return; }
+            if (pg.keputusan && !pg.guru) { showCustomAlert('Sila isi nama guru pengawas.', 'error'); return; }
+            const g = Object.assign({}, b.guru || {}, { markah: { disiplin: md, penuhDisiplin: mdp, tanggungjawab: mt, penuhTanggungjawab: mtp }, pengesahan: pg });
+            if (!g.demerit) g.demerit = { tarikh: getRealTimeTodayStr(), jumlah: bkKiraDemerit_(b.pId, getRealTimeTodayStr()) };
+            b.guru = g; b.status = bkStatus_(b);
+            queueDelta('simpanBorangKenaikan', { rekod: { id: b.id, pId: b.pId, nama: b.nama, kelas: b.kelas, guru: g } }, 'Kemaskini Markah Borang Pengesahan: ' + b.nama);
+            saveStateToLocal(); markUnsynced(); bkTutupOverlay(); bkRender();
+            showCustomAlert('Markah disimpan.', 'success');
+        }
+
+        // ---------- Naikkan ke Pengawas Biasa ----------
+        function bkNaikkan(id) {
+            const b = bkCari_(id), p = b ? m2Pengawas_(b.pId) : null;
+            if (!b || !p) { showCustomAlert('Rekod pengawas tidak ditemui.', 'error'); return; }
+            if (bkStatus_(b) !== 'Disahkan') { showCustomAlert('Borang belum lengkap: murid mesti menghantar borang dan guru mesti memilih "Disahkan".', 'error'); return; }
+            const jawatanBaharu = String(p.jawatan || '').replace(/Percubaan/i, 'Biasa');
+            if (jawatanBaharu === p.jawatan) { showCustomAlert('Pengawas ini bukan berjawatan Pengawas Percubaan.', 'error'); return; }
+            try {
+                const jenis = getSesiPengawas(p) === 'Pagi' ? 'pengawasPagi' : 'pengawasPetang';
+                if (getSenaraiJawatanByJenis(jenis).indexOf(jawatanBaharu) === -1) { showCustomAlert('Jawatan "' + jawatanBaharu + '" tiada dalam Tetapan Jawatan. Sila tambah dahulu atau ubah jawatan secara manual.', 'error'); return; }
+            } catch (e) { /* teruskan */ }
+            showCustomConfirm('Naikkan ke Pengawas Biasa', p.nama + ' akan dinaikkan daripada "' + p.jawatan + '" kepada "' + jawatanBaharu + '". Teruskan?', function() {
+                p.jawatan = jawatanBaharu;
+                b.dinaikkanPada = new Date().toISOString();
+                queueDelta('simpanBorangKenaikan', { rekod: { id: b.id, pId: b.pId, nama: b.nama, kelas: b.kelas, guru: b.guru || {}, dinaikkan: true } }, 'Naikkan ke Pengawas Biasa: ' + p.nama);
+                queueDelta('updatePrefect', p, 'Naikkan ke Pengawas Biasa: ' + p.nama);
+                saveStateToLocal(); markUnsynced(); renderAll(); bkRender();
+                showCustomAlert(p.nama + ' telah dinaikkan menjadi Pengawas Biasa.', 'success');
+            });
+        }
+
+        // ---------- Cetakan ----------
+        function bkNamaSekolah_() { return String((state.settings && (state.settings.schoolName || state.settings.namaSekolah)) || 'SMK JALAN DAMAI').toUpperCase(); }
+        const BK_GAYA_ = "font-family:'Times New Roman',serif; font-size:11pt; line-height:1.4; color:#000;";
+        function bkKepala_(tajuk) {
+            return '<div style="text-align:center; margin-bottom:12px;"><div style="font-weight:bold; font-size:12pt;">' + m2Esc_(bkNamaSekolah_()) + '</div><div style="font-weight:bold; font-size:12.5pt; margin-top:3px;">BORANG PENGESAHAN PENGAWAS PERCUBAAN</div><div style="font-size:10.5pt;">' + tajuk + '</div></div>';
+        }
+        function bkBaris_(l, v) { return '<tr><td style="width:34%; padding:5px 6px; border:1px solid #000; font-weight:bold;">' + l + '</td><td style="padding:5px 6px; border:1px solid #000;">' + (v === '' || v == null ? '&nbsp;' : m2Esc_(v)) + '</td></tr>'; }
+        function bkKotak_(t, n) { return '<div style="border:1px solid #000; min-height:' + (n || 40) + 'px; padding:5px 7px; white-space:pre-line;">' + m2Esc_(t || '') + '</div>'; }
+        // Borang soalan untuk murid (kosong, dijawab atas kertas)
+        function bkCetakSoalanHTML_(b) {
+            const s = bkSoalan_();
+            const soalan = function(arr) {
+                return arr.map(function(q, i) {
+                    return '<div style="margin:0 0 8px 0; page-break-inside:avoid;"><div>' + (i + 1) + '. ' + m2Esc_(q.teks) + '</div><div style="margin-left:16px;">'
+                        + q.pilihan.map(function(p, j) { return '<div>&#9675; ' + BK_HURUF_[j] + '. ' + m2Esc_(p) + '</div>'; }).join('') + '</div></div>';
+                }).join('') || '<div style="color:#666;">(Tiada soalan ditetapkan)</div>';
+            };
+            const garis = function(n) { let h = ''; for (let i = 0; i < n; i++) h += '<div style="border-bottom:1px solid #000; height:24px;"></div>'; return h; };
+            return '<div style="' + BK_GAYA_ + '">' + bkKepala_('BORANG MURID')
+                + '<table style="width:100%; border-collapse:collapse; margin-bottom:10px;">' + bkBaris_('1. Nama', b.nama) + bkBaris_('2. Kelas', b.kelas) + '</table>'
+                + '<div style="font-weight:bold; margin:8px 0 4px;">3. Soalan asas tentang disiplin sekolah <span style="font-weight:normal;">(bulatkan satu jawapan)</span></div>' + soalan(s.disiplin)
+                + '<div style="font-weight:bold; margin:10px 0 4px;">4. Soalan asas tentang tanggungjawab pengawas <span style="font-weight:normal;">(bulatkan satu jawapan)</span></div>' + soalan(s.tanggungjawab)
+                + '<div style="page-break-before:always;"></div>'
+                + '<div style="font-weight:bold; margin:6px 0 4px;">5. Kenapa hendak menjadi pengawas? <span style="font-weight:normal;">(Jawab dalam Bahasa Melayu)</span></div>' + garis(8)
+                + '<div style="font-weight:bold; margin:16px 0 4px;">6. What problems have you noticed during your time as a probationary prefect? <span style="font-weight:normal;">(Answer in English)</span></div>' + garis(8)
+                + '<div style="margin-top:22px;">Tandatangan murid: ______________________ &nbsp;&nbsp; Tarikh: ____________</div></div>';
+        }
+        // Skema jawapan (untuk guru menanda)
+        function bkCetakSkemaHTML_() {
+            const s = bkSoalan_();
+            const bhg = function(t, arr) {
+                return '<div style="font-weight:bold; margin:10px 0 4px;">' + t + ' (' + arr.length + ' soalan)</div>' + (arr.map(function(q, i) { return '<div>' + (i + 1) + '. ' + BK_HURUF_[q.betul] + ' &mdash; ' + m2Esc_(q.pilihan[q.betul]) + '</div>'; }).join('') || '<div>(Tiada)</div>');
+            };
+            return '<div style="' + BK_GAYA_ + '">' + bkKepala_('SKEMA JAWAPAN (UNTUK GURU SAHAJA)') + bhg('Disiplin sekolah', s.disiplin) + bhg('Tanggungjawab pengawas', s.tanggungjawab) + '</div>';
+        }
+        // Borang guru (cetak; demerit dikira automatik, selebihnya ditulis tangan)
+        function bkCetakGuruHTML_(b) {
+            const g = b.guru || {}, mk = g.markah || {}, pg = g.pengesahan || {}, dm = g.demerit || {}, kk = g.komenGuruKelas || {}, kp = g.komenPengawas || {}, kh = g.kehadiran || {};
+            const tDem = dm.tarikh || getRealTimeTodayStr();
+            const jDem = dm.jumlah === undefined ? bkKiraDemerit_(b.pId, tDem) : dm.jumlah;
+            const peratus = kh.jumlahHari > 0 ? ' (' + (Math.round(kh.hariHadir / kh.jumlahHari * 1000) / 10) + '%)' : '';
+            const f = function(v, p) { return v == null ? '______' : v + (p == null ? '' : ' / ' + p); };
+            const mp = (g.komenGuruMP || []).map(function(x) { return '<tr><td style="border:1px solid #000; padding:4px 6px; width:26%;">' + m2Esc_(x.nama) + '<br><span style="font-size:9.5pt;">' + m2Esc_(x.subjek) + '</span></td><td style="border:1px solid #000; padding:4px 6px; white-space:pre-line;">' + m2Esc_(x.komen) + '</td></tr>'; }).join('');
+            return '<div style="' + BK_GAYA_ + '">' + bkKepala_('BAHAGIAN GURU')
+                + '<table style="width:100%; border-collapse:collapse; margin-bottom:10px;">' + bkBaris_('1. Nama', b.nama) + bkBaris_('2. Kelas', b.kelas)
+                + bkBaris_('3. Jumlah demerit setakat ' + bkTarikhPendek_(tDem), String(jDem))
+                + bkBaris_('4. Kehadiran ke sekolah', kh.jumlahHari ? (kh.mula ? bkTarikhPendek_(kh.mula) + ' - ' + bkTarikhPendek_(kh.tamat) + ': ' : '') + kh.hariHadir + ' / ' + kh.jumlahHari + ' hari' + peratus : '') + '</table>'
+                + '<div style="font-weight:bold; margin:8px 0 3px;">5. Komen guru kelas / guru mata pelajaran</div>'
+                + '<div style="margin-bottom:4px;">Guru kelas: ' + m2Esc_(kk.nama || '') + '</div>' + bkKotak_(kk.komen, 60)
+                + '<table style="width:100%; border-collapse:collapse; margin-top:5px;">' + (mp || '<tr><td style="border:1px solid #000; padding:18px; width:26%;">&nbsp;</td><td style="border:1px solid #000;">&nbsp;</td></tr><tr><td style="border:1px solid #000; padding:18px;">&nbsp;</td><td style="border:1px solid #000;">&nbsp;</td></tr>') + '</table>'
+                + '<div style="font-weight:bold; margin:10px 0 3px;">6. Komen Ketua Pengawas / Penolong Ketua Pengawas / AJK Pengawas</div>'
+                + '<div style="margin-bottom:4px;">Nama: ' + m2Esc_(kp.nama || '____________________') + ' &nbsp;&nbsp; Jawatan: ' + m2Esc_(kp.jawatan || '____________________') + '</div>' + bkKotak_(kp.komen, 60)
+                + '<div style="font-weight:bold; margin:10px 0 3px;">Markah borang soalan murid</div>'
+                + '<div style="border:1px solid #000; padding:6px 10px;">Disiplin: <b>' + f(mk.disiplin, mk.penuhDisiplin) + '</b> &nbsp;&nbsp;&nbsp; Tanggungjawab: <b>' + f(mk.tanggungjawab, mk.penuhTanggungjawab) + '</b></div>'
+                + '<div style="font-weight:bold; margin:10px 0 3px;">7. Pengesahan guru pengawas</div>'
+                + '<div style="border:1px solid #000; padding:8px 10px;"><div>Keputusan: <b>' + m2Esc_(pg.keputusan || 'Disahkan / Ditangguhkan / Tidak Disahkan') + '</b></div><div style="margin-top:3px; min-height:24px; white-space:pre-line;">' + m2Esc_(pg.ulasan || '') + '</div>'
+                + '<div style="margin-top:30px;">Tandatangan: ______________________ &nbsp;&nbsp; Nama: ' + m2Esc_(pg.guru || '______________________') + ' &nbsp;&nbsp; Tarikh: ' + m2Esc_(pg.tarikh ? bkTarikhPendek_(pg.tarikh) : '____________') + '</div></div></div>';
+        }
+        function bkCetak(id, jenis) {
+            const b = bkCari_(id); if (!b) return;
+            executePrint(jenis === 'soalan' ? bkCetakSoalanHTML_(b) : jenis === 'skema' ? bkCetakSkemaHTML_() : bkCetakGuruHTML_(b), 'portrait');
+        }
+
+        // =====================================================================
+        //  T3. BORANG MURID (akaun Pengawas)
+        // =====================================================================
+        function bsBorang_() {
+            return bkSenarai_().find(function(b) { return normalizeId(b.pId) === normalizeId(state.currentPrefectId) && !b.dinaikkanPada; }) || null;
+        }
+        function bsRender() {
+            const wrap = m2El_('bs-isi'); if (!wrap) return;
+            const b = bsBorang_();
+            if (!b) { wrap.innerHTML = '<div class="bg-white p-6 rounded-2xl border border-slate-100 text-sm text-slate-600">Tiada borang pengesahan untuk anda buat masa ini.</div>'; return; }
+            const m = b.murid || {};
+            const hantar = !!m.tarikhHantar;
+            const s = bkSoalan_();
+            const lab = 'block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1';
+            const inp = 'w-full border border-slate-200 p-2.5 rounded-xl text-sm bg-white';
+            const soalanHTML = function(kunci, arr, jawapan) {
+                return arr.map(function(q, i) {
+                    const pil = parseInt((jawapan || [])[i]);
+                    return '<fieldset class="mb-4"><legend class="text-sm font-semibold text-slate-800 mb-1.5">' + (i + 1) + '. ' + m2Esc_(q.teks) + '</legend>'
+                        + q.pilihan.map(function(p, j) {
+                            return '<label class="flex items-start gap-2 text-sm text-slate-700 py-0.5 cursor-pointer"><input type="radio" class="mt-1" name="bs-' + kunci + '-' + i + '" value="' + j + '"' + (pil === j ? ' checked' : '') + (hantar ? ' disabled' : '') + '> <span>' + BK_HURUF_[j] + '. ' + m2Esc_(p) + '</span></label>';
+                        }).join('') + '</fieldset>';
+                }).join('') || '<p class="text-xs text-slate-400">Tiada soalan.</p>';
+            };
+            wrap.innerHTML = (hantar
+                ? '<div class="mb-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold"><i class="fas fa-circle-check mr-1.5"></i>Borang anda telah dihantar pada ' + m2Esc_(bkTarikhPendek_(String(m.tarikhHantar).slice(0, 10))) + '. Guru akan menyemak dan membuat pengesahan.</div>'
+                : '<div class="mb-4 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm">Sila isi semua bahagian dengan jujur, kemudian tekan <b>Hantar Borang</b>. Borang tidak boleh diubah selepas dihantar.</div>')
+                + '<div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 mb-4"><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label class="' + lab + '">1. Nama</label><input class="' + inp + ' bg-slate-50" value="' + m2Esc_(b.nama) + '" readonly></div><div><label class="' + lab + '">2. Kelas</label><input class="' + inp + ' bg-slate-50" value="' + m2Esc_(b.kelas || '') + '" readonly></div></div></div>'
+                + '<div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 mb-4"><h3 class="font-bold text-slate-800 mb-3">3. Soalan asas tentang disiplin sekolah</h3>' + soalanHTML('d', s.disiplin, m.jawapanDisiplin) + '</div>'
+                + '<div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 mb-4"><h3 class="font-bold text-slate-800 mb-3">4. Soalan asas tentang tanggungjawab pengawas</h3>' + soalanHTML('t', s.tanggungjawab, m.jawapanTanggungjawab) + '</div>'
+                + '<div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 mb-4"><label class="block text-sm font-bold text-slate-800 mb-1">5. Kenapa hendak menjadi pengawas?</label><p class="text-[11px] text-slate-500 mb-2">Jawab dalam <b>Bahasa Melayu</b> (sekurang-kurangnya 20 aksara).</p>'
+                + '<textarea id="bs-mengapa" rows="5" maxlength="3000" class="' + inp + '"' + (hantar ? ' readonly' : '') + '>' + m2Esc_(m.mengapa || '') + '</textarea></div>'
+                + '<div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 mb-4"><label class="block text-sm font-bold text-slate-800 mb-1">6. What problems have you noticed during your time as a probationary prefect?</label><p class="text-[11px] text-slate-500 mb-2">Answer in <b>English</b> (at least 20 characters).</p>'
+                + '<textarea id="bs-masalah" rows="5" maxlength="3000" class="' + inp + '"' + (hantar ? ' readonly' : '') + '>' + m2Esc_(m.masalah || '') + '</textarea></div>'
+                + (hantar ? '' : '<div class="flex justify-end"><button type="button" onclick="bsHantar()" class="px-6 py-3 rounded-xl bg-brand-blue text-white font-bold hover:bg-blue-800"><i class="fas fa-paper-plane mr-2"></i>Hantar Borang</button></div>');
+        }
+        function bsHantar() {
+            const b = bsBorang_(); if (!b) return;
+            const s = bkSoalan_();
+            const kumpul = function(kunci, arr) {
+                const hasil = [];
+                for (let i = 0; i < arr.length; i++) {
+                    const r = document.querySelector('input[name="bs-' + kunci + '-' + i + '"]:checked');
+                    if (!r) return null;
+                    hasil.push(parseInt(r.value));
+                }
+                return hasil;
+            };
+            const jd = kumpul('d', s.disiplin), jt = kumpul('t', s.tanggungjawab);
+            if (!jd || !jt) { showCustomAlert('Sila jawab semua soalan objektif.', 'error'); return; }
+            const mengapa = (m2Nilai_('bs-mengapa') || '').trim(), masalah = (m2Nilai_('bs-masalah') || '').trim();
+            if (mengapa.length < 20) { showCustomAlert('Jawapan soalan 5 terlalu pendek (minimum 20 aksara).', 'error'); return; }
+            if (masalah.length < 20) { showCustomAlert('Answer for question 6 is too short (minimum 20 characters).', 'error'); return; }
+            showCustomConfirm('Hantar Borang', 'Borang tidak boleh diubah selepas dihantar. Hantar sekarang?', function() {
+                b.murid = { nama: b.nama, kelas: b.kelas, jawapanDisiplin: jd, jawapanTanggungjawab: jt, mengapa: mengapa, masalah: masalah, tarikhHantar: new Date().toISOString() };
+                b.status = 'Dihantar';
+                queueDelta('hantarBorangMurid', { id: b.id, jawapanDisiplin: jd, jawapanTanggungjawab: jt, mengapa: mengapa, masalah: masalah }, 'Hantar Borang Pengesahan Murid');
+                saveStateToLocal(); markUnsynced(); bsRender(); updateUIRoles();
+                showCustomAlert('Borang dihantar. Terima kasih.', 'success');
+            });
+        }
+        // Papar menu "Borang Pengesahan Saya" hanya kepada pengawas yang borangnya telah dibuka guru
+        (function() {
+            const asal = updateUIRoles;
+            updateUIRoles = function() {
+                const r = asal.apply(this, arguments);
+                try {
+                    const li = document.getElementById('nav-li-borang-saya');
+                    if (li) {
+                        const b = null; // borang dijawab atas kertas; menu pengawas tidak dipaparkan
+                        li.style.display = b ? '' : 'none';
+                        const tanda = b && !(b.murid && b.murid.tarikhHantar);
+                        const d = li.querySelector('.nav-btn');
+                        if (d) d.innerHTML = '<i class="fas fa-file-pen w-6"></i> Borang Pengesahan Saya' + (tanda ? ' <span class="ml-auto bg-red-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none">!</span>' : '');
+                    }
+                } catch (e) { /* abaikan */ }
+                return r;
+            };
+        })();
 
         // =====================================================================
         //  CANGKUK & PENDAFTARAN (pasang sekali sahaja)
@@ -23908,7 +24454,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         // ---- Kawalan akses pusat ----
         // Tab yang HANYA untuk Guru/Admin -- tidak pernah dipaparkan atau dibuka oleh akaun Pengawas (AJK),
         // walaupun Tetapan Akses Tab tersilap menandakannya.
-        const GURU_SAHAJA_TAB_ = ['kewangan', 'permohonan-pengawas', 'dokumen-rasmi', 'semakan-sistem', 'laporan-ringkas'];
+        const GURU_SAHAJA_TAB_ = ['borang-kenaikan', 'tetapan-soalan', 'kewangan', 'permohonan-pengawas', 'dokumen-rasmi', 'semakan-sistem', 'laporan-ringkas'];
         const AKSES_BAHARU_GURU_ = ['dokumen-rasmi', 'laporan-ringkas', 'pengumuman', 'semakan-sistem'];
         function x6AksesDitetap_() { return (parseInt(state.settings && state.settings.aksesTabV) || 0) >= 2; }
         function tabDibenarkan_(tabId) {
@@ -23987,6 +24533,9 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     else if (tabId === 'laporan-ringkas') lrInit_();
                     else if (tabId === 'semakan-sistem') { sqRender(); try { lgMuat(); tfaMuat(); tkMuat(); } catch (e) {} }
                     else if (tabId === 'tetapan-kalendar') kalRender();
+                    else if (tabId === 'tetapan-soalan') sqkRender();
+                    else if (tabId === 'borang-kenaikan') bkRender();
+                    else if (tabId === 'borang-saya') bsRender();
                     else if (tabId === 'penilaian-prestasi') rpRender();
                     else if (tabId === 'tetapan') { sdrPapar_(); sdrSemak(false); }
                 } catch (e) { console.warn('Cangkuk tab gagal:', e); }
