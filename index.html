@@ -21349,7 +21349,9 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         // ----- Susun atur surat (tanpa kepala surat & tanpa no. rujukan; ruang kosong di atas) -----
         function dokBungkus_(snap, isi) {
             const ruang = Math.max(0, parseFloat(snap.ruang) || 0);
-            return `<div style="page-break-inside:avoid; font-family:'Times New Roman',serif; font-size:11.5pt; line-height:1.5; color:#000;">` +
+            // CSS cetak global memberi garis kotak pada semua <table>; surat rasmi tidak perlu kotak.
+            return `<style>.dok-surat table,.dok-surat td,.dok-surat th{border:0!important;background:none!important;box-shadow:none!important}.dok-surat table table{margin:0!important}</style>` +
+                `<div class="dok-surat" style="page-break-inside:avoid; font-family:'Times New Roman',serif; font-size:11.5pt; line-height:1.5; color:#000;">` +
                 `<div style="height:${ruang}cm;"></div>${isi}</div>`;
         }
         function dokPenerima_(p, snap) {
