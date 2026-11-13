@@ -22,6 +22,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SPP SMKJD">
+    <link rel="manifest" id="manifest-statik" href="manifest.json">
     <meta name="theme-color" content="#0b2152">
     <script>try{var _d=document.documentElement,_t=localStorage.getItem("spp_tema"),_s=localStorage.getItem("spp_saiz");if(_t==="gelap")_d.setAttribute("data-tema","gelap");if(_s)_d.setAttribute("data-saiz",_s);if((window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone)_d.classList.add("mod-aplikasi");}catch(e){}</script>
 
@@ -17422,6 +17423,22 @@ html[data-tema="gelap"] .keadaan-kosong .kk-btn{background:#3b5bdb}
         //  Apps Script (mesti satu asal/origin). Sistem ini perlukan sambungan internet utk
         //  segerak, jadi caching luar talian tidak ditawarkan.
         function setupPWA() {
+            // Utamakan manifest.json sebenar (diletak sebelah fail HTML) -- pelayar komputer (Chrome/Edge)
+            // hanya mempercayai ikon daripada manifest berasaskan URL sebenar. Jika fail itu tiada/rosak,
+            // buang pautan statik dan guna manifest dijana (blob) seperti dahulu.
+            const guguran = function() {
+                const statik = document.getElementById('manifest-statik');
+                if (statik) statik.remove();
+                setupPWABlob_();
+            };
+            try {
+                fetch('manifest.json', { cache: 'no-cache' })
+                    .then(function(r) { if (!r.ok) throw new Error('tiada'); return r.json(); })
+                    .then(function(j) { if (!j || !Array.isArray(j.icons) || !j.icons.length) throw new Error('tidak sah'); })
+                    .catch(guguran);
+            } catch (e) { guguran(); }
+        }
+        function setupPWABlob_() {
             try {
                 const asalUrl = window.location.origin + window.location.pathname;
                 const manifest = {
