@@ -21244,8 +21244,11 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 `<div style="height:${ruang}cm;"></div>${isi}</div>`;
         }
         function dokPenerima_(p, snap) {
-            return `<table style="width:100%; border-collapse:collapse; margin-bottom:10px;"><tr><td style="text-align:left; vertical-align:bottom;">${snap.ruj ? 'Ruj. Kami&nbsp;:&nbsp;&nbsp;' + '&nbsp;'.repeat(2) + '<span style="display:inline-block; width:6cm; border-bottom:1px dotted #000;">&nbsp;</span>' : ''}</td><td style="text-align:right; vertical-align:bottom;">${m2Esc_(m2Tarikh_(snap.tarikhSurat))}</td></tr></table>
-                <div style="margin-bottom:10px;"><b>${m2Esc_(String(p.nama || '').toUpperCase())}</b><br>${p.ic ? 'No. K/P: ' + m2Esc_(p.ic) + '<br>' : ''}Kelas: ${m2Esc_(p.kelas || '-')}<br>Sekolah Menengah Kebangsaan Jalan Damai</div>
+            const ruj = snap.ruj ? '<tr><td style="padding:0;">Ruj. Kami</td><td style="padding:0 6px;">:</td><td style="padding:0; min-width:4cm;">&nbsp;</td></tr>' : '';
+            return `<table style="width:100%; border-collapse:collapse; margin-bottom:10px;"><tr>
+                <td style="vertical-align:top; text-align:left; padding:0;"><b>${m2Esc_(String(p.nama || '').toUpperCase())}</b><br>${p.ic ? 'No. K/P: ' + m2Esc_(p.ic) + '<br>' : ''}Kelas: ${m2Esc_(p.kelas || '-')}<br>Sekolah Menengah Kebangsaan Jalan Damai</td>
+                <td style="vertical-align:top; padding:0; white-space:nowrap;"><table style="border-collapse:collapse; margin-left:auto;">${ruj}<tr><td style="padding:0;">Tarikh</td><td style="padding:0 6px;">:</td><td style="padding:0; min-width:4cm; text-align:left;">${m2Esc_(m2Tarikh_(snap.tarikhSurat))}</td></tr></table></td>
+                </tr></table>
                 <div style="margin-bottom:8px;">${m2Esc_(m2Sapaan_(p))},</div>`;
         }
         function dokTajuk_(teks) {
@@ -21260,16 +21263,18 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 <p style="margin:0 0 2px 0; font-weight:bold;">&ldquo;BERKHIDMAT UNTUK NEGARA&rdquo;</p>
                 <p style="margin:6px 0 0 0;">Saya yang menjalankan amanah,</p>
                 <div style="height:46px;"></div>
-                <div style="border-top:1px solid #000; width:270px; padding-top:3px; line-height:1.35;"><b>(${nama})</b><br>Pengetua<br>Sekolah Menengah Kebangsaan Jalan Damai</div>
+                <div style="border-top:1px solid #000; display:inline-block; white-space:nowrap; padding-top:3px; line-height:1.35;"><b>(${nama})</b><br>Pengetua<br>Sekolah Menengah Kebangsaan Jalan Damai</div>
             </div>`;
         }
 
         function dokBinaSurat_(jenis, p, snap) {
             const jaw = `<b>${m2Esc_(snap.jawatan)}</b>`;
-            const sek = 'Lembaga Pengawas Sekolah Menengah Kebangsaan Jalan Damai';
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) {}
+            const sek = `Lembaga Pengawas ${sesiP ? 'Sesi ' + sesiP + ' ' : ''}Sekolah Menengah Kebangsaan Jalan Damai`;
+            const T = function(t) { return dokTajuk_(t + (sesiP ? ' (Sesi ' + sesiP + ')' : '')); };
             let isi = dokPenerima_(p, snap);
             if (jenis === 'lantikan') {
-                isi += dokTajuk_(`Surat Lantikan Sebagai ${snap.jawatan} Lembaga Pengawas Sekolah Sesi ${snap.tahun}`);
+                isi += T(`Surat Lantikan Sebagai ${snap.jawatan} Lembaga Pengawas Sekolah Sesi ${snap.tahun}`);
                 isi += dokPara_('', 'Dengan segala hormatnya perkara di atas adalah dirujuk.');
                 isi += dokPara_('2', `Sukacita dimaklumkan bahawa anda telah dilantik sebagai ${jaw} ${m2Esc_(sek)} bagi sesi <b>${m2Esc_(snap.tahun)}</b>, berkuat kuasa mulai <b>${m2Esc_(m2Tarikh_(snap.kuatkuasa))}</b>.`);
                 isi += dokPara_('3', 'Sebagai pengawas sekolah, anda dikehendaki:');
@@ -21282,7 +21287,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 if (snap.tambahan) isi += dokPara_('5', m2Esc_(snap.tambahan));
                 isi += dokPara_('', 'Sekian, terima kasih.');
             } else if (jenis === 'penghargaan') {
-                isi += dokTajuk_('Surat Penghargaan Khidmat Bakti Sebagai Pengawas Sekolah');
+                isi += T('Surat Penghargaan Khidmat Bakti Sebagai Pengawas Sekolah');
                 isi += dokPara_('', 'Dengan segala hormatnya perkara di atas adalah dirujuk.');
                 let tempoh = 'sepanjang tempoh perkhidmatan anda';
                 if (snap.mula && snap.tamat) tempoh = `bermula <b>${m2Esc_(m2Tarikh_(snap.mula))}</b> hingga <b>${m2Esc_(m2Tarikh_(snap.tamat))}</b>`;
@@ -21302,7 +21307,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 const jt = snap.jenisTamat;
                 const sebab = snap.sebab ? m2Esc_(snap.sebab) : '';
                 if (jt === 'lucut') {
-                    isi += dokTajuk_('Pelucutan Jawatan Pengawas Sekolah');
+                    isi += T('Pelucutan Jawatan Pengawas Sekolah');
                     isi += dokPara_('', 'Dengan segala hormatnya perkara di atas adalah dirujuk.');
                     isi += dokPara_('2', `Dimaklumkan bahawa anda telah <b>dilucutkan jawatan</b> sebagai ${jaw} ${m2Esc_(sek)} berkuat kuasa <b>${m2Esc_(m2Tarikh_(snap.kuatkuasa))}</b>${sebab ? ' atas sebab: ' + sebab + (/[.!?]$/.test(snap.sebab) ? '' : '.') : '.'}`);
                     let no = 3;
@@ -21315,13 +21320,13 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     isi += dokPara_(String(no++), 'Anda dikehendaki memulangkan lencana, tag nama dan semua kelengkapan pengawas kepada Guru Pengawas dalam tempoh tujuh (7) hari dari tarikh surat ini.');
                     isi += dokPara_(String(no), 'Anda diingatkan supaya terus mematuhi peraturan sekolah pada setiap masa.');
                 } else if (jt === 'letak') {
-                    isi += dokTajuk_('Penerimaan Letak Jawatan Sebagai Pengawas Sekolah');
+                    isi += T('Penerimaan Letak Jawatan Sebagai Pengawas Sekolah');
                     isi += dokPara_('', 'Dengan segala hormatnya perkara di atas adalah dirujuk.');
                     isi += dokPara_('2', `Dimaklumkan bahawa pihak sekolah telah menerima letak jawatan anda sebagai ${jaw} ${m2Esc_(sek)} berkuat kuasa <b>${m2Esc_(m2Tarikh_(snap.kuatkuasa))}</b>${sebab ? ' (' + sebab + ')' : ''}.`);
                     isi += dokPara_('3', 'Anda dikehendaki memulangkan lencana, tag nama dan semua kelengkapan pengawas kepada Guru Pengawas dalam tempoh tujuh (7) hari dari tarikh surat ini.');
                     isi += dokPara_('4', 'Pihak sekolah merakamkan penghargaan atas khidmat bakti yang telah anda sumbangkan sepanjang berkhidmat sebagai pengawas.');
                 } else {
-                    isi += dokTajuk_('Pemakluman Tamat Perkhidmatan Sebagai Pengawas Sekolah');
+                    isi += T('Pemakluman Tamat Perkhidmatan Sebagai Pengawas Sekolah');
                     isi += dokPara_('', 'Dengan segala hormatnya perkara di atas adalah dirujuk.');
                     isi += dokPara_('2', `Dimaklumkan bahawa perkhidmatan anda sebagai ${jaw} ${m2Esc_(sek)} telah <b>tamat</b> berkuat kuasa <b>${m2Esc_(m2Tarikh_(snap.kuatkuasa))}</b>${sebab ? ' kerana ' + sebab : ''}.`);
                     isi += dokPara_('3', 'Anda dikehendaki memulangkan lencana, tag nama dan semua kelengkapan pengawas kepada Guru Pengawas dalam tempoh tujuh (7) hari dari tarikh surat ini.');
