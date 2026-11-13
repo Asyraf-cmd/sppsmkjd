@@ -904,6 +904,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 <li id="nav-li-laporan" class="sidebar-group-mesyuarat-laporan"><div onclick="switchTab('laporan')" id="nav-laporan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chart-bar w-6 opacity-85 text-brand-yellow"></i> Laporan Pengawas</div></li>
                 <li id="nav-li-sejarah-laporan" class="sidebar-group-mesyuarat-laporan"><div onclick="switchTab('sejarah-laporan')" id="nav-sejarah-laporan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-history w-6 opacity-85 text-brand-yellow"></i> Sejarah Laporan dan Minit Mesyuarat</div></li>
                 <li id="nav-li-laporan-ringkas" class="sidebar-group-mesyuarat-laporan"><div onclick="switchTab('laporan-ringkas')" id="nav-laporan-ringkas" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-file-lines w-6 opacity-85 text-brand-yellow"></i> Laporan Ringkas (PK HEM)</div></li>
+                <li id="nav-li-semakan-sistem" class="sidebar-group-mesyuarat-laporan"><div onclick="switchTab('semakan-sistem')" id="nav-semakan-sistem" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-clipboard-check w-6 opacity-85 text-brand-yellow"></i> Semakan &amp; Kualiti Data</div></li>
 
                 <!-- Divider: Pentadbiran (Kewangan & Guru) -->
                 <li class="pt-3 pb-1 px-3">
@@ -3479,10 +3480,11 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-brand-blue w-full mb-6">
                     <h3 class="font-bold text-base text-slate-800 mb-4 border-b border-slate-100 pb-3">Jana Dokumen</h3>
 
-                    <div id="dok-jenis-bar" class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
+                    <div id="dok-jenis-bar" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-5">
                         <button type="button" data-dok-jenis="lantikan" onclick="dokPilihJenis('lantikan')" class="dok-jenis-btn px-4 py-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-2"><i class="fas fa-award"></i>Surat Lantikan</button>
                         <button type="button" data-dok-jenis="penghargaan" onclick="dokPilihJenis('penghargaan')" class="dok-jenis-btn px-4 py-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-2"><i class="fas fa-hands-clapping"></i>Surat Penghargaan</button>
                         <button type="button" data-dok-jenis="tamat" onclick="dokPilihJenis('tamat')" class="dok-jenis-btn px-4 py-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-2"><i class="fas fa-user-slash"></i>Surat Tamat / Pelucutan</button>
+                        <button type="button" data-dok-jenis="sijil" onclick="dokPilihJenis('sijil')" class="dok-jenis-btn px-4 py-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-2"><i class="fas fa-certificate"></i>Sijil Penghargaan</button>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -3501,6 +3503,13 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         <div>
                             <label class="block text-sm font-semibold mb-1 text-slate-700">Ruang Kosong Atas (cm)</label>
                             <input type="number" id="dok-ruang" min="0" max="8" step="0.5" value="2" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm bg-white">
+                        </div>
+                        <div id="dok-bhs-wrap">
+                            <label class="block text-sm font-semibold mb-1 text-slate-700">Bahasa Surat</label>
+                            <select id="dok-bhs" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm bg-white">
+                                <option value="ms">Bahasa Melayu</option>
+                                <option value="en">English</option>
+                            </select>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold mb-1 text-slate-700">Ruang No. Rujukan</label>
@@ -3571,11 +3580,29 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         </div>
                     </div>
 
+                    <!-- Pilihan khusus: Sijil -->
+                    <div id="dok-opsyen-sijil" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 bg-slate-50 border border-slate-100 rounded-xl p-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Tajuk Sijil</label>
+                            <input type="text" id="dok-sijil-tajuk" value="SIJIL PENGHARGAAN" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Sesi (Tahun)</label>
+                            <input type="number" id="dok-sijil-tahun" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm bg-white">
+                        </div>
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Teks Penghargaan <span class="font-normal normal-case">(kosongkan untuk teks lalai)</span></label>
+                            <textarea id="dok-sijil-teks" rows="2" class="w-full border border-slate-200 p-2.5 rounded-xl text-sm bg-white" placeholder="Cth: atas sumbangan cemerlang dalam Program Hari Sukan 2026"></textarea>
+                            <p class="text-[11px] text-slate-400 mt-1">Sijil dicetak secara portrait A4. Ruang kosong disediakan di bahagian atas untuk logo atau cop sekolah.</p>
+                        </div>
+                    </div>
+
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Tandakan Nama Pengawas <span class="text-red-500">*</span> <span class="text-slate-500 font-normal">(boleh pilih ramai &mdash; setiap pengawas dicetak pada muka surat berasingan)</span></label>
                     <div id="dok-mount" class="mb-4"></div>
 
                     <div class="flex flex-wrap items-center gap-3">
                         <button type="button" onclick="dokCetak()" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2.5 px-5 rounded-xl transition shadow-md shadow-blue-900/10 active:scale-98 text-sm"><i class="fas fa-print mr-1.5"></i>Pratonton &amp; Cetak (<span id="dok-bilangan-btn">0</span>)</button>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer"><input type="checkbox" id="dok-sunting" class="accent-blue-700"> Sunting teks sebelum cetak</label>
                         <span class="text-[11px] text-slate-500">Setiap cetakan direkodkan dalam sejarah di bawah dan boleh dicetak semula.</span>
                     </div>
                 </div>
@@ -3589,6 +3616,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                                 <option value="lantikan">Surat Lantikan</option>
                                 <option value="penghargaan">Surat Penghargaan</option>
                                 <option value="tamat">Surat Tamat / Pelucutan</option>
+                                <option value="sijil">Sijil Penghargaan</option>
                             </select>
                             <input type="text" id="dok-sej-cari" oninput="dokRenderSejarah()" placeholder="Cari nama..." class="border border-slate-200 py-1.5 px-2.5 rounded-lg text-xs bg-white">
                         </div>
@@ -3671,6 +3699,69 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         </div>
                         <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer mb-5"><input type="checkbox" id="pgm-penting" class="accent-red-600"> Tandakan sebagai <b>PENTING</b> (disematkan di atas)</label>
                         <button onclick="pgmSimpan()" class="w-full bg-brand-blue hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-xl shadow-lg active:scale-98 transition flex items-center justify-center gap-2"><i class="fas fa-paper-plane"></i> Simpan Pengumuman</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ===================== TAB: Semakan & Kualiti Data ===================== -->
+            <div id="tab-semakan-sistem" class="tab-content hidden">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Semakan &amp; Kualiti Data</h2>
+                        <p class="text-xs text-slate-500 mt-1">Semakan sebelum tamat sesi, kelengkapan yang belum dipulangkan, dan pemeriksaan data pengawas yang tidak lengkap atau pendua.</p>
+                    </div>
+                    <button onclick="sqRender()" class="bg-brand-blue hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 transition"><i class="fas fa-rotate"></i>Segarkan</button>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-brand-blue mb-6">
+                    <h3 class="font-bold text-base text-slate-800 mb-1 flex items-center gap-2"><i class="fas fa-list-check text-brand-blue"></i>Semakan Sebelum Tamat Sesi</h3>
+                    <p class="text-[11px] text-slate-500 mb-4">Selesaikan perkara di bawah sebelum menjalankan Reset &amp; Arkib Tahunan.</p>
+                    <div id="sq-sesi-semak" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-1">
+                        <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-id-badge text-amber-500"></i>Kelengkapan Belum Dipulangkan</h3>
+                        <button onclick="sqExcel('kelengkapan')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-file-excel"></i>Excel</button>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mb-3">Pengawas yang sudah tamat, letak atau dilucutkan jawatan tetapi lencana, uniform atau buku belum ditanda dipulangkan dalam senarai semak offboarding. <span id="sq-kelengkapan-nota" class="font-bold"></span></p>
+                    <div class="overflow-x-auto rounded-xl border border-slate-100">
+                        <table class="w-full text-sm text-left border-collapse">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b"><tr><th class="px-4 py-3 font-bold">Nama</th><th class="px-4 py-3 font-bold">Status</th><th class="px-4 py-3 font-bold">Tarikh Tamat</th><th class="px-4 py-3 font-bold">Belum Dipulangkan</th><th class="px-4 py-3"></th></tr></thead>
+                            <tbody id="sq-kelengkapan" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-1">
+                        <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-magnifying-glass-chart text-brand-blue"></i>Kualiti Data Pengawas</h3>
+                        <div class="flex gap-2">
+                            <select id="sq-kualiti-jenis" onchange="sqRender()" class="border border-slate-200 py-1.5 px-2.5 rounded-lg text-xs bg-white">
+                                <option value="semua">Semua Isu</option><option value="pendua">Pendua</option><option value="ic">No. K/P</option><option value="kelas">Kelas</option><option value="jawatan">Jawatan</option><option value="jantina">Jantina</option><option value="tarikh">Tarikh lantikan</option>
+                            </select>
+                            <button onclick="sqExcel('kualiti')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-file-excel"></i>Excel</button>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mb-3">Menyemak No. K/P pendua atau tidak sah, kelas dan jawatan yang tidak wujud dalam tetapan, serta medan wajib yang kosong. <span id="sq-kualiti-nota" class="font-bold"></span></p>
+                    <div class="overflow-x-auto rounded-xl border border-slate-100">
+                        <table class="w-full text-sm text-left border-collapse">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b"><tr><th class="px-4 py-3 font-bold">Nama</th><th class="px-4 py-3 font-bold">Isu</th><th class="px-4 py-3 font-bold">Butiran</th><th class="px-4 py-3"></th></tr></thead>
+                            <tbody id="sq-kualiti" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="krl-kad" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-red-400">
+                    <h3 class="font-bold text-base text-slate-800 mb-1 flex items-center gap-2"><i class="fas fa-lock text-red-500"></i>Kunci Rekod Lama</h3>
+                    <p class="text-[11px] text-slate-500 mb-3">Rekod kehadiran dan kesalahan yang bertarikh lebih daripada bilangan hari ini tidak boleh ditambah, diubah atau dipadam oleh guru dan AJK. Admin tidak terjejas. Masukkan 0 untuk mematikan kunci.</p>
+                    <div class="flex flex-wrap items-end gap-3">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Kunci selepas (hari)</label>
+                            <input type="number" id="krl-hari" min="0" max="3650" class="w-40 border border-slate-200 p-2.5 rounded-xl text-sm bg-white">
+                        </div>
+                        <button onclick="krlSimpan()" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2.5 px-5 rounded-xl transition text-sm">Simpan</button>
                     </div>
                 </div>
             </div>
@@ -5756,10 +5847,12 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         const TETAPAN_AKSES_TAB_LIST = [
             { id: 'dashboard', label: 'Dashboard' },
             { id: 'pendaftaran', label: 'Pendaftaran Pengawas' },
+            { id: 'permohonan-pengawas', label: 'Permohonan Pengawas' },
             { id: 'perjanjian', label: 'Perjanjian & Aku Janji' },
             { id: 'dokumen-rasmi', label: 'Dokumen Rasmi Pengawas' },
             { id: 'pengumuman', label: 'Pengumuman' },
             { id: 'laporan-ringkas', label: 'Laporan Ringkas (PK HEM)' },
+            { id: 'semakan-sistem', label: 'Semakan & Kualiti Data' },
             { id: 'kehadiran', label: 'Kehadiran Pengawas' },
             { id: 'sejarah-kehadiran', label: 'Sejarah Kehadiran' },
             { id: 'kesalahan', label: 'Rekod Kesalahan' },
@@ -5814,7 +5907,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 'Pengawas Percubaan': baseline.slice()
             };
             const hasil = {
-                guru: ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kesalahan', 'surat', 'tunjuk-sebab', 'profil-disiplin', 'kemenjadian', 'penilaian-prestasi', 'bilik-disiplin', 'arkib', 'tetapan-lokasi', 'carta-organisasi-lengkap', 'tetapan-bidang-tugas', 'kewangan', 'dokumen-rasmi', 'laporan-ringkas', 'pengumuman']
+                guru: ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kesalahan', 'surat', 'tunjuk-sebab', 'profil-disiplin', 'kemenjadian', 'penilaian-prestasi', 'bilik-disiplin', 'arkib', 'tetapan-lokasi', 'carta-organisasi-lengkap', 'tetapan-bidang-tugas', 'kewangan', 'dokumen-rasmi', 'laporan-ringkas', 'pengumuman', 'semakan-sistem']
             };
             // Setiap jawatan lalai digandakan untuk KEDUA-DUA sesi (cth "Ketua Pengawas (Sesi
             // Pagi)" & "Ketua Pengawas (Sesi Petang)") -- ini SATU peranan berasingan yang
@@ -7191,6 +7284,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         function buildSharedSettingsPayload() {
             return {
                 ambangDemeritAmaran: state.settings.ambangDemeritAmaran || 5,
+                kunciRekodHari: parseInt(state.settings.kunciRekodHari) || 0,
+                aksesTabV: parseInt(state.settings.aksesTabV) || 0,
                 ambangKelulusanPerbelanjaan: state.settings.ambangKelulusanPerbelanjaan || 100,
                 ambangBakiRendah: (state.settings.ambangBakiRendah === undefined || state.settings.ambangBakiRendah === null) ? 50 : Number(state.settings.ambangBakiRendah),
                 kunciKewanganSehingga: state.settings.kunciKewanganSehingga || '',
@@ -7286,6 +7381,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             // Tetapan kongsi merentasi peranti (ambang amaran, logo) -- gabung sahaja medan ini,
             // JANGAN sentuh tetapan sulit/setempat (scriptUrl, kata laluan, log sync tempatan)
             if (remoteState.sharedSettings) {
+                state.settings.kunciRekodHari = parseInt(remoteState.sharedSettings.kunciRekodHari) || 0;
+                state.settings.aksesTabV = parseInt(remoteState.sharedSettings.aksesTabV) || 0;
                 if (remoteState.sharedSettings.ambangDemeritAmaran) {
                     state.settings.ambangDemeritAmaran = remoteState.sharedSettings.ambangDemeritAmaran;
                 }
@@ -8804,7 +8901,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             let jawatan = '';
 
             // Hide all tab elements in sidebar first
-            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'kewangan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'dokumen-rasmi', 'pengumuman', 'laporan-ringkas', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'log-aktiviti'];
+            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'kewangan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'dokumen-rasmi', 'pengumuman', 'laporan-ringkas', 'semakan-sistem', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'log-aktiviti'];
             navTabs.forEach(nav => {
                 const el = document.getElementById(`nav-li-${nav}`);
                 if (el) el.style.display = 'none';
@@ -21134,13 +21231,15 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         const DOK_JENIS_ = {
             lantikan: { label: 'Surat Lantikan' },
             penghargaan: { label: 'Surat Penghargaan' },
-            tamat: { label: 'Surat Tamat / Pelucutan' }
+            tamat: { label: 'Surat Tamat / Pelucutan' },
+            sijil: { label: 'Sijil Penghargaan' }
         };
         let _dokJenis_ = 'lantikan';
 
         function dokInit_() {
             const tk = m2El_('dok-tarikh-surat'); if (tk && !tk.value) tk.value = getRealTimeTodayStr();
             const th = m2El_('dok-lantik-tahun'); if (th && !th.value) th.value = new Date().getFullYear();
+            const sj = m2El_('dok-sijil-tahun'); if (sj && !sj.value) sj.value = new Date().getFullYear();
             const kk = m2El_('dok-lantik-kuatkuasa'); if (kk && !kk.value) kk.value = getRealTimeTodayStr();
             const pg = m2El_('dok-pengetua'); if (pg && !pg.value) pg.value = m2NamaPengetua_();
             if (!PR.ada('dok-mount')) {
@@ -21172,16 +21271,17 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 b.className = 'dok-jenis-btn px-4 py-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-2 ' +
                     (aktif ? 'bg-brand-blue text-white border-brand-blue' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50');
             });
-            ['lantikan', 'penghargaan', 'tamat'].forEach(function(k) {
+            ['lantikan', 'penghargaan', 'tamat', 'sijil'].forEach(function(k) {
                 const el = m2El_('dok-opsyen-' + k);
                 if (el) el.classList.toggle('hidden', k !== j);
             });
+            const bw = m2El_('dok-bhs-wrap'); if (bw) bw.classList.toggle('hidden', j === 'sijil');
             if (PR.ada('dok-mount')) PR.refresh('dok-mount');
         }
 
         // Snapshot parameter bagi SEORANG pengawas -- disimpan dalam rekod supaya cetak semula serupa.
         function dokSnapshot_(jenis, p, g) {
-            const snap = { ruj: !!g.ruj, ruang: g.ruang, pengetua: g.pengetua, tarikhSurat: g.tarikhSurat, jawatan: m2Jawatan_(p) };
+            const snap = { bhs: g.bhs || 'ms', ruj: !!g.ruj, ruang: g.ruang, pengetua: g.pengetua, tarikhSurat: g.tarikhSurat, jawatan: m2Jawatan_(p) };
             if (jenis === 'lantikan') {
                 snap.tahun = g.lantikTahun;
                 snap.kuatkuasa = (g.lantikGunaRekod && p.tarikhLantikan) ? p.tarikhLantikan : (g.lantikKuatkuasa || g.tarikhSurat);
@@ -21198,6 +21298,10 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                             snap.pencapaian.push(`${k.namaPertandingan} (${k.peringkat}) - ${k.pencapaian}${k.tarikh ? ', ' + String(k.tarikh).slice(0, 4) : ''}`);
                         });
                 }
+            } else if (jenis === 'sijil') {
+                snap.tajuk = g.sijilTajuk || 'SIJIL PENGHARGAAN';
+                snap.teks = g.sijilTeks;
+                snap.tahun = g.sijilTahun;
             } else {
                 let jt = g.tamatJenis;
                 if (!jt || jt === 'auto') jt = p.status === 'Dilucutkan Jawatan' ? 'lucut' : (p.status === 'Letak Jawatan' ? 'letak' : 'tamat');
@@ -21221,6 +21325,11 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             return {
                 ruang: ruang,
                 ruj: !!(m2El_('dok-ruj') && m2El_('dok-ruj').checked),
+                bhs: (m2Nilai_('dok-bhs') === 'en') ? 'en' : 'ms',
+                sunting: !!(m2El_('dok-sunting') && m2El_('dok-sunting').checked),
+                sijilTajuk: m2Nilai_('dok-sijil-tajuk').trim(),
+                sijilTeks: m2Nilai_('dok-sijil-teks').trim(),
+                sijilTahun: m2Nilai_('dok-sijil-tahun') || String(new Date().getFullYear()),
                 pengetua: m2Nilai_('dok-pengetua').trim(),
                 tarikhSurat: m2Nilai_('dok-tarikh-surat') || getRealTimeTodayStr(),
                 lantikTahun: m2Nilai_('dok-lantik-tahun') || String(new Date().getFullYear()),
@@ -21267,7 +21376,133 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             </div>`;
         }
 
+        function m2TarikhEN_(s) {
+            try { return new Date(s + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return s || ''; }
+        }
+
+        // ----- Sijil penghargaan (portrait A4) -----
+        function dokBinaSijil_(p, snap) {
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) {}
+            const nama = m2Esc_(String(p.nama || '').toUpperCase());
+            const teks = snap.teks
+                ? m2Esc_(snap.teks)
+                : `atas sumbangan, dedikasi dan khidmat bakti yang cemerlang sebagai <b>${m2Esc_(snap.jawatan)}</b> Lembaga Pengawas ${sesiP ? 'Sesi ' + m2Esc_(sesiP) + ' ' : ''}Sekolah Menengah Kebangsaan Jalan Damai bagi sesi <b>${m2Esc_(snap.tahun)}</b>`;
+            const pengetua = snap.pengetua ? m2Esc_(String(snap.pengetua).toUpperCase()) : '&nbsp;'.repeat(28);
+            return `<div style="page-break-inside:avoid; width:100%; height:243mm; box-sizing:border-box; border:3px double #000; padding:8mm; font-family:'Times New Roman',serif; color:#000; text-align:center; position:relative;">
+                <div style="border:1px solid #000; height:100%; box-sizing:border-box; padding:12mm 10mm; display:flex; flex-direction:column; justify-content:space-between;">
+                    <div>
+                        <div style="height:3.2cm;"></div>
+                        <div style="font-size:12pt; letter-spacing:2px; margin-bottom:4mm;">SEKOLAH MENENGAH KEBANGSAAN JALAN DAMAI</div>
+                        <div style="font-size:26pt; font-weight:bold; letter-spacing:3px; margin-bottom:10mm;">${m2Esc_(snap.tajuk || 'SIJIL PENGHARGAAN')}</div>
+                        <div style="font-size:12pt; font-style:italic; margin-bottom:6mm;">dengan sukacitanya dianugerahkan kepada</div>
+                        <div style="font-size:21pt; font-weight:bold; border-bottom:1px solid #000; display:inline-block; padding:0 8mm 1mm 8mm; margin-bottom:3mm;">${nama}</div>
+                        <div style="font-size:11.5pt; margin-bottom:8mm;">${p.ic ? 'No. K/P: ' + m2Esc_(p.ic) + '&nbsp;&nbsp;|&nbsp;&nbsp;' : ''}Kelas: ${m2Esc_(p.kelas || '-')}</div>
+                        <div style="font-size:13pt; line-height:1.7; padding:0 6mm; text-align:center;">${teks}.</div>
+                    </div>
+                    <div>
+                        <div style="font-size:11.5pt; margin-bottom:14mm;">${m2Esc_(m2Tarikh_(snap.tarikhSurat))}</div>
+                        <div style="display:inline-block; text-align:left; white-space:nowrap; line-height:1.35; font-size:11.5pt;">
+                            <div style="height:16mm;"></div>
+                            <div style="border-top:1px solid #000; padding-top:3px;"><b>(${pengetua})</b><br>Pengetua<br>Sekolah Menengah Kebangsaan Jalan Damai</div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // ----- Versi Bahasa Inggeris -----
+        function dokBinaSuratEN_(jenis, p, snap) {
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) {}
+            const ses = sesiP ? (sesiP === 'Pagi' ? 'Morning' : 'Afternoon') : '';
+            const board = `${ses ? ses + ' Session ' : ''}School Prefectorial Board of SMK Jalan Damai`;
+            const jaw = `<b>${m2Esc_(snap.jawatan)}</b>`;
+            const T = function(t) { return dokTajuk_(t + (ses ? ' (' + ses + ' Session)' : '')); };
+            const tgl = function(s) { return m2Esc_(m2TarikhEN_(s)); };
+            const ruj = snap.ruj ? '<tr><td style="padding:0;">Our Ref</td><td style="padding:0 6px;">:</td><td style="padding:0; min-width:4cm;">&nbsp;</td></tr>' : '';
+            const sapa = 'Dear ' + (String(p.jantina || '').toLowerCase().indexOf('l') === 0 ? 'Sir' : (String(p.jantina || '').toLowerCase().indexOf('p') === 0 ? 'Madam' : 'Student')) + ',';
+            let isi = `<table style="width:100%; border-collapse:collapse; margin-bottom:10px;"><tr>
+                <td style="vertical-align:top; text-align:left; padding:0;"><b>${m2Esc_(String(p.nama || '').toUpperCase())}</b><br>${p.ic ? 'IC No.: ' + m2Esc_(p.ic) + '<br>' : ''}Class: ${m2Esc_(p.kelas || '-')}<br>Sekolah Menengah Kebangsaan Jalan Damai</td>
+                <td style="vertical-align:top; padding:0; white-space:nowrap;"><table style="border-collapse:collapse; margin-left:auto;">${ruj}<tr><td style="padding:0;">Date</td><td style="padding:0 6px;">:</td><td style="padding:0; min-width:4cm; text-align:left;">${tgl(snap.tarikhSurat)}</td></tr></table></td>
+                </tr></table><div style="margin-bottom:8px;">${m2Esc_(sapa)}</div>`;
+            if (jenis === 'lantikan') {
+                isi += T(`Letter of Appointment as ${snap.jawatan}, School Prefectorial Board, Session ${snap.tahun}`);
+                isi += dokPara_('', 'With reference to the above matter.');
+                isi += dokPara_('2', `We are pleased to inform you that you have been appointed as ${jaw} of the ${m2Esc_(board)} for the <b>${m2Esc_(snap.tahun)}</b> session, effective from <b>${tgl(snap.kuatkuasa)}</b>.`);
+                isi += dokPara_('3', 'As a school prefect, you are required to:');
+                isi += `<ol type="a" style="margin:0 0 6px 0; padding-left:44px; text-align:justify;">
+                    <li>carry out your duties with integrity, trust and responsibility;</li>
+                    <li>abide by school rules and the Prefect Agreement &amp; Pledge;</li>
+                    <li>be a role model in discipline, attendance, neatness and conduct; and</li>
+                    <li>attend meetings, training and duties assigned by the school.</li></ol>`;
+                isi += dokPara_('4', 'This appointment may be terminated or revoked should you fail to fulfil your responsibilities or breach school rules.');
+                if (snap.tambahan) isi += dokPara_('5', m2Esc_(snap.tambahan));
+                isi += dokPara_('', 'Thank you.');
+            } else if (jenis === 'penghargaan') {
+                isi += T('Letter of Appreciation for Service as a School Prefect');
+                isi += dokPara_('', 'With reference to the above matter.');
+                let tempoh = 'throughout your period of service';
+                if (snap.mula && snap.tamat) tempoh = `from <b>${tgl(snap.mula)}</b> to <b>${tgl(snap.tamat)}</b>`;
+                else if (snap.mula) tempoh = `since <b>${tgl(snap.mula)}</b>`;
+                else if (snap.tamat) tempoh = `until <b>${tgl(snap.tamat)}</b>`;
+                isi += dokPara_('2', `The school records its sincere appreciation and gratitude for your contribution, dedication and commitment as ${jaw} of the ${m2Esc_(board)} ${tempoh}.`);
+                isi += dokPara_('3', 'Throughout this time, you carried out your responsibilities with trust and set a good example to your peers and the school community.');
+                let no = 4;
+                if (snap.pencapaian && snap.pencapaian.length) {
+                    isi += dokPara_(String(no++), 'Among your notable achievements:');
+                    isi += `<ul style="margin:0 0 6px 0; padding-left:44px; list-style:disc;">${snap.pencapaian.map(function(x) { return '<li>' + m2Esc_(x) + '</li>'; }).join('')}</ul>`;
+                }
+                if (snap.tambahan) isi += dokPara_(String(no++), m2Esc_(snap.tambahan));
+                isi += dokPara_(String(no), 'We wish you continued success and excellence in all your future endeavours.');
+                isi += dokPara_('', 'Thank you.');
+            } else {
+                const jt = snap.jenisTamat;
+                const sebab = snap.sebab ? m2Esc_(snap.sebab) : '';
+                const pulang = 'You are required to return your badge, name tag and all prefect equipment to the Prefect Advisor within seven (7) days from the date of this letter.';
+                if (jt === 'lucut') {
+                    isi += T('Revocation of Prefect Appointment');
+                    isi += dokPara_('', 'With reference to the above matter.');
+                    isi += dokPara_('2', `We regret to inform you that you have been <b>removed</b> from your position as ${jaw} of the ${m2Esc_(board)}, effective <b>${tgl(snap.kuatkuasa)}</b>${sebab ? ' due to: ' + sebab + (/[.!?]$/.test(snap.sebab) ? '' : '.') : '.'}`);
+                    let no = 3;
+                    if (snap.demerit != null) {
+                        const bil = [];
+                        if (snap.bilSurat) bil.push(snap.bilSurat + ' warning/disciplinary letter(s)');
+                        if (snap.bilTS) bil.push(snap.bilTS + ' show-cause letter(s)');
+                        isi += dokPara_(String(no++), `This decision is based on your disciplinary record, totalling <b>${m2Esc_(snap.demerit)}</b> demerit points${bil.length ? ' and ' + bil.join(' and ') : ''}.`);
+                    }
+                    isi += dokPara_(String(no++), pulang);
+                    isi += dokPara_(String(no), 'You are reminded to continue to abide by school rules at all times.');
+                } else if (jt === 'letak') {
+                    isi += T('Acceptance of Resignation as a School Prefect');
+                    isi += dokPara_('', 'With reference to the above matter.');
+                    isi += dokPara_('2', `The school has accepted your resignation as ${jaw} of the ${m2Esc_(board)}, effective <b>${tgl(snap.kuatkuasa)}</b>${sebab ? ' (' + sebab + ')' : ''}.`);
+                    isi += dokPara_('3', pulang);
+                    isi += dokPara_('4', 'The school records its appreciation for your service as a prefect.');
+                } else {
+                    isi += T('Notice of End of Service as a School Prefect');
+                    isi += dokPara_('', 'With reference to the above matter.');
+                    isi += dokPara_('2', `Please be informed that your service as ${jaw} of the ${m2Esc_(board)} has <b>ended</b> effective <b>${tgl(snap.kuatkuasa)}</b>${sebab ? ' due to ' + sebab : ''}.`);
+                    isi += dokPara_('3', pulang);
+                    isi += dokPara_('4', 'The school records its appreciation for your service as a prefect.');
+                }
+                isi += dokPara_('', 'Thank you.');
+            }
+            const nama = snap.pengetua ? m2Esc_(String(snap.pengetua).toUpperCase()) : '&nbsp;'.repeat(28);
+            isi += `<div style="margin-top:12px; page-break-inside:avoid;">
+                <p style="margin:0 0 2px 0; font-weight:bold;">&ldquo;SERVING THE NATION&rdquo;</p>
+                <p style="margin:6px 0 0 0;">I am entrusted to serve,</p>
+                <div style="height:46px;"></div>
+                <div style="border-top:1px solid #000; display:inline-block; white-space:nowrap; padding-top:3px; line-height:1.35;"><b>(${nama})</b><br>Principal<br>Sekolah Menengah Kebangsaan Jalan Damai</div>
+            </div>`;
+            return dokBungkus_(snap, isi);
+        }
+
         function dokBinaSurat_(jenis, p, snap) {
+            if (jenis === 'sijil') return dokBinaSijil_(p, snap);
+            if (snap && snap.bhs === 'en') return dokBinaSuratEN_(jenis, p, snap);
+            return dokBinaSuratMS_(jenis, p, snap);
+        }
+
+        function dokBinaSuratMS_(jenis, p, snap) {
             const jaw = `<b>${m2Esc_(snap.jawatan)}</b>`;
             let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) {}
             const sek = `Lembaga Pengawas ${sesiP ? 'Sesi ' + sesiP + ' ' : ''}Sekolah Menengah Kebangsaan Jalan Damai`;
@@ -21339,6 +21574,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         }
 
         function dokCetak() {
+            if (!m2AdaiGuru_()) { showCustomAlert('Hanya guru/admin boleh melakukan tindakan ini.', 'error'); return; }
             const ids = PR.getSelected('dok-mount');
             if (!ids.length) { showCustomAlert('Sila tandakan sekurang-kurangnya seorang pengawas terlebih dahulu.', 'error'); return; }
             const senarai = ids.map(m2Pengawas_).filter(Boolean).sort(function(a, b) { return String(a.nama).localeCompare(String(b.nama)); });
@@ -21358,10 +21594,11 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             saveStateToLocal();
             markUnsynced();
             dokRenderSejarah();
-            executePrint(html, 'portrait');
+            if (g.sunting && jenis !== 'sijil') x5BukaSunting_(html); else executePrint(html, 'portrait');
         }
 
         function dokCetakSemula(id) {
+            if (!m2AdaiGuru_()) { showCustomAlert('Hanya guru/admin boleh melakukan tindakan ini.', 'error'); return; }
             const r = (state.dokumenPengawasLog || []).find(function(x) { return normalizeId(x.id) === normalizeId(id); });
             if (!r) return;
             const p = m2Pengawas_(r.pId);
@@ -21370,6 +21607,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         }
 
         function dokPadam(id) {
+            if (!m2AdaiGuru_()) { showCustomAlert('Hanya guru/admin boleh melakukan tindakan ini.', 'error'); return; }
             const r = (state.dokumenPengawasLog || []).find(function(x) { return normalizeId(x.id) === normalizeId(id); });
             if (!r) return;
             showCustomConfirm('Padam Rekod Dokumen', 'Padam rekod sejarah dokumen ini? (Surat yang telah dicetak tidak terjejas.)', function() {
@@ -21398,7 +21636,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 tbody.innerHTML = keadaanKosongHTML(5, 'fa-file-signature', 'Belum ada dokumen dikeluarkan', 'Surat yang dicetak dari borang di atas akan direkodkan di sini.');
                 return;
             }
-            const warna = { lantikan: 'bg-blue-50 text-blue-700 border-blue-200', penghargaan: 'bg-emerald-50 text-emerald-700 border-emerald-200', tamat: 'bg-amber-50 text-amber-700 border-amber-200' };
+            const warna = { lantikan: 'bg-blue-50 text-blue-700 border-blue-200', penghargaan: 'bg-emerald-50 text-emerald-700 border-emerald-200', tamat: 'bg-amber-50 text-amber-700 border-amber-200', sijil: 'bg-purple-50 text-purple-700 border-purple-200' };
             tbody.innerHTML = list.map(function(r) {
                 const p = m2Pengawas_(r.pId);
                 return `<tr class="hover:bg-slate-50">
@@ -21411,6 +21649,35 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         <button onclick="dokPadam('${escapeJsStr(r.id)}')" class="text-red-600 hover:text-red-800 px-2" title="Padam rekod"><i class="fas fa-trash"></i></button>
                     </td></tr>`;
             }).join('');
+        }
+
+
+        // ----- Sunting teks surat sebelum cetak (untuk cetakan ini sahaja) -----
+        function x5BukaSunting_(html) {
+            let ov = document.getElementById('x5-sunting-overlay');
+            if (ov) ov.remove();
+            ov = document.createElement('div');
+            ov.id = 'x5-sunting-overlay';
+            ov.className = 'fixed inset-0 z-[100] bg-black/60 flex items-center justify-center p-3 no-print';
+            ov.innerHTML = `<div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[94vh] flex flex-col">
+                <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100">
+                    <div><h3 class="font-bold text-slate-800">Sunting Surat Sebelum Cetak</h3><p class="text-[11px] text-slate-500">Klik pada teks untuk menyunting. Perubahan hanya untuk cetakan ini dan tidak mengubah templat atau rekod sejarah.</p></div>
+                    <button type="button" onclick="x5TutupSunting_()" class="text-slate-400 hover:text-slate-700"><i class="fas fa-times text-lg"></i></button>
+                </div>
+                <div class="flex-1 overflow-auto p-4 bg-slate-100">
+                    <div id="x5-sunting-kertas" contenteditable="true" spellcheck="false" style="background:#fff; color:#000; max-width:210mm; margin:0 auto; padding:20mm; box-shadow:0 1px 6px rgba(0,0,0,.2); outline:none; min-height:200mm;">${html}</div>
+                </div>
+                <div class="flex justify-end gap-2 px-5 py-3 border-t border-slate-100">
+                    <button type="button" onclick="x5TutupSunting_()" class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50">Batal</button>
+                    <button type="button" onclick="x5CetakSunting_()" class="px-5 py-2 rounded-xl bg-brand-blue hover:bg-blue-800 text-white text-sm font-bold"><i class="fas fa-print mr-1"></i>Cetak</button>
+                </div></div>`;
+            document.body.appendChild(ov);
+        }
+        function x5TutupSunting_() { const ov = document.getElementById('x5-sunting-overlay'); if (ov) ov.remove(); }
+        function x5CetakSunting_() {
+            const k = document.getElementById('x5-sunting-kertas'); if (!k) return;
+            const h = k.innerHTML; x5TutupSunting_();
+            executePrint(h, 'portrait');
         }
 
         // =====================================================================
@@ -21540,6 +21807,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             showCustomAlert('Pengumuman berjaya disimpan.', 'success');
         }
         function pgmPadam(id) {
+            if (!m2AdaiGuru_()) { showCustomAlert('Hanya guru/admin boleh memadam pengumuman.', 'error'); return; }
             const a = (state.pengumumanLog || []).find(function(x) { return normalizeId(x.id) === normalizeId(id); });
             if (!a) return;
             showCustomConfirm('Padam Pengumuman', `Padam pengumuman "${a.tajuk}"?`, function() {
@@ -22041,6 +22309,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         }
 
         async function tplMuatTurun() {
+            if (state.currentUser !== 'admin') { showCustomAlert('Hanya Admin boleh memuat turun templat tetapan.', 'error'); return; }
             try { await muatSkripLuar_('xlsx'); } catch (e) { showCustomAlert(e.message, 'error'); return; }
             const wb = XLSX.utils.book_new();
             const tambah = function(nama, aoa, lebar) { const ws = XLSX.utils.aoa_to_sheet(aoa); ws['!cols'] = lebar.map(function(w) { return { wch: w }; }); XLSX.utils.book_append_sheet(wb, ws, nama); };
@@ -22263,30 +22532,347 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         }
 
         // =====================================================================
+        //  J. SEMAKAN SISTEM (sebelum tamat sesi, kelengkapan, kualiti data)
+        // =====================================================================
+        function sqTahun_() { return String(new Date().getFullYear()); }
+        function sqHariSejak_(s) {
+            if (!s) return null;
+            const d = new Date(String(s).slice(0, 10) + 'T00:00:00'); if (isNaN(d)) return null;
+            return Math.floor((new Date(getRealTimeTodayStr() + 'T00:00:00') - d) / 86400000);
+        }
+        const SQ_ITEM_KEMBALI_ = [['pulangLencana', 'Lencana'], ['pulangUniform', 'Uniform/aksesori'], ['pulangBuku', 'Buku panduan']];
+
+        // Pengawas tidak aktif yang masih belum memulangkan kelengkapan (ikut senarai semak offboarding)
+        function sqKelengkapan_() {
+            const hasil = [];
+            (state.pengawas || []).forEach(function(p) {
+                if (isPengawasAktif(p)) return;
+                const cl = p.offboardingChecklist || {};
+                const belum = SQ_ITEM_KEMBALI_.filter(function(it) { return !cl[it[0]]; }).map(function(it) { return it[1]; });
+                if (!belum.length) return;
+                hasil.push({ id: p.id, nama: p.nama, kelas: p.kelas || '', status: p.status || '', tarikh: p.tarikhArkib || '', hari: sqHariSejak_(p.tarikhArkib), belum: belum });
+            });
+            return hasil.sort(function(a, b) { return (b.hari == null ? -1 : b.hari) - (a.hari == null ? -1 : a.hari); });
+        }
+
+        function sqSemakanSesi_() {
+            const aktif = (state.pengawas || []).filter(isPengawasAktif);
+            const thn = sqTahun_();
+            const dinilai = new Set((state.penilaianPrestasiLog || []).filter(function(x) { return String(x.tahun) === thn && (!x.tempoh || x.tempoh === 'Akhir Tahun'); }).map(function(x) { return normalizeId(x.pId); }));
+            const belumNilai = aktif.filter(function(p) { return !dinilai.has(normalizeId(p.id)); }).map(function(p) { return p.nama + (p.kelas ? ' (' + p.kelas + ')' : ''); });
+            const ts = (state.suratTunjukSebabLog || []).filter(function(t) { return t.statusJawapan !== 'Sudah Dihantar'; }).map(function(t) { const p = m2Pengawas_(t.pId); return (p ? p.nama : 'Tidak diketahui') + (t.tajuk ? ' - ' + t.tajuk : ''); });
+            const kel = sqKelengkapan_().map(function(x) { return x.nama + ' (' + x.belum.join(', ') + ')'; });
+            const ambang = (state.settings && state.settings.ambangDemeritAmaran) || 5;
+            const dm = bangunPetaDemeritSemuaPengawas();
+            const demerit = aktif.filter(function(p) {
+                const k = normalizeId(p.id); if ((dm[k] || 0) < ambang) return false;
+                return !((state.suratLog || []).some(function(s) { return normalizeId(s.pId) === k; }) || (state.suratTunjukSebabLog || []).some(function(s) { return normalizeId(s.pId) === k; }));
+            }).map(function(p) { return p.nama + ' (' + dm[normalizeId(p.id)] + ' mata)'; });
+            const onb = aktif.filter(function(p) { try { const r = _kiraProgresChecklist_('onboarding', p); return r.selesai < r.jumlah; } catch (e) { return false; } })
+                .map(function(p) { const r = _kiraProgresChecklist_('onboarding', p); return p.nama + ' (' + r.selesai + '/' + r.jumlah + ')'; });
+            const mgg = (state.mingguSettings || []).length;
+            return [
+                { tajuk: 'Penilaian prestasi ' + thn + ' belum dibuat', senarai: belumNilai, ikon: 'fa-clipboard-check' },
+                { tajuk: 'Surat tunjuk sebab belum dijawab', senarai: ts, ikon: 'fa-envelope-open-text' },
+                { tajuk: 'Kelengkapan belum dipulangkan', senarai: kel, ikon: 'fa-id-badge' },
+                { tajuk: 'Demerit melebihi ambang tanpa tindakan surat', senarai: demerit, ikon: 'fa-gavel' },
+                { tajuk: 'Senarai semak lantikan belum lengkap', senarai: onb, ikon: 'fa-list-check' },
+                { tajuk: 'Tetapan minggu persekolahan', senarai: mgg ? [] : ['Tiada minggu ditetapkan'], ikon: 'fa-calendar-week' }
+            ];
+        }
+
+        // ----- Kualiti data -----
+        function sqKualiti_() {
+            const isu = [];
+            const tambah = function(p, jenis, teks) { isu.push({ id: p.id, nama: p.nama || '(tiada nama)', kelas: p.kelas || '', jenis: jenis, teks: teks }); };
+            const semua = state.pengawas || [];
+            const icPeta = {};
+            semua.forEach(function(p) { const ic = String(p.ic || '').replace(/\D/g, ''); if (ic.length === 12) (icPeta[ic] = icPeta[ic] || []).push(p); });
+            const namaPeta = {};
+            semua.forEach(function(p) { const k = String(p.nama || '').trim().toLowerCase() + '|' + String(p.kelas || '').trim().toLowerCase(); if (k !== '|') (namaPeta[k] = namaPeta[k] || []).push(p); });
+            const kelasSah = {};
+            Object.keys(state.classNameSettings || {}).forEach(function(t) { kelasSah[String(t).toLowerCase()] = (state.classNameSettings[t] || []).map(function(n) { return String(n).trim().toLowerCase(); }); });
+            const jawatanSah = {};
+            ['Petang', 'Pagi'].forEach(function(s) { getJawatanPengawasList(s).forEach(function(j) { jawatanSah[String(j).trim().toLowerCase()] = 1; }); });
+            semua.forEach(function(p) {
+                const aktif = isPengawasAktif(p);
+                const ic = String(p.ic || '').replace(/\D/g, '');
+                if (!p.ic) tambah(p, 'ic', 'No. K/P kosong');
+                else if (ic.length !== 12) tambah(p, 'ic', 'No. K/P tidak 12 digit (' + p.ic + ')');
+                else if (icPeta[ic].length > 1) tambah(p, 'pendua', 'No. K/P pendua dengan ' + icPeta[ic].filter(function(x) { return x !== p; }).map(function(x) { return x.nama; }).join(', '));
+                const nk = String(p.nama || '').trim().toLowerCase() + '|' + String(p.kelas || '').trim().toLowerCase();
+                if (nk !== '|' && namaPeta[nk] && namaPeta[nk].length > 1 && !(ic.length === 12 && icPeta[ic].length > 1)) tambah(p, 'pendua', 'Nama dan kelas sama dengan rekod lain');
+                if (!aktif) return;
+                if (!String(p.kelas || '').trim()) tambah(p, 'kelas', 'Kelas kosong');
+                else {
+                    const bhg = String(p.kelas).trim().split(/\s+/); const t = bhg.shift().toLowerCase(); const n = bhg.join(' ').toLowerCase();
+                    if (kelasSah[t] && n && kelasSah[t].indexOf(n) === -1) tambah(p, 'kelas', 'Kelas "' + p.kelas + '" tiada dalam Tetapan Kelas');
+                }
+                if (!String(p.jawatan || '').trim()) tambah(p, 'jawatan', 'Jawatan kosong');
+                else if (!jawatanSah[String(p.jawatan).trim().toLowerCase()]) tambah(p, 'jawatan', 'Jawatan "' + p.jawatan + '" tiada dalam senarai jawatan');
+                if (!String(p.jantina || '').trim()) tambah(p, 'jantina', 'Jantina kosong');
+                if (!p.tarikhLantikan) tambah(p, 'tarikh', 'Tarikh lantikan kosong');
+            });
+            return isu;
+        }
+        const SQ_JENIS_ = { ic: 'No. K/P', pendua: 'Pendua', kelas: 'Kelas', jawatan: 'Jawatan', jantina: 'Jantina', tarikh: 'Tarikh lantikan' };
+
+        function sqRender() {
+            const sesi = m2El_('sq-sesi-semak'); if (!sesi) return;
+            const kad = sqSemakanSesi_();
+            sesi.innerHTML = kad.map(function(k) {
+                const ok = !k.senarai.length;
+                return `<div class="border ${ok ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'} rounded-xl p-4">
+                    <h4 class="font-bold text-sm ${ok ? 'text-emerald-800' : 'text-amber-800'} flex items-center gap-1.5"><i class="fas ${ok ? 'fa-circle-check' : k.ikon}"></i>${m2Esc_(k.tajuk)} <span class="ml-auto">${ok ? 'Selesai' : k.senarai.length}</span></h4>
+                    ${ok ? '' : `<details class="mt-2"><summary class="text-xs cursor-pointer text-slate-600">Lihat senarai</summary><ul class="mt-1.5 space-y-1 max-h-48 overflow-y-auto">${k.senarai.slice(0, 80).map(function(s) { return `<li class="text-xs bg-white rounded-lg px-2.5 py-1 border border-amber-100 text-slate-700">${m2Esc_(s)}</li>`; }).join('')}${k.senarai.length > 80 ? `<li class="text-[10px] text-slate-500">+${k.senarai.length - 80} lagi</li>` : ''}</ul></details>`}
+                </div>`;
+            }).join('');
+
+            const kel = sqKelengkapan_();
+            const tb = m2El_('sq-kelengkapan');
+            tb.innerHTML = kel.length ? kel.map(function(x) {
+                return `<tr class="hover:bg-slate-50"><td class="px-4 py-2.5 font-semibold text-slate-800">${m2Esc_(x.nama)}<div class="text-[10px] text-slate-400">${m2Esc_(x.kelas)}</div></td>
+                    <td class="px-4 py-2.5 text-xs text-slate-600">${m2Esc_(x.status)}</td>
+                    <td class="px-4 py-2.5 text-xs text-slate-600 whitespace-nowrap">${x.tarikh ? m2Esc_(formatTarikhPendek(x.tarikh)) : '-'}${x.hari != null ? `<div class="text-[10px] ${x.hari > 7 ? 'text-red-600 font-bold' : 'text-slate-400'}">${x.hari} hari lalu</div>` : ''}</td>
+                    <td class="px-4 py-2.5 text-xs text-red-600 font-semibold">${m2Esc_(x.belum.join(', '))}</td>
+                    <td class="px-4 py-2.5 text-right"><button type="button" onclick="bukaChecklistSemakan_('${escapeJsStr(x.id)}')" class="text-xs font-bold text-brand-blue hover:underline">Kemas kini</button></td></tr>`;
+            }).join('') : keadaanKosongHTML(5, 'fa-circle-check', 'Semua kelengkapan telah dipulangkan', 'Tiada pengawas tidak aktif yang masih menyimpan lencana, uniform atau buku.');
+            const kn = m2El_('sq-kelengkapan-nota'); if (kn) kn.textContent = kel.length ? `${kel.length} pengawas belum memulangkan kelengkapan.` : '';
+
+            const jenis = m2Nilai_('sq-kualiti-jenis') || 'semua';
+            const isu = sqKualiti_();
+            const tapis = isu.filter(function(x) { return jenis === 'semua' || x.jenis === jenis; });
+            const kq = m2El_('sq-kualiti');
+            kq.innerHTML = tapis.length ? tapis.slice(0, 200).map(function(x) {
+                return `<tr class="hover:bg-slate-50"><td class="px-4 py-2.5 font-semibold text-slate-800">${m2Esc_(x.nama)}<div class="text-[10px] text-slate-400">${m2Esc_(x.kelas)}</div></td>
+                    <td class="px-4 py-2.5 text-xs"><span class="px-2 py-0.5 rounded-full border bg-slate-50 text-slate-600 border-slate-200 font-bold">${m2Esc_(SQ_JENIS_[x.jenis] || x.jenis)}</span></td>
+                    <td class="px-4 py-2.5 text-xs text-slate-600">${m2Esc_(x.teks)}</td>
+                    <td class="px-4 py-2.5 text-right">${typeof editPengawas === 'function' ? `<button type="button" onclick="editPengawas('${escapeJsStr(x.id)}')" class="text-xs font-bold text-brand-blue hover:underline">Sunting</button>` : ''}</td></tr>`;
+            }).join('') : keadaanKosongHTML(4, 'fa-circle-check', 'Tiada isu data ditemui', 'Rekod pengawas kelihatan lengkap dan konsisten.');
+            const qn = m2El_('sq-kualiti-nota'); if (qn) qn.textContent = isu.length ? `${isu.length} isu ditemui${tapis.length > 200 ? ' (memaparkan 200 pertama)' : ''}.` : '';
+            krlPapar_();
+        }
+
+        function bukaChecklistSemakan_(id) {
+            try { openChecklistPengawasModal('offboarding', id); return; } catch (e) {}
+            if (typeof editPengawas === 'function') editPengawas(id);
+        }
+
+        async function sqExcel(jenis) {
+            try { await muatSkripLuar_('xlsx'); } catch (e) { showCustomAlert(e.message, 'error'); return; }
+            let aoa, nama;
+            if (jenis === 'kelengkapan') {
+                aoa = [['Nama', 'Kelas', 'Status', 'Tarikh Tamat', 'Hari Berlalu', 'Belum Dipulangkan']];
+                sqKelengkapan_().forEach(function(x) { aoa.push([m2Sel_(x.nama), x.kelas, x.status, x.tarikh, x.hari == null ? '' : x.hari, x.belum.join(', ')]); });
+                nama = 'Kelengkapan_Belum_Dipulangkan';
+            } else {
+                aoa = [['Nama', 'Kelas', 'Jenis Isu', 'Butiran']];
+                sqKualiti_().forEach(function(x) { aoa.push([m2Sel_(x.nama), x.kelas, SQ_JENIS_[x.jenis] || x.jenis, m2Sel_(x.teks)]); });
+                nama = 'Kualiti_Data_Pengawas';
+            }
+            const ws = XLSX.utils.aoa_to_sheet(aoa); ws['!cols'] = [{ wch: 30 }, { wch: 14 }, { wch: 22 }, { wch: 50 }, { wch: 14 }, { wch: 34 }];
+            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Senarai');
+            XLSX.writeFile(wb, `${nama}_${getRealTimeTodayStr()}.xlsx`);
+            recordAuditLog('Eksport Excel', nama); saveStateToLocal();
+        }
+
+        // =====================================================================
+        //  K. KUNCI REKOD LAMA (kehadiran & disiplin) -- terpakai kepada bukan Admin
+        // =====================================================================
+        function krlHari_() { return parseInt(state.settings && state.settings.kunciRekodHari) || 0; }
+        function krlTerkunci_(tarikh) {
+            if (state.currentUser === 'admin') return false;
+            const n = krlHari_(); if (!n || !tarikh) return false;
+            return String(tarikh).slice(0, 10) < m2Hari_(getRealTimeTodayStr(), -n);
+        }
+        function krlTolak_(tarikh) {
+            showCustomAlert(`Rekod bertarikh ${formatTarikhPendek(tarikh)} telah dikunci (lebih ${krlHari_()} hari). Sila hubungi Admin untuk membuat pindaan.`, 'error');
+        }
+        function krlPapar_() {
+            const el = m2El_('krl-hari'); if (!el) return;
+            if (document.activeElement !== el) el.value = krlHari_();
+            const admin = state.currentUser === 'admin';
+            const kad = m2El_('krl-kad'); if (kad) kad.classList.toggle('hidden', !admin);
+        }
+        function krlSimpan() {
+            if (state.currentUser !== 'admin') return;
+            const v = parseInt(m2Nilai_('krl-hari'));
+            if (isNaN(v) || v < 0 || v > 3650) { showCustomAlert('Masukkan bilangan hari antara 0 hingga 3650 (0 = tiada kunci).', 'error'); return; }
+            state.settings.kunciRekodHari = v;
+            queueDelta('updateSettings', { kunci: 'sharedSettings', nilai: buildSharedSettingsPayload() }, v ? `Tetapkan kunci rekod lama: ${v} hari` : 'Matikan kunci rekod lama');
+            saveStateToLocal(); markUnsynced();
+            showCustomAlert(v ? `Rekod kehadiran dan disiplin lebih ${v} hari akan dikunci untuk guru dan AJK. Tekan 'Push' untuk kongsi tetapan ini.` : 'Kunci rekod lama dimatikan.', 'success');
+        }
+
+        // =====================================================================
+        //  L. SEJARAH PERUBAHAN (nilai lama -> baharu dalam log audit)
+        // =====================================================================
+        const _x9Snap_ = {};
+        function x9Medan_(jenis, r) {
+            return jenis === 'p'
+                ? { 'Nama': r.nama, 'No. K/P': r.ic, 'Kelas': r.kelas, 'Jawatan': r.jawatan, 'Status': r.status, 'Jantina': r.jantina }
+                : { 'Jenis': r.jenis, 'Demerit': r.demerit, 'Tarikh': r.tarikh, 'Kategori': r.kategori };
+        }
+        function x9Bina_() {
+            (state.pengawas || []).forEach(function(p) { _x9Snap_['p:' + normalizeId(p.id)] = x9Medan_('p', p); });
+            (state.kesalahan || []).forEach(function(k) { _x9Snap_['k:' + normalizeId(k.id)] = x9Medan_('k', k); });
+        }
+        function x9Diff_(sub, data) {
+            if (!data || data.id == null) return '';
+            const jenis = sub === 'updatePrefect' ? 'p' : (sub === 'updateOffense' ? 'k' : '');
+            if (!jenis) return '';
+            const kunci = jenis + ':' + normalizeId(data.id);
+            const lama = _x9Snap_[kunci], baru = x9Medan_(jenis, data);
+            _x9Snap_[kunci] = baru;
+            if (!lama) return '';
+            const b = [];
+            Object.keys(baru).forEach(function(f) {
+                const a = lama[f] == null ? '' : String(lama[f]), c = baru[f] == null ? '' : String(baru[f]);
+                if (a !== c) b.push(`${f}: ${a || '-'} → ${c || '-'}`);
+            });
+            return b.join('; ');
+        }
+
+        // =====================================================================
+        //  M. MOD TELEFON -- kehadiran satu ketukan
+        // =====================================================================
+        const KDH_KITAR_ = ['Hadir', 'Tidak Hadir', 'Lewat', 'Sakit (MC)', 'Tugas Rasmi'];
+        function kdhPasangCSS_() {
+            if (document.getElementById('x5-css')) return;
+            const s = document.createElement('style'); s.id = 'x5-css';
+            s.textContent = `
+            .kdh-chip{display:none;min-height:40px;min-width:104px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;border:1px solid transparent;cursor:pointer}
+            .kdh-chip[data-s="Hadir"]{background:#dcfce7;color:#166534;border-color:#86efac}
+            .kdh-chip[data-s="Tidak Hadir"]{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+            .kdh-chip[data-s="Lewat"]{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+            .kdh-chip[data-s="Sakit (MC)"]{background:#f3e8ff;color:#6b21a8;border-color:#d8b4fe}
+            .kdh-chip[data-s="Tugas Rasmi"]{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
+            .kdh-chip[data-s="Digantung Tugas"]{background:#e2e8f0;color:#334155;border-color:#cbd5e1}
+            html[data-tema="gelap"] .kdh-chip[data-s="Hadir"]{background:rgba(34,197,94,.2);color:#86efac;border-color:rgba(34,197,94,.5)}
+            html[data-tema="gelap"] .kdh-chip[data-s="Tidak Hadir"]{background:rgba(239,68,68,.2);color:#fca5a5;border-color:rgba(239,68,68,.5)}
+            html[data-tema="gelap"] .kdh-chip[data-s="Lewat"]{background:rgba(245,158,11,.2);color:#fcd34d;border-color:rgba(245,158,11,.5)}
+            html[data-tema="gelap"] .kdh-chip[data-s="Sakit (MC)"]{background:rgba(168,85,247,.2);color:#d8b4fe;border-color:rgba(168,85,247,.5)}
+            html[data-tema="gelap"] .kdh-chip[data-s="Tugas Rasmi"]{background:rgba(59,130,246,.2);color:#93c5fd;border-color:rgba(59,130,246,.5)}
+            html[data-tema="gelap"] .kdh-chip[data-s="Digantung Tugas"]{background:rgba(148,163,184,.2);color:#cbd5e1;border-color:rgba(148,163,184,.5)}
+            @media (max-width:767px){
+              .kdh-thead{display:none}
+              .kdh-tbody tr{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:8px 10px}
+              .kdh-tbody td{padding:2px 0!important;border:0!important}
+              .kdh-tbody td:nth-child(1){flex:1 1 55%;min-width:0}
+              .kdh-tbody td:nth-child(2){display:none}
+              .kdh-tbody td:nth-child(3){flex:0 0 auto}
+              .kdh-tbody td:nth-child(3) select{display:none}
+              .kdh-tbody td:nth-child(3) .kdh-chip{display:inline-block}
+              .kdh-tbody td:nth-child(4){flex:1 1 100%}
+            }`;
+            document.head.appendChild(s);
+        }
+        function kdhKitar_(btn) {
+            const sel = btn.parentNode.querySelector('select.kehadiran-status-input'); if (!sel) return;
+            const sedia = sel.value; let i = KDH_KITAR_.indexOf(sedia);
+            const seterus = KDH_KITAR_[(i + 1) % KDH_KITAR_.length];
+            sel.value = seterus; btn.textContent = seterus; btn.setAttribute('data-s', seterus);
+            sel.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        function kdhDekorasi_(sesi) {
+            kdhPasangCSS_();
+            const suffix = sesiKeSuffixKehadiran(sesi);
+            const tb = m2El_('form-kehadiran-body-' + suffix); if (!tb) return;
+            tb.classList.add('kdh-tbody');
+            const tbl = tb.closest('table'); const th = tbl && tbl.querySelector('thead'); if (th) th.classList.add('kdh-thead');
+            tb.querySelectorAll('tr[data-pid]').forEach(function(tr) {
+                const sel = tr.querySelector('select.kehadiran-status-input'); if (!sel || tr.querySelector('.kdh-chip')) return;
+                const b = document.createElement('button'); b.type = 'button'; b.className = 'kdh-chip';
+                b.textContent = sel.value; b.setAttribute('data-s', sel.value);
+                b.onclick = function() { kdhKitar_(b); };
+                sel.parentNode.appendChild(b);
+            });
+        }
+
+        // =====================================================================
         //  CANGKUK & PENDAFTARAN (pasang sekali sahaja)
         // =====================================================================
-        function m2LengkapAkses_() {
-            const a = state.settings && state.settings.aksesTab;
-            if (!a || typeof a !== 'object' || state.settings.aksesTabBaharu2611) return;
+        // ---- Kawalan akses pusat ----
+        // Tab yang HANYA untuk Guru/Admin -- tidak pernah dipaparkan atau dibuka oleh akaun Pengawas (AJK),
+        // walaupun Tetapan Akses Tab tersilap menandakannya.
+        const GURU_SAHAJA_TAB_ = ['kewangan', 'permohonan-pengawas', 'dokumen-rasmi', 'semakan-sistem', 'laporan-ringkas'];
+        const AKSES_BAHARU_GURU_ = ['dokumen-rasmi', 'laporan-ringkas', 'pengumuman', 'semakan-sistem'];
+        function x6AksesDitetap_() { return (parseInt(state.settings && state.settings.aksesTabV) || 0) >= 2; }
+        function tabDibenarkan_(tabId) {
+            const u = state.currentUser;
+            if (!u) return true;                 // skrin log masuk -- tiada peranan lagi
+            if (u === 'admin') return true;
+            if (tabId === 'dashboard') return true;
+            if (u === 'prefect' && GURU_SAHAJA_TAB_.indexOf(tabId) !== -1) return false;
+            const li = document.getElementById('nav-li-' + tabId);
+            return !li || li.style.display !== 'none';
+        }
+        // Tab baharu diberi secara lalai (tanpa mengubah tetapan tersimpan) sehingga Admin menyimpan Tetapan Akses Tab.
+        function x6Materialkan_() {
+            if (state.currentUser !== 'admin' || x6AksesDitetap_()) return;
+            const a = getAksesTabSemasa();
             Object.keys(a).forEach(function(role) {
                 if (!Array.isArray(a[role])) return;
-                (role === 'guru' ? ['dokumen-rasmi', 'laporan-ringkas', 'pengumuman'] : ['pengumuman']).forEach(function(t) {
-                    if (a[role].indexOf(t) === -1) a[role].push(t);
-                });
+                (role === 'guru' ? AKSES_BAHARU_GURU_ : ['pengumuman']).forEach(function(t) { if (a[role].indexOf(t) === -1) a[role].push(t); });
             });
-            state.settings.aksesTabBaharu2611 = 1;
+            state.settings.aksesTabV = 2;
+        }
+        // Papar cetusan akses Guru-sahaja sebagai dilumpuhkan bagi peranan Pengawas dalam Tetapan Akses Tab
+        function x6UlasAksesUI_() {
+            const sel = m2El_('tak-senarai-role-select'); if (!sel) return;
+            const guru = sel.value === 'guru';
+            document.querySelectorAll('#tak-senarai-checklist .tak-senarai-checkbox').forEach(function(cb) {
+                const sahaja = GURU_SAHAJA_TAB_.indexOf(cb.dataset.tab) !== -1;
+                if (sahaja && !guru) { cb.checked = false; cb.disabled = true; cb.title = 'Hanya untuk Guru/Admin'; }
+                else { cb.disabled = false; cb.title = ''; }
+            });
         }
         (function() {
-            const migAsal = migrasiAksesTabCartaLengkap_;
-            migrasiAksesTabCartaLengkap_ = function() { migAsal.apply(this, arguments); m2LengkapAkses_(); };
+            const tkAsal = terapkanSenaraiAksesTabKeUI;
+            terapkanSenaraiAksesTabKeUI = function(senarai) {
+                let s = (senarai || []).slice();
+                const u = state.currentUser;
+                if (u === 'prefect') s = s.filter(function(x) { return GURU_SAHAJA_TAB_.indexOf(x) === -1; });
+                if (!x6AksesDitetap_()) {
+                    (u === 'guru' ? AKSES_BAHARU_GURU_ : ['pengumuman']).forEach(function(t) { if (s.indexOf(t) === -1) s.push(t); });
+                }
+                return tkAsal.call(this, s);
+            };
+            const itaAsal = initTetapanAksesSenarai;
+            initTetapanAksesSenarai = function() {
+                try { x6Materialkan_(); } catch (e) {}
+                const r = itaAsal.apply(this, arguments);
+                try { x6UlasAksesUI_(); } catch (e) {}
+                return r;
+            };
+            const rtaAsal = renderTetapanAksesSenarai;
+            renderTetapanAksesSenarai = function() {
+                const r = rtaAsal.apply(this, arguments);
+                try { x6UlasAksesUI_(); } catch (e) {}
+                return r;
+            };
+            const stasAsal = simpanTetapanAksesSenarai;
+            simpanTetapanAksesSenarai = function() {
+                try {
+                    x6Materialkan_();
+                    const sel = m2El_('tak-senarai-role-select');
+                    if (sel && sel.value !== 'guru') document.querySelectorAll('#tak-senarai-checklist .tak-senarai-checkbox').forEach(function(cb) { if (GURU_SAHAJA_TAB_.indexOf(cb.dataset.tab) !== -1) cb.checked = false; });
+                } catch (e) {}
+                return stasAsal.apply(this, arguments);
+            };
 
             const swAsal = switchTab;
             switchTab = function(tabId) {
+                if (!tabDibenarkan_(tabId)) {
+                    showCustomAlert('Anda tidak mempunyai akses ke halaman ini.', 'error');
+                    tabId = 'dashboard'; arguments[0] = tabId;
+                }
                 const r = swAsal.apply(this, arguments);
                 try {
                     if (tabId === 'dokumen-rasmi') dokInit_();
                     else if (tabId === 'pengumuman') { pgmRender(); pgmTandaDilihat_(); }
                     else if (tabId === 'laporan-ringkas') lrInit_();
+                    else if (tabId === 'semakan-sistem') sqRender();
                     else if (tabId === 'penilaian-prestasi') rpRender();
                     else if (tabId === 'tetapan') { sdrPapar_(); sdrSemak(false); }
                 } catch (e) { console.warn('Cangkuk tab gagal:', e); }
@@ -22308,7 +22894,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             const raAsal = renderAll;
             renderAll = function() {
                 const r = raAsal.apply(this, arguments);
-                try { dokRenderSejarah(); pgmRender(); rpRender(); } catch (e) { console.warn('Cangkuk renderAll gagal:', e); }
+                try { x9Bina_(); dokRenderSejarah(); pgmRender(); rpRender(); } catch (e) { console.warn('Cangkuk renderAll gagal:', e); }
                 return r;
             };
 
@@ -22316,6 +22902,57 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             renderPenilaianPrestasiHistory = function() {
                 const r = rpAsal.apply(this, arguments);
                 try { rpRender(); } catch (e) { console.warn(e); }
+                return r;
+            };
+            // ---- Sejarah perubahan: lampirkan nilai lama -> baharu pada entri audit ----
+            const qdAsal = queueDelta;
+            queueDelta = function(sub, data) {
+                let diff = '';
+                try { diff = x9Diff_(sub, data); } catch (e) {}
+                const r = qdAsal.apply(this, arguments);
+                if (diff) {
+                    try {
+                        const d = state.pendingDeltas[state.pendingDeltas.length - 1];
+                        if (d && d.audit) d.audit.keterangan = ((d.audit.keterangan ? d.audit.keterangan + ' | ' : '') + 'Perubahan: ' + diff).slice(0, 600);
+                    } catch (e) {}
+                }
+                return r;
+            };
+
+            // ---- Kunci rekod lama ----
+            const skhAsal = saveKehadiranHarian;
+            saveKehadiranHarian = function(sesi) {
+                try { const t = m2Nilai_('kehadiran-tarikh-' + sesiKeSuffixKehadiran(sesi)); if (krlTerkunci_(t)) { krlTolak_(t); return; } } catch (e) {}
+                return skhAsal.apply(this, arguments);
+            };
+            const dkhAsal = deleteKehadiranRecord;
+            deleteKehadiranRecord = function(id) {
+                try { const k = (state.kehadiranLog || []).find(function(x) { return normalizeId(x.id) === normalizeId(id); }); if (k && krlTerkunci_(k.tarikh)) { krlTolak_(k.tarikh); return; } } catch (e) {}
+                return dkhAsal.apply(this, arguments);
+            };
+            const skbAsal = saveKesalahanBatch;
+            saveKesalahanBatch = function(e) {
+                try {
+                    const tarikhList = [];
+                    const editId = m2Nilai_('kesalahan-id');
+                    if (editId) { const k = (state.kesalahan || []).find(function(x) { return normalizeId(x.id) === normalizeId(editId); }); if (k) tarikhList.push(k.tarikh); }
+                    document.querySelectorAll('[id^="kes-tarikh-"]').forEach(function(i) { if (i.value) tarikhList.push(i.value); });
+                    const lock = tarikhList.find(krlTerkunci_);
+                    if (lock) { if (e && e.preventDefault) e.preventDefault(); krlTolak_(lock); return; }
+                } catch (er) {}
+                return skbAsal.apply(this, arguments);
+            };
+            const dkAsal = deleteKesalahan;
+            deleteKesalahan = function(id) {
+                try { const k = (state.kesalahan || []).find(function(x) { return normalizeId(x.id) === normalizeId(id); }); if (k && krlTerkunci_(k.tarikh)) { krlTolak_(k.tarikh); return; } } catch (e) {}
+                return dkAsal.apply(this, arguments);
+            };
+
+            // ---- Mod telefon kehadiran ----
+            const lkfAsal = loadKehadiranForm;
+            loadKehadiranForm = function(sesi) {
+                const r = lkfAsal.apply(this, arguments);
+                try { kdhDekorasi_(sesi); } catch (e) { console.warn(e); }
                 return r;
             };
         })();
