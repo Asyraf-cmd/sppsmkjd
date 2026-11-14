@@ -5329,7 +5329,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         // "Ketua Pengawas" dilindungi & wajib wujud pada KEDUA-DUA senarai (setiap sesi ada
         // Ketua Pengawas sendiri).
         // =========================================================================
-        //  PENAMBAHAN: DAFTAR ID TETAP bagi JAWATAN PENGAWAS ("jawatanIdMap")
+        //  DAFTAR ID TETAP bagi JAWATAN PENGAWAS ("jawatanIdMap")
         //  MASALAH ASAL: rujukan silang jawatan (Bidang Tugas, dll) sebelum ini guna NAMA
         //  jawatan sbg "kunci" -- setiap kali nama ditukar, SETIAP tempat rujukan perlu
         //  dikemaskini secara manual dlm kod (rawan terlepas -- spt yg berulang kali kita
@@ -5469,14 +5469,6 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             const m = (jawatan || '').match(/\(Sesi\s*(Pagi|Petang)\)\s*$/i);
             return m ? `${asas} · ${m[1]}` : asas;
         }
-        function formatJawatanBadgeHtml(jawatan) {
-            const asas = escapeHtml(namaAsasJawatan(jawatan));
-            const m = (jawatan || '').match(/\(Sesi\s*(Pagi|Petang)\)\s*$/i);
-            if (!m) return asas;
-            const sesi = m[1];
-            const cls = /pagi/i.test(sesi) ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700';
-            return `${asas} <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${cls}">${escapeHtml(sesi)}</span>`;
-        }
 
         // --- SESI BERTUGAS GURU (Pendaftaran Guru) ---
         // Berbeza drpd sesi Pengawas (yg dibina dpd kelas -- lihat getSesiPengawas()): sesi Guru
@@ -5591,7 +5583,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         // =========================================================================
         const JAWATAN_KHAS_DILINDUNGI = { pengawas: 'Ketua Pengawas', guru: 'Penyelaras (Admin)' };
 
-        // PENAMBAHAN (Item #5): setiap perubahan struktur jawatan (tambah/padam/tukar nama/
+        // setiap perubahan struktur jawatan (tambah/padam/tukar nama/
         // susun semula) kini turut dicatat dalam Log Aktiviti Sistem (state.auditLog), berasingan
         // drpd log rekod pengawas/guru individu -- supaya sejarah perubahan STRUKTUR organisasi
         // (bukan sekadar rekod ahli) boleh dijejak/disemak semula oleh Admin bila-bila masa,
@@ -5632,7 +5624,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         const TJ_INPUT_EL_ID = { pengawasPetang: 'tj-input-pengawas-petang-baharu', pengawasPagi: 'tj-input-pengawas-pagi-baharu', guru: 'tj-input-guru-baharu' };
         const TJ_LABEL = { pengawasPetang: 'pengawas', pengawasPagi: 'pengawas', guru: 'guru' };
 
-        // PENAMBAHAN (Item #1): kumpulan carta organisasi (tier) bagi setiap jawatan PENGAWAS
+        // kumpulan carta organisasi (tier) bagi setiap jawatan PENGAWAS
         // kini boleh ditetapkan SECARA EKSPLISIT oleh Admin (dropdown "Kumpulan Carta"), bukan
         // hanya diteka drpd corak nama ("Penolong..." / "AJK..."). Ini disimpan berasingan drpd
         // nama jawatan (state.settings.jawatanTierOverride, dikunci ikut NAMA jawatan) supaya
@@ -5669,7 +5661,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             setJawatanTierOverride(selectEl.dataset.nama, selectEl.value);
         }
 
-        // PENAMBAHAN (Item #2): jawatan GURU TERAS (6 kedudukan tetap yg dipaparkan di Carta
+        // jawatan GURU TERAS (6 kedudukan tetap yg dipaparkan di Carta
         // Organisasi Lengkap -- Pengetua, PK HEM, PK Petang, Ketua Guru Disiplin, Penolong Ketua
         // Guru Disiplin, Guru Pengawas) kini diikat kpd NAMA jawatan semasa yg dipilih Admin
         // (dropdown "Jawatan Teras"), BUKAN semata-mata kedudukan/index dlm senarai. Ini bermakna
@@ -5803,7 +5795,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 ? ` Amaran: ${bilPengguna} rekod ${TJ_LABEL[jenis]} sedia ada kini menggunakan jawatan ini -- rekod tersebut TIDAK akan berubah (kekal papar nama jawatan lama), cuma ia tidak lagi kelihatan dalam senarai pilihan untuk pendaftaran baharu.`
                 : '';
 
-            // PENAMBAHAN (Item #3): jika jawatan ini mempunyai TETAPAN AKSES TAB TERSENDIRI
+            // jika jawatan ini mempunyai TETAPAN AKSES TAB TERSENDIRI
             // (tab "Kebenaran Tab") yg berbeza drpd lalai sistem, amaran tambahan diberi --
             // supaya Admin sedar konfigurasi akses berkenaan akan turut "hilang senyap" (tiada lagi
             // baris tersendiri utk jawatan ini dlm Tetapan Akses Tab) apabila jawatan ini dipadam.
@@ -5818,7 +5810,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             if (jenis === 'guru' && getKunciTerasBagiNamaJawatan_(namaSasaran)) {
                 amaranPengguna += ` Amaran tambahan: jawatan ini ditetapkan sbg salah satu JAWATAN TERAS dlm Carta Organisasi Lengkap -- kedudukan teras berkenaan akan kosong/guna nama lalai selepas ini dipadam.`;
             }
-            // PENAMBAHAN: jika jawatan ini ada entri Bidang Tugas dlm Tetapan Bidang Tugas
+            // jika jawatan ini ada entri Bidang Tugas dlm Tetapan Bidang Tugas
             // Pengawas, beritahu ia akan menjadi entri "anak yatim" (bukan dipadam automatik --
             // teks bidang tugas dikekalkan, tapi dropdown akan tanda ia tiada lagi dlm Tetapan
             // Jawatan) supaya Admin sedar & boleh betulkan/padam entri berkenaan jika perlu.
@@ -5830,7 +5822,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 const senaraiBaharu = senarai.filter((_, i) => i !== idx);
                 // Bersihkan konfigurasi berkaitan (tier/teras/akses tab) yg terikat kpd nama jawatan ini.
                 delete getJawatanTierOverride()[namaSasaran];
-                // PENAMBAHAN: kunci teras kini disimpan ikut ID (bukan nama) -- padankan ikut ID.
+                // kunci teras kini disimpan ikut ID (bukan nama) -- padankan ikut ID.
                 const idJawatanDipadam = getIdJawatanPengawas_('guru', namaSasaran);
                 const kunciTeras = getJawatanGuruTerasKunci();
                 Object.keys(kunciTeras).forEach(k => { if (kunciTeras[k] === idJawatanDipadam || kunciTeras[k] === namaSasaran) delete kunciTeras[k]; });
@@ -5887,11 +5879,11 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     state.settings.aksesTab[namaBaharu] = state.settings.aksesTab[namaAsal];
                     delete state.settings.aksesTab[namaAsal];
                 }
-                // PENAMBAHAN (ID tetap): pindahkan ID jawatan drpd nama lama -> nama baharu bagi
+                // pindahkan ID jawatan drpd nama lama -> nama baharu bagi
                 // SEMUA jenis (pengawasPetang/pengawasPagi/guru) -- guru turut guna daftar ID
                 // yg sama (lihat setJawatanGuruTeras()/getKunciTerasBagiNamaJawatan_() di atas).
                 pindahIdJawatanSelepasRename_(jenis, namaAsal, namaBaharu);
-                // PENAMBAHAN: segerakkan tukar nama ini ke Tetapan Bidang Tugas Pengawas (jika
+                // segerakkan tukar nama ini ke Tetapan Bidang Tugas Pengawas (jika
                 // jenis ini pengawas, bukan guru) supaya nama jawatan di sana turut berubah
                 // secara automatik -- lihat segerakBidangTugasSelepasRenameJawatan_(). Ini kekal
                 // sbg lapisan keselamatan TAMBAHAN (fallback) bagi data lama yg mungkin belum ada
@@ -5916,7 +5908,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         }
 
         // =========================================================================
-        //  PENAMBAHAN (Item #6): EKSPORT / IMPORT TETAPAN JAWATAN
+        //  EKSPORT / IMPORT TETAPAN JAWATAN
         //  Membolehkan struktur senarai jawatan (Pengawas Petang/Pagi/Guru, berserta tetapan
         //  kumpulan carta & jawatan teras) dieksport sbg fail .json berasingan drpd data pengawas/
         //  guru individu -- berguna utk SANDARAN berasingan, atau utk PINDAH konfigurasi jawatan
@@ -6335,7 +6327,7 @@ asal_renderTetapanAksesSenarai_20: {
         }
 
         // =============================================================================
-        //  KESELAMATAN (ITEM 10): PEMBANTU ESCAPE ikut KONTEKS. escapeHtml() sahaja HANYA selamat
+        //  KESELAMATAN: PEMBANTU ESCAPE ikut KONTEKS. escapeHtml() sahaja HANYA selamat
         //  dalam teks/atribut berkutip biasa. Di dalam pengendali on*="..." data masuk ke dalam
         //  KOD JAVASCRIPT -- pelayar menyahkod entiti HTML SEBELUM menjalankan JS, jadi `'` yang
         //  di-escape sbg &#039; kembali menjadi `'` dan menamatkan rentetan. Gunakan:
@@ -6583,7 +6575,7 @@ asal_renderTetapanAksesSenarai_20: {
 
         let confirmCancelCallback = null;
         // =============================================================================
-        //  KESELAMATAN (ITEM 6): ID PERANTI. ID rawak 128-bit dijana sekali & disimpan berasingan
+        //  KESELAMATAN: ID PERANTI. ID rawak 128-bit dijana sekali & disimpan berasingan
         //  drpd data aplikasi (kekal selepas log keluar). Pelayan menggunakannya utk mengenali
         //  peranti yg PERNAH log masuk berjaya supaya penyerang yg sengaja gagal log masuk
         //  berulang kali tidak dapat menguncikan akaun anda dari peranti anda sendiri.
@@ -6605,7 +6597,7 @@ asal_renderTetapanAksesSenarai_20: {
         }
 
         // =============================================================================
-        //  KESELAMATAN (ITEM 7): SAHKAN SEMULA KATA LALUAN utk tindakan merosakkan.
+        //  KESELAMATAN: SAHKAN SEMULA KATA LALUAN utk tindakan merosakkan.
         //  Pelayan MEMAKSA ini utk Reset Tahunan & Pulih Sandaran (aksi 'reauth' -> kebenaran
         //  sekali guna 5 minit). Padam pukal pula melalui baris gilir delta, jadi pengesahan di
         //  sini dibuat oleh pelayan (kata laluan disahkan) tetapi TIDAK dikuatkuasa di pelayan
@@ -6693,7 +6685,7 @@ asal_renderTetapanAksesSenarai_20: {
             document.getElementById('confirm-title').innerText = title;
             document.getElementById('confirm-message').innerText = message;
             document.getElementById('modal-confirm').classList.remove('hidden');
-            // KESELAMATAN (ITEM 7): semua "Padam ... Pukal" meminta kata laluan sekali lagi.
+            // KESELAMATAN: semua "Padam ... Pukal" meminta kata laluan sekali lagi.
             let cb = callback;
             if (typeof title === 'string' && /pukal/i.test(title) && typeof callback === 'function') {
                 cb = function() {
@@ -6808,7 +6800,7 @@ asal_renderTetapanAksesSenarai_20: {
                     const navLiTersimpan = tabTersimpan ? document.getElementById(`nav-li-${tabTersimpan}`) : null;
                     const bolehPulih = !!(tabTersimpan && navLiTersimpan && navLiTersimpan.style.display !== 'none');
                     switchTab(bolehPulih ? tabTersimpan : 'dashboard');
-                    // PENAMBAHAN (KESELAMATAN): sesi Admin dipulihkan drpd penyegaran halaman --
+                    // KESELAMATAN: sesi Admin dipulihkan drpd penyegaran halaman --
                     // peta kata laluan (memori sahaja) TIDAK bertahan penyegaran, muatkan semula.
                     muatkanSenaraiKataLaluanAdmin();
                 }
@@ -6885,7 +6877,7 @@ asal_renderTetapanAksesSenarai_20: {
             }
         });
 
-        // PENAMBAHAN: "beforeunload" TIDAK boleh diharap sepenuhnya di pelayar mudah alih
+        // "beforeunload" TIDAK boleh diharap sepenuhnya di pelayar mudah alih
         // (cth Safari iOS/Chrome Android sering ABAIKAN kotak amaran ini, terutama bila
         // pengguna tukar aplikasi/kunci skrin drpd dalam webview app spt Claude, bukan
         // "tutup tab" secara literal). Sbg lapisan keselamatan TAMBAHAN (bukan gantian),
@@ -7385,7 +7377,7 @@ asal_ambilLogAktivitiTertapis__12: {
                     // sebenar terus dipaparkan tanpa perlu pengguna tukar tab/refresh manual.
                     if (typeof renderTableAksesPengawas === 'function') renderTableAksesPengawas();
                     if (typeof renderTablePendaftaranGuru === 'function') renderTablePendaftaranGuru();
-                    // PEMBETULAN: tab "Akses Guru" (jadual #table-teachers) ialah jadual
+                    // tab "Akses Guru" (jadual #table-teachers) ialah jadual
                     // BERASINGAN drpd "Pendaftaran Guru" -- turut guna getDisplayPassword(),
                     // turut perlu dibina semula di sini atas sebab race condition yg sama.
                     if (typeof renderTableTeachers === 'function') renderTableTeachers();
@@ -7466,7 +7458,7 @@ asal_ambilLogAktivitiTertapis__12: {
         }
 
         // =========================================================================
-        //  PENAMBAHAN: KUMPULAN SIDEBAR "TETAPAN SISTEM" (boleh kembang/kuncup)
+        //  KUMPULAN SIDEBAR "TETAPAN SISTEM" (boleh kembang/kuncup)
         //  Sebelum ini 9 tab "Tetapan *" berasingan (Tetapan & Segerak, Tetapan Akses
         //  Tab, Tetapan Jawatan, Tetapan Bidang Tugas Pengawas, Tetapan Lokasi Bertugas,
         //  Tetapan Kelas, Tetapan Minggu, Log Aktiviti Sistem, Reset Tahunan) tersenarai
@@ -7678,19 +7670,19 @@ const r = hasil_loadStateFromLocal_17; bersihkanState_(); return r; }
                 jawatanPengawasPetangList: getJawatanPengawasList('Petang'),
                 jawatanPengawasPagiList: getJawatanPengawasList('Pagi'),
                 jawatanGuruList: getJawatanGuruList(),
-                // PENAMBAHAN: kumpulan carta org (tier) ditetapkan EKSPLISIT oleh Admin per nama
+                // kumpulan carta org (tier) ditetapkan EKSPLISIT oleh Admin per nama
                 // jawatan (bukan hanya diteka drpd corak nama "Penolong.../AJK...") -- lihat
                 // getJawatanTierOverride()/buildOrgChartTiers(). Serta kunci jawatan TERAS guru
                 // (Pengetua/PK HEM/dll) diikat kpd NAMA jawatan semasa (bukan kedudukan/index
                 // semata) -- lihat getJawatanGuruTerasKunci()/getHierarkiLengkapConfig_().
                 jawatanTierOverride: state.settings.jawatanTierOverride || {},
                 jawatanGuruTerasKunci: state.settings.jawatanGuruTerasKunci || {},
-                // PENAMBAHAN: kandungan Bidang Tugas Jawatankuasa (boleh disunting Admin di tab
+                // kandungan Bidang Tugas Jawatankuasa (boleh disunting Admin di tab
                 // Tetapan Jawatan -> subtab "Bidang Tugas (Aku Janji)") turut disegerakkan.
                 // Pastikan kedua-dua sesi dimulakan/dimigrasi (lihat getBidangTugasJawatankuasa())
                 // sblm disegerakkan supaya struktur { Petang:{...}, Pagi:{...} } lengkap.
                 bidangTugasJawatankuasa: (getBidangTugasJawatankuasa('Petang'), getBidangTugasJawatankuasa('Pagi'), state.settings.bidangTugasJawatankuasa),
-                // PENAMBAHAN (ID tetap): daftar {nama: id} bagi jawatan pengawas -- SUMBER
+                // daftar {nama: id} bagi jawatan pengawas -- SUMBER
                 // KEBENARAN utk rujukan ID dlm Bidang Tugas. Mesti disegerakkan berserta
                 // bidangTugasJawatankuasa supaya ID sentiasa dpt diselesaikan kpd nama di
                 // MANA-MANA peranti (bukan setakat peranti yg mula-mula jana ID tersebut).
@@ -7858,7 +7850,7 @@ asal_applySyncedState_16: {
                 state.settings.syncErrorLog = state.settings.syncErrorLog.slice(0, 10); // simpan 10 terkini sahaja
             }
             saveStateToLocal();
-            // KESELAMATAN (ITEM 8): kegagalan kerana sesi di pelayan sudah tamat/dibatalkan.
+            // KESELAMATAN: kegagalan kerana sesi di pelayan sudah tamat/dibatalkan.
             if (!berjaya && /Sesi log masuk tidak sah|Sila log masuk semula/.test(String(sebab || ''))) tanganiSesiTamat_();
         }
 
@@ -8271,7 +8263,7 @@ asal_applySyncedState_16: {
             return true;
         }
 
-        // PRESTASI (PEMBETULAN): respons `login` (handleLogin di Code_GS.txt) kini turut
+        // PRESTASI: respons `login` (handleLogin di Code_GS.txt) kini turut
         // menyertakan `state` PENUH terus (data yg SUDAH dibaca drpd Drive semasa pelayan
         // sahkan kata laluan) -- jadi TIDAK PERLU lagi buat panggilan `pull` BERASINGAN
         // (yg akan baca SEMULA fail Drive yang SAMA dari awal) sejurus selepas log masuk
@@ -8308,20 +8300,6 @@ asal_applySyncedState_16: {
                 catatStatusSync('pull', false, err.message);
                 if (tunjukMesej) showCustomAlert("Ralat sambungan ke Google Sheets: " + err.message, "error");
                 return false;
-            }
-        }
-
-        async function syncDataAtLogin() {
-            const btn = document.getElementById('login-sync-btn');
-            const originalHtml = btn ? btn.innerHTML : '';
-            if (btn) {
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat turun data akaun...';
-                btn.disabled = true;
-            }
-            await pullDataForLogin(true, "Akaun & data berjaya dimuat turun. Sila log masuk.");
-            if (btn) {
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
             }
         }
 
@@ -8414,7 +8392,7 @@ asal_applySyncedState_16: {
                 "Sahkan Pulihkan Sandaran",
                 `Anda akan MENGGANTIKAN SEMUA data semasa di Google Sheets dengan data daripada sandaran "${namaFail}". Satu sandaran keselamatan bagi data semasa akan disimpan dahulu secara automatik. Tindakan ini melibatkan SEMUA pengguna sistem. Teruskan?`,
                 async function() {
-                    // KESELAMATAN (ITEM 7): pelayan menuntut pengesahan kata laluan sebelum memulihkan.
+                    // KESELAMATAN: pelayan menuntut pengesahan kata laluan sebelum memulihkan.
                     if (!(await mintaSahKataLaluan('Sahkan Pulihkan Sandaran', 'Pemulihan akan MENGGANTIKAN semua data semasa. Sila taip kata laluan anda untuk meneruskan.'))) return;
                     const scriptUrl = state.settings.scriptUrl;
                     showCustomAlert("Sedang memulihkan sandaran...", "info");
@@ -8776,15 +8754,15 @@ asal_applySyncedState_16: {
             // sebenarnya berjaya, dan bukan senyap sepenuhnya sekiranya ia gagal.
             let pullLoginBerjaya = false;
             if (hasil.status === 'success') {
-                // PEMBETULAN: tetapkan token sesi DAHULU supaya sebarang panggilan `push`/dsb.
+                // tetapkan token sesi DAHULU supaya sebarang panggilan `push`/dsb.
                 // seterusnya (& fallback `pull` di bawah, jika terpakai) menyertakan token sah.
                 state.sessionToken = hasil.token || null;
-                // PRESTASI (PEMBETULAN): respons log masuk kini SUDAH sertakan `state` PENUH
+                // PRESTASI: respons log masuk kini SUDAH sertakan `state` PENUH
                 // terus (lihat terapkanStateDariLogin() & nota prestasi di Code_GS.txt) -- guna
                 // itu terus & ELAKKAN panggilan `pull` BERASINGAN yg baca SEMULA Drive dari awal
                 // (punca log masuk terasa sangat perlahan sebelumnya). Fallback ke pull lama
                 // hanya jika deployment pelayan masih versi lama yg tiada `state` dlm respons.
-                // PEMBETULAN: kekalkan data tertangguh HANYA jika ia milik pengguna yg sama (pendingOwner);
+                // kekalkan data tertangguh HANYA jika ia milik pengguna yg sama (pendingOwner);
                 // jika orang lain log masuk di peranti ini, rekod orang itu tidak dihantar atas nama pengguna baharu.
                 const _adaTertangguhLama = (state.pendingDeltas || []).length > 0 || !!state.needsFullSync;
                 const _pemilikSama = !!state.pendingOwner && String(state.pendingOwner).trim().toLowerCase() === String(id).trim().toLowerCase();
@@ -8824,7 +8802,7 @@ asal_applySyncedState_16: {
                 if (w) w.classList.add('hidden');
             }
             if (hasil.status !== 'success') {
-                // PENAMBAHAN: jika PELAYAN sendiri yg mengunci akaun ini (bukan sekadar
+                // jika PELAYAN sendiri yg mengunci akaun ini (bukan sekadar
                 // kiraan tempatan pelayar -- lihat _semakAkaunDikunci_() di Code_GS.txt),
                 // papar terus mesej pelayan tanpa tambah "baki cubaan" (mengelirukan,
                 // kerana kiraan sebenar yg berkuasa kini di pelayan, bukan tempatan).
@@ -8890,7 +8868,7 @@ asal_applySyncedState_16: {
                 // nilai LAMA (kosong/lalai) walaupun data sebenar dlm `state` sudah pun terkini.
                 renderAll();
                 updateDashboard();
-                // PENAMBAHAN (KESELAMATAN): muatkan peta kata laluan sebenar (Admin sahaja,
+                // KESELAMATAN: muatkan peta kata laluan sebenar (Admin sahaja,
                 // disahkan token di pelayan) -- "fire and forget", tidak menyekat UI. Lihat
                 // muatkanSenaraiKataLaluanAdmin() -- disimpan dlm memori sahaja.
                 muatkanSenaraiKataLaluanAdmin();
@@ -9140,7 +9118,7 @@ asal_applySyncedState_16: {
         }
 
         // =========================================================================
-        //  KESELAMATAN (ITEM 8): LOG KELUAR YANG SEBENAR
+        //  KESELAMATAN: LOG KELUAR YANG SEBENAR
         //  1. Token dibatalkan di PELAYAN (sebelum ini ia kekal sah sehingga luput).
         //  2. Data cache di peranti DIKOSONGKAN (sebelum ini seluruh pangkalan data -- IC,
         //     rekod disiplin, senarai akaun -- kekal dalam localStorage selepas log keluar
@@ -9536,7 +9514,7 @@ asal_switchTab_21: {
                 navBtn.classList.add('bg-blue-800/60', 'border-brand-yellow', 'text-white', 'font-bold', 'shadow-inner');
                 navBtn.classList.remove('border-transparent', 'text-blue-100');
             }
-            // PENAMBAHAN: jika tab yg dituju ialah salah satu ahli kumpulan sidebar
+            // jika tab yg dituju ialah salah satu ahli kumpulan sidebar
             // "Tetapan Sistem" (boleh kembang/kuncup), pastikan kumpulan itu KEMBANG
             // supaya item aktif (& sorotan birunya) kelihatan -- bukan tersembunyi
             // di sebalik kumpulan yg masih kuncup.
@@ -9771,7 +9749,7 @@ asal_switchTab_21: {
             sidebar.classList.toggle('fixed');
             sidebar.classList.toggle('inset-y-0');
             sidebar.classList.toggle('left-0');
-            // PEMBETULAN: JANGAN toggle 'z-40' -- kelas ini SUDAH kekal (statik) pada
+            // JANGAN toggle 'z-40' -- kelas ini SUDAH kekal (statik) pada
             // elemen #sidebar sejak awal (lihat class asal di HTML). Meng-toggle kelas
             // yang sudah wujud akan MEMBUANGNYA setiap kali menu mudah alih dibuka --
             // menyebabkan sidebar kehilangan z-index & terbenam di bawah header/banner
@@ -11469,7 +11447,7 @@ asal_switchTab_21: {
 
             if(idInput) {
                 const idx = state.pengawas.findIndex(x => normalizeId(x.id) === normalizeId(idInput));
-                // PEMBETULAN: GABUNG medan borang ke atas rekod sedia ada (bukan ganti). Sebelum ini rekod
+                // GABUNG medan borang ke atas rekod sedia ada (bukan ganti). Sebelum ini rekod
                 // diganti dgn objek baharu yg hanya ada medan borang, jadi medan tambahan seperti senarai
                 // semak Onboarding/Offboarding hilang setiap kali pengawas diedit.
                 const pGabung = Object.assign({}, idx > -1 ? state.pengawas[idx] : {}, p);
@@ -13692,7 +13670,7 @@ asal_getProfilDisiplinPrintHTML_25: {
                 return;
             }
 
-            // PENAMBAHAN (KESELAMATAN): passwordEnc kini dijana & disulitkan SEPENUHNYA DI
+            // KESELAMATAN: passwordEnc kini dijana & disulitkan SEPENUHNYA DI
             // PELAYAR bukan -- maaf, DI PELAYAN (Code.gs), bukan di sini. Client hanya
             // hantar kata laluan PLAINTEXT baharu (jika ditukar) melalui medan `password`
             // seperti biasa (disulitkan HTTPS semasa transit) -- pelayan yg akan hash &
@@ -13785,7 +13763,7 @@ asal_getProfilDisiplinPrintHTML_25: {
                 return;
             }
 
-            // PEMBETULAN: semakan pendua di bawah dahulu case-SENSITIVE, sedangkan log masuk
+            // semakan pendua di bawah dahulu case-SENSITIVE, sedangkan log masuk
             // sebenar (backend handleLogin) case-INSENSITIVE. Ini membolehkan admin tersilap
             // daftar "Ahmad01" & "ahmad01" untuk 2 pengawas berlainan -- kedua lepas semakan di
             // sini, tetapi semasa log masuk sebenar, backend akan sentiasa padankan rekod PERTAMA
@@ -13805,7 +13783,7 @@ asal_getProfilDisiplinPrintHTML_25: {
                 return;
             }
 
-            // PEMBETULAN: pastikan seorang pengawas cuma ada SATU akaun log masuk sahaja --
+            // pastikan seorang pengawas cuma ada SATU akaun log masuk sahaja --
             // sebelum ini tiada had, jadi pengawas yang sama boleh diberi >1 akaun tanpa disedari,
             // mengelirukan semasa cetak slip kredensial (tidak jelas akaun mana yang "sah").
             const akaunSediaAdaUntukPengawas = state.studentAccounts.findIndex(s => normalizeId(s.prefectId) === normalizeId(pId) && normalizeId(s.id) !== normalizeId(id));
@@ -13814,7 +13792,7 @@ asal_getProfilDisiplinPrintHTML_25: {
                 return;
             }
 
-            // PENAMBAHAN (KESELAMATAN): passwordEnc kini dijana & disulitkan SEPENUHNYA DI
+            // KESELAMATAN: passwordEnc kini dijana & disulitkan SEPENUHNYA DI
             // PELAYAN (Code.gs) -- lihat komen sepadan pd bahagian akaun guru di atas.
             const passwordEncPengawas = existingAccForPw ? existingAccForPw.passwordEnc : '';
 
@@ -14779,6 +14757,48 @@ asal_getProfilDisiplinPrintHTML_25: {
             renderTableKesalahan();
         }
 
+        // --- Serpihan HTML rekod kesalahan, dikongsi oleh jadual (desktop) dan kad (telefon) ---
+        function kesBadgeRujukanHtml_(k) {
+            if (!k.suratJenis) return '';
+            let badgeColor = 'bg-orange-100 text-orange-850 border-orange-200';
+            if (k.suratJenis === 'amaran2') badgeColor = 'bg-orange-200 text-orange-900 border-orange-300';
+            if (k.suratJenis === 'gantung') badgeColor = 'bg-rose-100 text-rose-900 border-rose-200';
+            if (k.suratJenis === 'lucut') badgeColor = 'bg-black text-white border-black';
+            const sJenis = String(k.suratJenis).toUpperCase();
+            const suratLabel = sJenis === 'AMARAN1' ? 'AMARAN 1' : sJenis === 'AMARAN2' ? 'AMARAN 2' : sJenis;
+            return `<span class="inline-flex items-center mt-1 px-2 py-0.5 text-[10px] font-bold rounded-md border ${badgeColor}">Rujukan: ${escapeHtml(suratLabel)}</span>`;
+        }
+
+        function kesInfoPengawasHtml_(p) {
+            return p ? `<div class="text-[10px] text-slate-400 font-semibold tracking-wide uppercase mt-0.5">ID: ${escapeHtml(p.id)} | Kelas: ${escapeHtml(p.kelas)} | Sesi ${getSesiPengawas(p)}</div>` : '';
+        }
+
+        // Baris "Direkod oleh" -- hanya untuk Guru/Admin (pengawas hanya melihat rekod sendiri).
+        function kesDirekodOlehHtml_(k) {
+            if (state.currentUser === 'prefect') return '';
+            if (k.dimasukkanOleh) {
+                return `<div class="mt-1 text-[10px] text-brand-blue font-semibold"><i class="fas fa-user-pen mr-1"></i>Direkod oleh: ${escapeHtml(k.dimasukkanOleh.nama || k.dimasukkanOleh.username)} (${escapeHtml(k.dimasukkanOleh.peranan || k.dimasukkanOleh.jenis)})</div>`;
+            }
+            return `<div class="mt-1 text-[10px] text-slate-400 italic"><i class="fas fa-user-pen mr-1"></i>Direkod oleh: tidak direkodkan (rekod lama)</div>`;
+        }
+
+        // Kategori + jenis + butiran + pelapor + perekod + lencana rujukan surat.
+        function kesKandunganHtml_(k, kelasTeks, badgeHtml) {
+            return `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase ${k.kategori === 'Lembaga' ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-rose-50 text-rose-700 border border-rose-100'}">${escapeHtml(k.kategori)}</span>
+                <div class="mt-1 ${kelasTeks}">
+                    ${k.jenis ? `<b class="text-slate-700">${escapeHtml(k.jenis)}</b><br>` : ''}
+                    <span class="text-slate-600">${escapeHtml(k.butiran)}</span>
+                </div>
+                ${k.pengawasPelapor ? `<div class="mt-1 text-[10px] text-slate-400 italic"><i class="fas fa-user-shield mr-1"></i>Pengawas Melapor: ${escapeHtml(k.pengawasPelapor)}</div>` : ''}
+                ${kesDirekodOlehHtml_(k)}
+                ${badgeHtml ? `<div class="mt-1">${badgeHtml}</div>` : ''}`;
+        }
+
+        function kesButangTindakanHtml_(k) {
+            return `<button onclick="editKesalahan('${escapeJsStr(k.id)}')" class="text-blue-600 hover:text-blue-900 mx-1.5 text-sm" title="Edit"><i class="fas fa-edit"></i></button>
+                <button onclick="deleteKesalahan('${escapeJsStr(k.id)}')" class="text-red-600 hover:text-red-900 mx-1.5 text-sm" title="Padam"><i class="fas fa-trash"></i></button>`;
+        }
+
         function renderTableKesalahan() {
             const tbody = document.getElementById('table-kesalahan');
             const mobileContainer = document.getElementById('kesalahan-mobile-cards');
@@ -14802,37 +14822,15 @@ asal_getProfilDisiplinPrintHTML_25: {
                 tr.className = 'bg-white hover:bg-slate-50 transition-colors duration-150';
                 tr.dataset.rowId = k.id;
                 
-                let badgeHtml = '';
-                if(k.suratJenis) {
-                    let badgeColor = 'bg-orange-100 text-orange-850 border-orange-200';
-                    if(k.suratJenis === 'amaran2') badgeColor = 'bg-orange-200 text-orange-900 border-orange-300';
-                    if(k.suratJenis === 'gantung') badgeColor = 'bg-rose-100 text-rose-900 border-rose-200';
-                    if(k.suratJenis === 'lucut') badgeColor = 'bg-black text-white border-black';
-                    
-                    const sJenis = k.suratJenis ? String(k.suratJenis).toUpperCase() : "";
-                    const suratLabel = sJenis === 'AMARAN1' ? 'AMARAN 1' : sJenis === 'AMARAN2' ? 'AMARAN 2' : sJenis;
-                    badgeHtml = `<span class="inline-flex items-center mt-1 px-2 py-0.5 text-[10px] font-bold rounded-md border ${badgeColor}">Rujukan: ${escapeHtml(suratLabel)}</span>`;
-                }
+                const badgeHtml = kesBadgeRujukanHtml_(k);
 
                 tr.innerHTML = `
                     <td class="px-4 py-3.5 text-center"><input type="checkbox" name="kesalahan-select" value="${escapeHtml(k.id)}" class="rounded text-brand-blue"></td>
                     <td class="px-4 py-3.5 text-slate-500 font-medium text-xs md:text-sm">${escapeHtml(k.tarikh)}</td>
-                    <td class="px-4 py-3.5"><div class="font-bold text-slate-800">${escapeHtml(nama)}</div>${p ? `<div class="text-[10px] text-slate-400 font-semibold tracking-wide uppercase mt-0.5">ID: ${escapeHtml(p.id)} | Kelas: ${escapeHtml(p.kelas)} | Sesi ${getSesiPengawas(p)}</div>` : ''}</td>
-                    <td class="px-4 py-3.5">
-                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase ${k.kategori === 'Lembaga' ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-rose-50 text-rose-700 border border-rose-100'}">${escapeHtml(k.kategori)}</span>
-                        <div class="mt-1 text-xs md:text-sm">
-                            ${k.jenis ? `<b class="text-slate-700">${escapeHtml(k.jenis)}</b><br>` : ''}
-                            <span class="text-slate-600">${escapeHtml(k.butiran)}</span>
-                        </div>
-                        ${k.pengawasPelapor ? `<div class="mt-1 text-[10px] text-slate-400 italic"><i class="fas fa-user-shield mr-1"></i>Pengawas Melapor: ${escapeHtml(k.pengawasPelapor)}</div>` : ''}
-${(state.currentUser !== 'prefect' && k.dimasukkanOleh) ? `<div class="mt-1 text-[10px] text-brand-blue font-semibold"><i class="fas fa-user-pen mr-1"></i>Direkod oleh: ${escapeHtml(k.dimasukkanOleh.nama || k.dimasukkanOleh.username)} (${escapeHtml(k.dimasukkanOleh.peranan || k.dimasukkanOleh.jenis)})</div>` : (state.currentUser !== 'prefect' ? `<div class="mt-1 text-[10px] text-slate-400 italic"><i class="fas fa-user-pen mr-1"></i>Direkod oleh: tidak direkodkan (rekod lama)</div>` : '')}
-                        ${badgeHtml ? `<div class="mt-1">${badgeHtml}</div>` : ''}
-                    </td>
+                    <td class="px-4 py-3.5"><div class="font-bold text-slate-800">${escapeHtml(nama)}</div>${kesInfoPengawasHtml_(p)}</td>
+                    <td class="px-4 py-3.5">${kesKandunganHtml_(k, 'text-xs md:text-sm', badgeHtml)}</td>
                     <td class="px-4 py-3.5 font-black text-sm text-red-600">${escapeHtml(k.demerit)}</td>
-                    <td class="px-4 py-3.5 text-right whitespace-nowrap">
-                        <button onclick="editKesalahan('${escapeJsStr(k.id)}')" class="text-blue-600 hover:text-blue-900 mx-1.5 text-sm" title="Edit"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteKesalahan('${escapeJsStr(k.id)}')" class="text-red-600 hover:text-red-900 mx-1.5 text-sm" title="Padam"><i class="fas fa-trash"></i></button>
-                    </td>
+                    <td class="px-4 py-3.5 text-right whitespace-nowrap">${kesButangTindakanHtml_(k)}</td>
                 `;
                 tbody.appendChild(tr);
 
@@ -14847,26 +14845,14 @@ ${(state.currentUser !== 'prefect' && k.dimasukkanOleh) ? `<div class="mt-1 text
                         <div class="flex justify-between items-start gap-2 mb-2">
                             <div>
                                 <div class="font-bold text-slate-800">${escapeHtml(nama)}</div>
-                                ${p ? `<div class="text-[10px] text-slate-400 font-semibold tracking-wide uppercase mt-0.5">ID: ${escapeHtml(p.id)} | Kelas: ${escapeHtml(p.kelas)} | Sesi ${getSesiPengawas(p)}</div>` : ''}
+                                ${kesInfoPengawasHtml_(p)}
                             </div>
                             <span class="text-xs text-slate-500 font-medium whitespace-nowrap">${escapeHtml(k.tarikh)}</span>
                         </div>
-                        <div class="mb-2">
-                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase ${k.kategori === 'Lembaga' ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-rose-50 text-rose-700 border border-rose-100'}">${escapeHtml(k.kategori)}</span>
-                            <div class="mt-1 text-sm">
-                                ${k.jenis ? `<b class="text-slate-700">${escapeHtml(k.jenis)}</b><br>` : ''}
-                                <span class="text-slate-600">${escapeHtml(k.butiran)}</span>
-                            </div>
-                            ${k.pengawasPelapor ? `<div class="mt-1 text-[10px] text-slate-400 italic"><i class="fas fa-user-shield mr-1"></i>Pengawas Melapor: ${escapeHtml(k.pengawasPelapor)}</div>` : ''}
-${(state.currentUser !== 'prefect' && k.dimasukkanOleh) ? `<div class="mt-1 text-[10px] text-brand-blue font-semibold"><i class="fas fa-user-pen mr-1"></i>Direkod oleh: ${escapeHtml(k.dimasukkanOleh.nama || k.dimasukkanOleh.username)} (${escapeHtml(k.dimasukkanOleh.peranan || k.dimasukkanOleh.jenis)})</div>` : (state.currentUser !== 'prefect' ? `<div class="mt-1 text-[10px] text-slate-400 italic"><i class="fas fa-user-pen mr-1"></i>Direkod oleh: tidak direkodkan (rekod lama)</div>` : '')}
-                            ${badgeHtml ? `<div class="mt-1">${badgeHtml}</div>` : ''}
-                        </div>
+                        <div class="mb-2">${kesKandunganHtml_(k, 'text-sm', badgeHtml)}</div>
                         <div class="flex justify-between items-center border-t border-slate-100 pt-2">
                             <span class="text-xs text-slate-500">Demerit: <b class="text-red-600 text-sm">${escapeHtml(k.demerit)}</b></span>
-                            <div>
-                                <button onclick="editKesalahan('${escapeJsStr(k.id)}')" class="text-blue-600 hover:text-blue-900 mx-1.5 text-sm" title="Edit"><i class="fas fa-edit"></i></button>
-                                <button onclick="deleteKesalahan('${escapeJsStr(k.id)}')" class="text-red-600 hover:text-red-900 mx-1.5 text-sm" title="Padam"><i class="fas fa-trash"></i></button>
-                            </div>
+                            <div>${kesButangTindakanHtml_(k)}</div>
                         </div>
                     `;
                     mobileContainer.appendChild(card);
@@ -17102,7 +17088,7 @@ asal_renderPenilaianPrestasiHistory_22: {
                 showCustomAlert("URL Google Apps Script belum ditetapkan di tab Tetapan & Segerak.", "error");
                 return;
             }
-            // KESELAMATAN (ITEM 7): pelayan menuntut pengesahan kata laluan sebelum Reset Tahunan.
+            // KESELAMATAN: pelayan menuntut pengesahan kata laluan sebelum Reset Tahunan.
             if (!(await mintaSahKataLaluan('Sahkan Reset Tahunan', 'Reset & Arkib Tahunan mengubah SELURUH pangkalan data. Sila taip kata laluan anda untuk meneruskan.'))) return;
             const d = rtCollectData();
             const btn = document.getElementById('rt-confirm-btn');
@@ -19025,7 +19011,7 @@ asal_renderPenilaianPrestasiHistory_22: {
             if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
             document.body.style.overflow = '';
 
-            // PEMBETULAN: kosongkan editingLaporanId DAHULU (sebelum resetLaporanForm)
+            // kosongkan editingLaporanId DAHULU (sebelum resetLaporanForm)
             // supaya populateMingguSelects() di dalam resetLaporanForm() tidak lagi
             // mengecualikan minggu laporan yg baru sahaja DIBATALKAN penyuntingannya --
             // minggu tsb PERLU kembali disekat (sebab laporan sedia ada bagi minggu itu
@@ -20037,7 +20023,7 @@ asal_renderPenilaianPrestasiHistory_22: {
         }
 
         // =========================================================================
-        //  PENAMBAHAN: TETAPAN BIDANG TUGAS JAWATANKUASA (boleh disunting Admin)
+        //  TETAPAN BIDANG TUGAS JAWATANKUASA (boleh disunting Admin)
         //  Kandungan bidang tugas bagi setiap jawatan (Utama & AJK) kini disimpan dlm
         //  state.settings.bidangTugasJawatankuasa, DIASINGKAN ikut SESI ('Petang'/'Pagi')
         //  supaya kandungan bidang tugas boleh berbeza antara kedua-dua sesi jika perlu --
@@ -20168,7 +20154,7 @@ asal_renderPenilaianPrestasiHistory_22: {
         function renderBidangTugasUI() {
             ['Petang', 'Pagi'].forEach(sesi => {
                 const data = getBidangTugasJawatankuasa(sesi);
-                // PENAMBAHAN: senarai jawatan LIVE drpd tab Tetapan Jawatan (bukan teks bebas lagi)
+                // senarai jawatan LIVE drpd tab Tetapan Jawatan (bukan teks bebas lagi)
                 // -- dropdown ini sentiasa ikut nama SEMASA (& ID TETAP), jadi tukar nama/tambah
                 // di Tetapan Jawatan terus disegerakkan ke sini secara automatik.
                 const senaraiLive = getJawatanPengawasList(sesi);
@@ -20587,7 +20573,7 @@ asal_renderPenilaianPrestasiHistory_22: {
         // g.perananTambahan sahaja (lihat nota "auto tambah peranan Guru Pengawas" di borang
         // Pendaftaran Guru). Tanpa ini, guru sebegini akan gugur senyap drpd SEMUA kotak carta
         // (termasuk kotak "Guru Pengawas") kerana g.peranan tidak pernah sepadan dgn box.match.
-        // PENAMBAHAN (Item #2): kedudukan 6 jawatan TERAS guru kini diikat kpd NAMA jawatan
+        // kedudukan 6 jawatan TERAS guru kini diikat kpd NAMA jawatan
         // semasa MELALUI KUNCI eksplisit (state.settings.jawatanGuruTerasKunci, ditetapkan Admin
         // di tab Tetapan Jawatan -> dropdown "Jawatan Teras") -- BUKAN semata-mata kedudukan/index
         // dlm senarai lagi. Ini bermakna Admin bebas susun semula/tambah/buang jawatan guru LAIN
@@ -20937,7 +20923,7 @@ asal_renderPenilaianPrestasiHistory_22: {
         // nama/susun semula) yang dibuat Admin dalam tab Tetapan Jawatan, tanpa perlu ubah kod.
         // Dua carta berasingan dijana -- satu bagi Sesi Petang, satu bagi Sesi Pagi -- kerana
         // setiap sesi ada Lembaga Pengawas & senarai jawatan tersendiri.
-        // PENAMBAHAN (Item #1): kumpulan (tier) SETIAP jawatan kini diperiksa DAHULU terhadap
+        // kumpulan (tier) SETIAP jawatan kini diperiksa DAHULU terhadap
         // override eksplisit yg ditetapkan Admin (tab Tetapan Jawatan -> dropdown "Kumpulan
         // Carta") -- lihat getJawatanTierOverride(). Corak nama ("Penolong.../AJK...") HANYA
         // dipakai sbg JATUH-BALIK bagi jawatan yg belum dikonfigur secara eksplisit, supaya
@@ -21254,10 +21240,6 @@ asal_renderPenilaianPrestasiHistory_22: {
         function printSuratDataById(id) {
             const s = state.suratLog.find(x => normalizeId(x.id) === normalizeId(id));
             if(s) executePrint(getSuratPrintHTML(s));
-        }
-
-        function printSuratData(suratData) {
-            executePrint(getSuratPrintHTML(suratData));
         }
 
         // --- PERJANJIAN & AKU JANJI PENGAWAS SEKOLAH ---
@@ -21840,7 +21822,6 @@ asal_renderPenilaianPrestasiHistory_22: {
         function m2Tarikh_(s) { return s ? formatTarikhSuratPanjang(s) : ''; }
         function m2Pengawas_(id) { return (state.pengawas || []).find(function(x) { return normalizeId(x.id) === normalizeId(id); }); }
         function m2AdaiGuru_() { return state.currentUser === 'admin' || state.currentUser === 'guru'; }
-        function m2Sesi_(p) { return p ? getSesiPengawas(p) : ''; }
         function m2Jawatan_(p) { return p ? (namaAsasJawatan(p.jawatan) || p.jawatan || 'Pengawas') : 'Pengawas'; }
         function m2Hari_(dateStr, tambah) { const d = new Date(dateStr + 'T00:00:00'); d.setDate(d.getDate() + tambah); return formatDateLocalYMD(d); }
         function m2Sapaan_(p) {
@@ -24491,28 +24472,6 @@ const r = hasil_sgKumpul__7;
             });
             return jumlah;
         }
-        function bkKiraHariSekolah_(mula, tamat, sesi) {
-            if (!mula || !tamat || tamat < mula) return 0;
-            let n = 0;
-            const d = new Date(mula + 'T00:00:00'), akhir = new Date(tamat + 'T00:00:00');
-            for (let i = 0; d <= akhir && i < 800; i++, d.setDate(d.getDate() + 1)) {
-                const t = formatDateLocalYMD(d);
-                try { if (kalStatus_(t, sesi).sekolah) n++; } catch (e) { if ([0, 6].indexOf(d.getDay()) === -1) n++; }
-            }
-            return n;
-        }
-        function bkKehadiranTugas_(pId, mula, tamat) {
-            let hadir = 0, jumlah = 0;
-            (state.kehadiranLog || []).forEach(function(k) {
-                if (!k || (k.jenisHari && k.jenisHari !== 'Hari Persekolahan')) return;
-                const t = String(k.tarikh || '').slice(0, 10);
-                if ((mula && t < mula) || (tamat && t > tamat)) return;
-                const r = (k.rekod || []).find(function(x) { return normalizeId(x.pId) === normalizeId(pId); });
-                if (!r) return;
-                jumlah++; if (r.status === 'Hadir') hadir++;
-            });
-            return { hadir: hadir, jumlah: jumlah };
-        }
 
         // ---------- Overlay ringkas ----------
         function bkBukaOverlay_(judul, html) {
@@ -24916,7 +24875,6 @@ const r = hasil_bkRender_3; try { tpKemaskiniBadge_(); } catch (e) { } return r;
         }
 
         // ---------- Cetakan ----------
-        function bkNamaSekolah_() { return String((state.settings && (state.settings.schoolName || state.settings.namaSekolah)) || 'SMK JALAN DAMAI').toUpperCase(); }
         const BK_GAYA_ = "font-family:'Times New Roman',serif; font-size:11pt; line-height:1.4; color:#000;";
         function bkKepala_(tajuk) {
             // Header seragam dengan surat/cetakan lain (logo + nama sekolah + Lembaga Pengawas + alamat)
