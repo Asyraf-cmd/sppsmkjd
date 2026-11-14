@@ -26,7 +26,24 @@
     <meta name="apple-mobile-web-app-title" content="SPP SMKJD">
     <link rel="manifest" id="manifest-statik" href="manifest.json">
     <meta name="theme-color" content="#0b2152">
-    <script>try{var _d=document.documentElement,_t=localStorage.getItem("spp_tema"),_s=localStorage.getItem("spp_saiz");if(_t==="gelap")_d.setAttribute("data-tema","gelap");if(_s)_d.setAttribute("data-saiz",_s);if((window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone)_d.classList.add("mod-aplikasi");}catch(e){}</script>
+    <script>        // --- RALAT YANG SENGAJA DIABAIKAN: tidak lagi senyap ---
+        // Banyak blok try/catch menelan ralat yang tidak kritikal (cth. localStorage penuh). Fungsi ini
+        // mencatatnya dalam konsol & penimbal kecil (window.__ralatDiam), dan melaporkan kepada Log Ralat Klien
+        // HANYA jika ia ralat pengaturcaraan (TypeError/ReferenceError) supaya pepijat tersembunyi dapat dikesan.
+        window.__ralatDiam = [];
+        function ralatDiam_(konteks, e) {
+            try {
+                console.debug('[ralat diabaikan] ' + konteks, e);
+                const b = window.__ralatDiam;
+                b.push({ masa: new Date().toISOString(), konteks: konteks, ralat: String((e && e.message) || e) });
+                if (b.length > 50) b.shift();
+                if ((e instanceof TypeError || e instanceof ReferenceError) && typeof rlLapor_ === 'function') {
+                    rlLapor_(e.message, 'diabaikan:' + konteks);
+                }
+            } catch (_) { /* pencatat ralat tidak boleh sekali-kali menimbulkan ralat */ }
+        }
+
+try{var _d=document.documentElement,_t=localStorage.getItem("spp_tema"),_s=localStorage.getItem("spp_saiz");if(_t==="gelap")_d.setAttribute("data-tema","gelap");if(_s)_d.setAttribute("data-saiz",_s);if((window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone)_d.classList.add("mod-aplikasi");}catch(e){}</script>
 
     <!-- Tailwind CSS dijana statik (src/css/00-tailwind.css, lihat tw/jana.py); tiada lagi CDN. -->
     <!-- SheetJS (xlsx) TIDAK dimuat di sini lagi -- dimuat atas permintaan oleh muatSkripLuar_('xlsx') apabila
@@ -747,18 +764,18 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         try {
             if (C.kekerapan === 'sesi' && sessionStorage.getItem(kunci)) return;
             if (C.kekerapan === 'harian' && localStorage.getItem(kunci) === new Date().toISOString().slice(0, 10)) return;
-        } catch (e) { }
+        } catch (e) { ralatDiam_('inline-03-kecil', e); }
         var tamat = false, pemantau = null, penjaga = null;
         function tutup() {
             if (tamat) return; tamat = true;
-            try { sessionStorage.setItem(kunci, '1'); localStorage.setItem(kunci, new Date().toISOString().slice(0, 10)); } catch (e) { }
+            try { sessionStorage.setItem(kunci, '1'); localStorage.setItem(kunci, new Date().toISOString().slice(0, 10)); } catch (e) { ralatDiam_('tutup', e); }
             clearInterval(pemantau); clearTimeout(penjaga);
-            try { v.pause(); } catch (e) { }
+            try { v.pause(); } catch (e) { ralatDiam_('tutup', e); }
             el.classList.add('keluar'); el.setAttribute('aria-hidden', 'true');
-            setTimeout(function() { el.classList.remove('aktif'); try { v.removeAttribute('src'); v.load(); } catch (e) { } }, 550);
+            setTimeout(function() { el.classList.remove('aktif'); try { v.removeAttribute('src'); v.load(); } catch (e) { ralatDiam_('tutup', e); } }, 550);
         }
         function main() {
-            var p; try { p = v.play(); } catch (e) { }
+            var p; try { p = v.play(); } catch (e) { ralatDiam_('main', e); }
             if (p && p.catch) p.catch(function() { document.getElementById('iv-main').style.display = 'flex'; });
         }
         if (C.poster) v.poster = C.poster;
@@ -772,7 +789,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         document.addEventListener('keydown', function(e) { if (!tamat && e.key === 'Escape') tutup(); });
         if (C.bunyi) { v.muted = false; document.getElementById('iv-bunyi').innerHTML = '&#128266; Senyap'; }
         el.classList.add('aktif'); el.setAttribute('aria-hidden', 'false');
-        var p0; try { p0 = v.play(); } catch (e) { }
+        var p0; try { p0 = v.play(); } catch (e) { ralatDiam_('main', e); }
         if (p0 && p0.catch) p0.catch(function() {
             if (!v.muted) { v.muted = true; document.getElementById('iv-bunyi').innerHTML = '&#128263; Bunyi'; main(); }
             else document.getElementById('iv-main').style.display = 'flex';
@@ -6228,7 +6245,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
         // Isi dropdown pemilihan peranan (sekali sahaja bila tab dibuka) dan papar senarai
         // semak bagi peranan yang mula-mula terpilih.
         function initTetapanAksesSenarai() {
-                try { x6Materialkan_(); } catch (e) {}
+                try { x6Materialkan_(); } catch (e) { ralatDiam_('initTetapanAksesSenarai', e); }
                 let r;
 asal_initTetapanAksesSenarai_19: {
             const sel = document.getElementById('tak-senarai-role-select');
@@ -6238,7 +6255,7 @@ asal_initTetapanAksesSenarai_19: {
             sel.value = pilihanSemasa && getTetapanAksesRoleList().includes(pilihanSemasa) ? pilihanSemasa : getTetapanAksesRoleList()[0];
             renderTetapanAksesSenarai();
         }
-                try { x6UlasAksesUI_(); } catch (e) {}
+                try { x6UlasAksesUI_(); } catch (e) { ralatDiam_('initTetapanAksesSenarai', e); }
                 return r;
             }
 
@@ -6260,7 +6277,7 @@ asal_renderTetapanAksesSenarai_20: {
                 </label>
             `).join('');
         }
-                try { x6UlasAksesUI_(); } catch (e) {}
+                try { x6UlasAksesUI_(); } catch (e) { ralatDiam_('renderTetapanAksesSenarai', e); }
                 return r;
             }
 
@@ -6271,7 +6288,7 @@ asal_renderTetapanAksesSenarai_20: {
                     x6Materialkan_();
                     const sel = m2El_('tak-senarai-role-select');
                     if (sel && sel.value !== 'guru') document.querySelectorAll('#tak-senarai-checklist .tak-senarai-checkbox').forEach(function(cb) { if (GURU_SAHAJA_TAB_.indexOf(cb.dataset.tab) !== -1) cb.checked = false; });
-                } catch (e) {}
+                } catch (e) { ralatDiam_('simpanTetapanAksesSenarai', e); }
                 {
             const sel = document.getElementById('tak-senarai-role-select');
             if (!sel) return;
@@ -6631,7 +6648,7 @@ asal_renderTetapanAksesSenarai_20: {
                 const input = document.getElementById('reauth-password');
                 input.value = '';
                 modal.classList.remove('hidden');
-                setTimeout(() => { try { input.focus(); } catch (e) {} }, 50);
+                setTimeout(() => { try { input.focus(); } catch (e) { ralatDiam_('mintaSahKataLaluan', e); } }, 50);
             });
         }
         async function _hantarReauth_() {
@@ -7260,8 +7277,8 @@ asal_ambilLogAktivitiTertapis__12: {
         // Rekod ini akan dihantar seorang diri (bukan seluruh pangkalan data) semasa Push seterusnya.
         function queueDelta(subAction, data, labelAuditKhusus) {
                 let diff = '';
-                try { sjCatat_(subAction, data, arguments[2]); } catch (e) {}
-                try { diff = x9Diff_(subAction, data); } catch (e) {}
+                try { sjCatat_(subAction, data, arguments[2]); } catch (e) { ralatDiam_('queueDelta', e); }
+                try { diff = x9Diff_(subAction, data); } catch (e) { ralatDiam_('queueDelta', e); }
                 let r;
 {
             if (!state.pendingDeltas) state.pendingDeltas = [];
@@ -7277,7 +7294,7 @@ asal_ambilLogAktivitiTertapis__12: {
                     try {
                         const d = state.pendingDeltas[state.pendingDeltas.length - 1];
                         if (d && d.audit) d.audit.keterangan = ((d.audit.keterangan ? d.audit.keterangan + ' | ' : '') + 'Perubahan: ' + diff).slice(0, 600);
-                    } catch (e) {}
+                    } catch (e) { ralatDiam_('queueDelta', e); }
                 }
                 return r;
             }
@@ -8667,7 +8684,7 @@ asal_applySyncedState_16: {
             }
         }
         function setLoginLockoutData(data) {
-            try { localStorage.setItem(LOGIN_LOCKOUT_STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+            try { localStorage.setItem(LOGIN_LOCKOUT_STORAGE_KEY, JSON.stringify(data)); } catch (e) { ralatDiam_('setLoginLockoutData', e); }
         }
         function formatLockoutRemaining(ms) {
             const totalSaat = Math.ceil(ms / 1000);
@@ -9460,7 +9477,7 @@ asal_updateUIRoles_6: {
                 } catch (e) { /* abaikan */ }
                 { hasil_updateUIRoles_5 = r; break asal_updateUIRoles_6; }
             }
-const r = hasil_updateUIRoles_5; try { tpKemaskiniBadge_(); } catch (e) { } return r; }
+const r = hasil_updateUIRoles_5; try { tpKemaskiniBadge_(); } catch (e) { ralatDiam_('updateUIRoles', e); } return r; }
 
         // Bagi setiap divider sidebar, sembunyikan tajuknya jika TIADA satu pun tab di bawahnya
         // kelihatan bagi peranan semasa (cth: pengawas biasa yang tiada akses ke mana-mana tab
@@ -9642,7 +9659,7 @@ asal_switchTab_21: {
                     if (tabId === 'dokumen-rasmi') dokInit_();
                     else if (tabId === 'pengumuman') { pgmCatatSblm_(); pgmRender(); pgmTandaDilihat_(); }
                     else if (tabId === 'laporan-ringkas') lrInit_();
-                    else if (tabId === 'semakan-sistem') { sqRender(); try { lgMuat(); tfaMuat(); tkMuat(); kuMuat(); rlMuat(); } catch (e) {} }
+                    else if (tabId === 'semakan-sistem') { sqRender(); try { lgMuat(); tfaMuat(); tkMuat(); kuMuat(); rlMuat(); } catch (e) { ralatDiam_('switchTab', e); } }
                     else if (tabId === 'tetapan-kalendar') kalRender();
                     else if (tabId === 'tetapan-soalan') sqkRender();
                     else if (tabId === 'borang-kenaikan') bkRender();
@@ -14603,7 +14620,7 @@ asal_getProfilDisiplinPrintHTML_25: {
                     document.querySelectorAll('[id^="kes-tarikh-"]').forEach(function(i) { if (i.value) tarikhList.push(i.value); });
                     const lock = tarikhList.find(krlTerkunci_);
                     if (lock) { if (e && e.preventDefault) e.preventDefault(); krlTolak_(lock); return; }
-                } catch (er) {}
+                } catch (er) { ralatDiam_('saveKesalahanBatch', er); }
                 {
             e.preventDefault();
             const pId = document.getElementById('kesalahan-pengawas').value;
@@ -14639,6 +14656,7 @@ asal_getProfilDisiplinPrintHTML_25: {
                     rec.suratId = state.kesalahan[idxState].suratId || null;
                     rec.suratJenis = state.kesalahan[idxState].suratJenis || null;
                     if (state.kesalahan[idxState].dimasukkanOleh) rec.dimasukkanOleh = state.kesalahan[idxState].dimasukkanOleh;
+                    if (state.kesalahan[idxState].sejarahUbah) rec.sejarahUbah = state.kesalahan[idxState].sejarahUbah;
                     state.kesalahan[idxState] = rec;
                 }
                 queueDelta('updateOffense', rec);
@@ -14704,7 +14722,7 @@ asal_getProfilDisiplinPrintHTML_25: {
         }
 
         function deleteKesalahan(id) {
-                try { const k = (state.kesalahan || []).find(function(x) { return normalizeId(x.id) === normalizeId(id); }); if (k && krlTerkunci_(k.tarikh)) { krlTolak_(k.tarikh); return; } } catch (e) {}
+                try { const k = (state.kesalahan || []).find(function(x) { return normalizeId(x.id) === normalizeId(id); }); if (k && krlTerkunci_(k.tarikh)) { krlTolak_(k.tarikh); return; } } catch (e) { ralatDiam_('deleteKesalahan', e); }
                 {
             showCustomConfirm("Padam Kesalahan", "Adakah anda pasti untuk memadam kesalahan ini?", function() {
                 fadeOutRowById(id, function() {
@@ -14782,6 +14800,25 @@ asal_getProfilDisiplinPrintHTML_25: {
             return `<div class="mt-1 text-[10px] text-slate-400 italic"><i class="fas fa-user-pen mr-1"></i>Direkod oleh: tidak direkodkan (rekod lama)</div>`;
         }
 
+        // Sejarah ubah (Guru/Admin): entri terakhir kelihatan; semua entri dalam tooltip.
+        function kesSejarahUbahHtml_(k) {
+            if (state.currentUser === 'prefect' || !Array.isArray(k.sejarahUbah) || !k.sejarahUbah.length) return '';
+            const baris = k.sejarahUbah.map(function(e) {
+                return `${String(e.masa || '').slice(0, 16).replace('T', ' ')} - ${e.nama || e.username} (${e.peranan || e.jenis}): ${(e.medan || []).join(', ')}`;
+            });
+            const akhir = k.sejarahUbah[k.sejarahUbah.length - 1];
+            return `<div class="mt-1 text-[10px] text-amber-700 font-semibold" title="${escapeHtml(baris.join('\n'))}"><i class="fas fa-clock-rotate-left mr-1"></i>Diubah ${k.sejarahUbah.length}x &middot; terakhir ${escapeHtml(String(akhir.masa || '').slice(0, 10))} oleh ${escapeHtml(akhir.nama || akhir.username)}</div>`;
+        }
+
+        // Pengawas hanya boleh mengubah/memadam rekod sendiri dalam tempoh ini (sama dengan pelayan).
+        const HAD_JAM_UBAH_PENGAWAS_ = 24;
+        function kesBolehUbahPengawas_(k) {
+            if (state.currentUser !== 'prefect') return true;
+            const masa = k.dimasukkanOleh && new Date(k.dimasukkanOleh.masa).getTime();
+            if (!masa) return !k.dimasukkanOleh; // baru dimasukkan di peranti ini (belum dicop pelayan)
+            return (Date.now() - masa) <= HAD_JAM_UBAH_PENGAWAS_ * 3600 * 1000;
+        }
+
         // Kategori + jenis + butiran + pelapor + perekod + lencana rujukan surat.
         function kesKandunganHtml_(k, kelasTeks, badgeHtml) {
             return `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase ${k.kategori === 'Lembaga' ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-rose-50 text-rose-700 border border-rose-100'}">${escapeHtml(k.kategori)}</span>
@@ -14791,10 +14828,12 @@ asal_getProfilDisiplinPrintHTML_25: {
                 </div>
                 ${k.pengawasPelapor ? `<div class="mt-1 text-[10px] text-slate-400 italic"><i class="fas fa-user-shield mr-1"></i>Pengawas Melapor: ${escapeHtml(k.pengawasPelapor)}</div>` : ''}
                 ${kesDirekodOlehHtml_(k)}
+                ${kesSejarahUbahHtml_(k)}
                 ${badgeHtml ? `<div class="mt-1">${badgeHtml}</div>` : ''}`;
         }
 
         function kesButangTindakanHtml_(k) {
+            if (!kesBolehUbahPengawas_(k)) return `<span class="text-[10px] text-slate-400" title="Lebih ${HAD_JAM_UBAH_PENGAWAS_} jam: hubungi Guru/Admin"><i class="fas fa-lock"></i></span>`;
             return `<button onclick="editKesalahan('${escapeJsStr(k.id)}')" class="text-blue-600 hover:text-blue-900 mx-1.5 text-sm" title="Edit"><i class="fas fa-edit"></i></button>
                 <button onclick="deleteKesalahan('${escapeJsStr(k.id)}')" class="text-red-600 hover:text-red-900 mx-1.5 text-sm" title="Padam"><i class="fas fa-trash"></i></button>`;
         }
@@ -15106,7 +15145,7 @@ const r = hasil_loadKehadiranForm_1;
                         if (sel.value !== st.jenisHari) { sel.value = st.jenisHari; updateJenisHariKehadiranUI(sesi); }
                     }
                     kalNotaKehadiran_(sesi);
-                } catch (e) {}
+                } catch (e) { ralatDiam_('loadKehadiranForm', e); }
                 { hasil_loadKehadiranForm_23 = r; break asal_loadKehadiranForm_24; }
             }
 const r = hasil_loadKehadiranForm_23;
@@ -15142,7 +15181,7 @@ const r = hasil_loadKehadiranForm_23;
 
         let _kalLulus_ = false;
         function saveKehadiranHarian(sesi) {
-                try { const t = m2Nilai_('kehadiran-tarikh-' + sesiKeSuffixKehadiran(sesi)); if (krlTerkunci_(t)) { krlTolak_(t); return; } } catch (e) {}
+                try { const t = m2Nilai_('kehadiran-tarikh-' + sesiKeSuffixKehadiran(sesi)); if (krlTerkunci_(t)) { krlTolak_(t); return; } } catch (e) { ralatDiam_('saveKehadiranHarian', e); }
                 {
                 const self = this, args = arguments;
                 if (_kalLulus_) { _kalLulus_ = false; return saveKehadiranHarianTerus_.apply(self, args); }
@@ -15166,7 +15205,7 @@ const r = hasil_loadKehadiranForm_23;
                             return;
                         }
                     }
-                } catch (e) {}
+                } catch (e) { ralatDiam_('saveKehadiranHarian', e); }
                 return saveKehadiranHarianTerus_.apply(self, args);
             }}
         function saveKehadiranHarianTerus_(sesi) {
@@ -15267,7 +15306,7 @@ const r = hasil_loadKehadiranForm_23;
         }
 
         function deleteKehadiranRecord(id) {
-                try { const k = (state.kehadiranLog || []).find(function(x) { return normalizeId(x.id) === normalizeId(id); }); if (k && krlTerkunci_(k.tarikh)) { krlTolak_(k.tarikh); return; } } catch (e) {}
+                try { const k = (state.kehadiranLog || []).find(function(x) { return normalizeId(x.id) === normalizeId(id); }); if (k && krlTerkunci_(k.tarikh)) { krlTolak_(k.tarikh); return; } } catch (e) { ralatDiam_('deleteKehadiranRecord', e); }
                 {
             showCustomConfirm("Padam Rekod Kehadiran", "Adakah anda pasti untuk memadam keseluruhan rekod kehadiran bagi tarikh ini?", function() {
                 const k = state.kehadiranLog.find(x => normalizeId(x.id) === normalizeId(id));
@@ -16935,7 +16974,7 @@ asal_renderPenilaianPrestasiHistory_22: {
         function openResetTahunanWizard() {
                 const self = this, args = arguments;
                 let gagal = [];
-                try { gagal = rsSemak_().filter(function(x) { return x.tahap === 'gagal'; }); } catch (e) { }
+                try { gagal = rsSemak_().filter(function(x) { return x.tahap === 'gagal'; }); } catch (e) { ralatDiam_('openResetTahunanWizard', e); }
                 if (!gagal.length) return openResetTahunanWizardTerus_.apply(self, args);
                 showCustomConfirm('Semakan Belum Lulus', gagal.map(function(x) { return '- ' + x.tajuk + (x.butir ? ': ' + x.butir : ''); }).join('\n') + '\n\nTeruskan juga ke wizard Reset?', function() { openResetTahunanWizardTerus_.apply(self, args); });
             }
@@ -20008,7 +20047,7 @@ asal_renderPenilaianPrestasiHistory_22: {
         function logoPaparan_() {
             return logoLalaiDigunakan_() ? LOGO_SEKOLAH_LALAI_ : state.settings.logoUrl;
         }
-        window.addEventListener('load', function() { try { updateLogoGlobally(); } catch (e) {} });
+        window.addEventListener('load', function() { try { updateLogoGlobally(); } catch (e) { ralatDiam_('logoPaparan_', e); } });
 
         function updateLogoGlobally() {
             const url = logoPaparan_();
@@ -21552,7 +21591,7 @@ asal_renderPenilaianPrestasiHistory_22: {
                 cariKehadiranBelumDirekod_().forEach(function(x) {
                     tugasan.push({ warna: 'red', ikon: 'fa-calendar-xmark', teks: 'Kehadiran Sesi ' + x.sesi + ' semalam belum direkod', sub: x.tarikh, tab: 'kehadiran', btn: 'Isi' });
                 });
-            } catch (e) {}
+            } catch (e) { ralatDiam_('renderTugasanHariIni', e); }
             const menunggu = (state.permohonanPengawas || []).filter(function(m) { return !m.status || m.status === 'Menunggu'; }).length;
             if (menunggu) tugasan.push({ warna: 'amber', ikon: 'fa-user-plus', teks: menunggu + ' permohonan pengawas menunggu keputusan', sub: 'Semak dan luluskan atau tolak', tab: 'permohonan-pengawas', btn: 'Semak' });
             const hariIniD = new Date(hariIni);
@@ -21570,7 +21609,7 @@ asal_renderPenilaianPrestasiHistory_22: {
                     return !((state.suratLog || []).some(function(s) { return normalizeId(s.pId) === k; }) || (state.suratTunjukSebabLog || []).some(function(t) { return normalizeId(t.pId) === k; }));
                 }).length;
                 if (bil) tugasan.push({ warna: 'amber', ikon: 'fa-envelope-open-text', teks: bil + ' pengawas demerit tinggi belum ditindak', sub: 'Pertimbangkan surat amaran', tab: 'surat', btn: 'Tindak' });
-            } catch (e) {}
+            } catch (e) { ralatDiam_('renderTugasanHariIni', e); }
             const pending = (state.pendingDeltas || []).length;
             if (pending > 0 || state.needsFullSync) tugasan.push({ warna: 'amber', ikon: 'fa-cloud-arrow-up', teks: (pending ? pending + ' perubahan' : 'Perubahan') + ' belum dihantar ke Google Sheets', sub: 'Hantar supaya peranti lain turut dikemas kini', fn: "syncData('push')", btn: 'Hantar' });
 
@@ -21595,7 +21634,7 @@ asal_renderPenilaianPrestasiHistory_22: {
         function executePrint(htmlContent, orientation) {
             orientation = (orientation === 'landscape') ? 'landscape' : 'portrait';
             let langkau = false;
-            try { langkau = localStorage.getItem('spp_langkau_pratonton') === '1'; } catch (e) {}
+            try { langkau = localStorage.getItem('spp_langkau_pratonton') === '1'; } catch (e) { ralatDiam_('executePrint', e); }
             if (langkau) { executePrintLangsung_(htmlContent, orientation); return; }
             try { bukaPratontonCetak_(htmlContent, orientation); }
             catch (e) { console.warn('Pratonton gagal, cetak terus:', e); executePrintLangsung_(htmlContent, orientation); }
@@ -21641,13 +21680,13 @@ asal_renderPenilaianPrestasiHistory_22: {
                     const bahagian = d.querySelectorAll('.page-break').length + 1;
                     const anggar = Math.max(bahagian, Math.ceil(((d.querySelector('.kertas-pratonton') || d.body).scrollHeight - 80) / px));
                     document.getElementById('pc-info').textContent = 'A4 ' + (orientation === 'landscape' ? 'melintang' : 'menegak') + ' · anggaran ' + anggar + ' muka surat · garisan putus = muka surat baharu';
-                } catch (e) {}
+                } catch (e) { ralatDiam_('bukaPratontonCetak_', e); }
             };
             ifr.srcdoc = dok;
             document.getElementById('pc-cetak-btn').onclick = function() {
                 try {
                     const chk = document.getElementById('pc-langkau');
-                    if (chk && chk.checked) { try { localStorage.setItem('spp_langkau_pratonton', '1'); } catch (e) {} }
+                    if (chk && chk.checked) { try { localStorage.setItem('spp_langkau_pratonton', '1'); } catch (e) { ralatDiam_('bukaPratontonCetak_', e); } }
                     ifr.contentWindow.focus();
                     ifr.contentWindow.print();
                 } catch (e) {
@@ -21759,13 +21798,13 @@ asal_renderPenilaianPrestasiHistory_22: {
             const gelap = document.documentElement.getAttribute('data-tema') === 'gelap';
             const baru = gelap ? 'cerah' : 'gelap';
             _terapTema_(baru);
-            try { localStorage.setItem('spp_tema', baru); } catch (e) {}
+            try { localStorage.setItem('spp_tema', baru); } catch (e) { ralatDiam_('togolTema', e); }
         }
         function tukarSaiz(arah) {
             let i = _SAIZ_.indexOf(document.documentElement.getAttribute('data-saiz') || '');
             i = Math.max(0, Math.min(_SAIZ_.length - 1, i + arah));
             if (_SAIZ_[i]) document.documentElement.setAttribute('data-saiz', _SAIZ_[i]); else document.documentElement.removeAttribute('data-saiz');
-            try { localStorage.setItem('spp_saiz', _SAIZ_[i]); } catch (e) {}
+            try { localStorage.setItem('spp_saiz', _SAIZ_[i]); } catch (e) { ralatDiam_('tukarSaiz', e); }
         }
 
         // ---------- 15. PASANG SEBAGAI APLIKASI ----------
@@ -21793,7 +21832,7 @@ asal_renderPenilaianPrestasiHistory_22: {
 
         document.addEventListener('DOMContentLoaded', function() {
             let t = 'cerah';
-            try { t = localStorage.getItem('spp_tema') === 'gelap' ? 'gelap' : 'cerah'; } catch (e) {}
+            try { t = localStorage.getItem('spp_tema') === 'gelap' ? 'gelap' : 'cerah'; } catch (e) { ralatDiam_('pasangAplikasi', e); }
             _terapTema_(t);
             if (_ios_() && !_sudahDipasang_()) _tunjukButangPasang_();
             kemaskiniPenunjukSync_();
@@ -22002,7 +22041,7 @@ asal_renderPenilaianPrestasiHistory_22: {
 
         // ----- Sijil penghargaan (portrait A4) -----
         function dokBinaSijil_(p, snap) {
-            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) {}
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { ralatDiam_('dokBinaSijil_', e); }
             const nama = m2Esc_(String(p.nama || '').toUpperCase());
             const teks = snap.teks
                 ? m2Esc_(snap.teks)
@@ -22030,7 +22069,7 @@ asal_renderPenilaianPrestasiHistory_22: {
 
         // ----- Versi Bahasa Inggeris -----
         function dokBinaSuratEN_(jenis, p, snap) {
-            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) {}
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { ralatDiam_('dokBinaSuratEN_', e); }
             const ses = sesiP ? (sesiP === 'Pagi' ? 'Morning' : 'Afternoon') : '';
             const board = `${ses ? ses + ' Session ' : ''}School Prefectorial Board of SMK Jalan Damai`;
             const jaw = `<b>${m2Esc_(snap.jawatan)}</b>`;
@@ -22122,7 +22161,7 @@ asal_renderPenilaianPrestasiHistory_22: {
 
         function dokBinaSuratMS_(jenis, p, snap) {
             const jaw = `<b>${m2Esc_(snap.jawatan)}</b>`;
-            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) {}
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { ralatDiam_('dokBinaSuratMS_', e); }
             const sek = `Lembaga Pengawas ${sesiP ? 'Sesi ' + sesiP + ' ' : ''}Sekolah Menengah Kebangsaan Jalan Damai`;
             const T = function(t) { return dokTajuk_(t + (sesiP ? ' (Sesi ' + sesiP + ')' : '')); };
             let isi = dokPenerima_(p, snap);
@@ -22444,14 +22483,14 @@ asal_renderPenilaianPrestasiHistory_22: {
         function pgmTandaDilihat_() {
             const list = pgmSenarai_('aktif');
             const terkini = list.reduce(function(m, a) { return String(a.masa) > m ? String(a.masa) : m; }, '');
-            try { if (terkini) localStorage.setItem(pgmKunciDilihat_(), terkini); } catch (e) {}
+            try { if (terkini) localStorage.setItem(pgmKunciDilihat_(), terkini); } catch (e) { ralatDiam_('pgmTandaDilihat_', e); }
             pgmKemasKiniLencana_();
         }
         function pgmKemasKiniLencana_() {
             const el = m2El_('pgm-lencana');
             if (!el) return;
             let dilihat = '';
-            try { dilihat = localStorage.getItem(pgmKunciDilihat_()) || ''; } catch (e) {}
+            try { dilihat = localStorage.getItem(pgmKunciDilihat_()) || ''; } catch (e) { ralatDiam_('pgmKemasKiniLencana_', e); }
             const baharu = pgmSenarai_('aktif').filter(function(a) { return String(a.masa) > dilihat; }).length;
             el.textContent = baharu > 9 ? '9+' : String(baharu);
             el.classList.toggle('hidden', baharu === 0);
@@ -22899,7 +22938,7 @@ asal_renderPenilaianPrestasiHistory_22: {
                 const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'statusSandaranAuto', token: state.sessionToken }) });
                 const d = await res.json();
                 if (d.status === 'success') { _sdrAuto_ = d.kekerapan; _sdrAutoTerakhir_ = d.terakhir || null; sdrPapar_(); }
-            } catch (e) {}
+            } catch (e) { ralatDiam_('sdrAutoMuat', e); }
         }
         async function sdrAutoSimpan() {
             const url = state.settings.scriptUrl; if (!url || !url.trim()) { showCustomAlert('URL Google Apps Script belum ditetapkan.', 'error'); return; }
@@ -22920,7 +22959,7 @@ asal_renderPenilaianPrestasiHistory_22: {
                 try {
                     const c = JSON.parse(sessionStorage.getItem('spp_sdr_status') || 'null');
                     if (c && c.ok && Date.now() - c.t < 6 * 3600 * 1000) { _sdrCache_ = c; sdrPapar_(); return c; }
-                } catch (e) {}
+                } catch (e) { ralatDiam_('sdrSemak', e); }
             }
             try {
                 const res = await fetch(`${url}?action=listBackups&token=${encodeURIComponent(state.sessionToken || '')}`);
@@ -22929,7 +22968,7 @@ asal_renderPenilaianPrestasiHistory_22: {
                 const berkala = (data.senarai || []).filter(function(s) { return s.jenis !== 'pra-push'; });
                 const masa = berkala.reduce(function(m, s) { const t = new Date(s.tarikh).getTime(); return t > m ? t : m; }, 0);
                 _sdrCache_ = { t: Date.now(), ok: true, terbaru: masa || null, bil: berkala.length };
-                try { sessionStorage.setItem('spp_sdr_status', JSON.stringify(_sdrCache_)); } catch (e) {}
+                try { sessionStorage.setItem('spp_sdr_status', JSON.stringify(_sdrCache_)); } catch (e) { ralatDiam_('sdrSemak', e); }
             } catch (e) {
                 _sdrCache_ = { t: Date.now(), ok: false, ralat: e.message };
             }
@@ -22939,7 +22978,7 @@ asal_renderPenilaianPrestasiHistory_22: {
         }
         async function sdrBackupDanSemak() {
             await handleBackupSekarang();
-            try { sessionStorage.removeItem('spp_sdr_status'); } catch (e) {}
+            try { sessionStorage.removeItem('spp_sdr_status'); } catch (e) { ralatDiam_('sdrBackupDanSemak', e); }
             setTimeout(function() { sdrSemak(true); }, 1500);
         }
         function sdrUmur_() {
@@ -23420,7 +23459,7 @@ asal_auditRingkasan__11: {
         }
 
         function bukaChecklistSemakan_(id) {
-            try { openChecklistPengawasModal('offboarding', id); return; } catch (e) {}
+            try { openChecklistPengawasModal('offboarding', id); return; } catch (e) { ralatDiam_('bukaChecklistSemakan_', e); }
             if (typeof editPengawas === 'function') editPengawas(id);
         }
 
@@ -23481,7 +23520,7 @@ asal_auditRingkasan__11: {
         }
         function x9Bina_() {
             (state.pengawas || []).forEach(function(p) { _x9Snap_['p:' + normalizeId(p.id)] = x9Medan_('p', p); });
-            try { sjBina_(); } catch (e) {}
+            try { sjBina_(); } catch (e) { ralatDiam_('x9Bina_', e); }
             (state.kesalahan || []).forEach(function(k) { _x9Snap_['k:' + normalizeId(k.id)] = x9Medan_('k', k); });
         }
         function x9Diff_(sub, data) {
@@ -23906,7 +23945,7 @@ let e = hasil_jmEvent__14;
                     const k = p.keputusanPercubaan;
                     if (k && k.keputusan) {
                         let mk = '';
-                        try { const b = bkBorangUntukPengawas_(p.id); if (b && b.guru && b.guru.markah) mk = audMarkahTeks_(b.guru); } catch (e2) { }
+                        try { const b = bkBorangUntukPengawas_(p.id); if (b && b.guru && b.guru.markah) mk = audMarkahTeks_(b.guru); } catch (e2) { ralatDiam_('jmEvent_', e2); }
                         tambah('jawatan', k.tarikh, k.keputusan === 'berjaya' ? 'Disahkan & dinaikkan ke Pengawas Biasa' : 'Tidak berjaya disahkan (percubaan ditamatkan)', mk);
                     }
                     e.sort(function(a, b) { return a.t.localeCompare(b.t); });
@@ -24272,7 +24311,7 @@ let e = hasil_jmEvent__14;
         // ---------- Integrasi kalendar kehadiran ----------
         function kalRefreshKehadiran_() {
             ['Petang', 'Pagi'].forEach(function(s) {
-                try { if (document.getElementById('kehadiran-tarikh-' + s.toLowerCase()) && typeof loadKehadiranForm === 'function') { /* jangan ubah borang yang sedang diisi */ renderKehadiranKalendar(s); } } catch (e) {}
+                try { if (document.getElementById('kehadiran-tarikh-' + s.toLowerCase()) && typeof loadKehadiranForm === 'function') { /* jangan ubah borang yang sedang diisi */ renderKehadiranKalendar(s); } } catch (e) { ralatDiam_('kalRefreshKehadiran_', e); }
             });
         }
         function kalLegendaKehadiran_(suffix) {
@@ -24382,7 +24421,7 @@ asal_sgKumpul__8: {
             { hasil_sgKumpul__7 = isu; break asal_sgKumpul__8; }
         }
 const r = hasil_sgKumpul__7;
-                let tambahan = []; try { tambahan = bkSemakData_(); } catch (e) { }
+                let tambahan = []; try { tambahan = bkSemakData_(); } catch (e) { ralatDiam_('sgKumpul_', e); }
                 const semua = r.concat(tambahan), urut = { ralat: 0, amaran: 1 };
                 semua.sort(function(x, y) { return (urut[x.tahap] - urut[y.tahap]) || String(y.tarikh).localeCompare(String(x.tarikh)); });
                 return semua;
@@ -24669,7 +24708,7 @@ const r = hasil_sgKumpul__7;
             p.percubaanMula = mula; p.percubaanTamat = tamat;
             queueDelta('updatePrefect', p, 'Tetapkan tempoh percubaan: ' + p.nama);
             saveStateToLocal(); markUnsynced(); bkTutupOverlay(); bkRender();
-            try { if (typeof tpRender === 'function') tpRender(); } catch (e) { }
+            try { if (typeof tpRender === 'function') tpRender(); } catch (e) { ralatDiam_('pcSimpanTempoh', e); }
         }
         // Jejak (garis masa) seorang pengawas dalam proses pengesahan
         function bkJejak(pId) {
@@ -24770,7 +24809,7 @@ asal_bkRender_4: {
             const am = m2El_('bk-amaran-soalan');
             if (am) am.classList.toggle('hidden', (s.disiplin.length + s.tanggungjawab.length) > 0);
         }
-const r = hasil_bkRender_3; try { tpKemaskiniBadge_(); } catch (e) { } return r; }
+const r = hasil_bkRender_3; try { tpKemaskiniBadge_(); } catch (e) { ralatDiam_('bkRender', e); } return r; }
         function bkBuka(pId) {
             if (state.currentUser !== 'admin' && state.currentUser !== 'guru') return;
             const p = m2Pengawas_(pId); if (!p) return;
@@ -24822,7 +24861,7 @@ const r = hasil_bkRender_3; try { tpKemaskiniBadge_(); } catch (e) { } return r;
             bkBukaOverlay_('Markah Borang Pengesahan', html);
         }
         function bkSimpanGuru() {
-                try { const b = bkCari_(m2Nilai_('bkg-id')); if (b) AUD_LAMA_[b.id] = audMarkahTeks_(b.guru); } catch (e) { }
+                try { const b = bkCari_(m2Nilai_('bkg-id')); if (b) AUD_LAMA_[b.id] = audMarkahTeks_(b.guru); } catch (e) { ralatDiam_('bkSimpanGuru', e); }
                 {
             const b = bkCari_(m2Nilai_('bkg-id')); if (!b) return;
             const num = function(id) { const t = (m2Nilai_(id) || '').trim(); if (t === '') return null; const x = parseInt(t); return isNaN(x) || x < 0 ? NaN : x; };
@@ -24940,7 +24979,7 @@ const r = hasil_bkRender_3; try { tpKemaskiniBadge_(); } catch (e) { } return r;
         // Senarai guru berdaftar untuk pilihan penandatangan
         function bkGuruBerdaftar_() {
             return (state.pendaftaranGuru || []).filter(function(g) { return g && g.nama; }).map(function(g) {
-                let jaw = ''; try { jaw = String(getJawatanCetakGuru(g) || ''); } catch (e) {}
+                let jaw = ''; try { jaw = String(getJawatanCetakGuru(g) || ''); } catch (e) { ralatDiam_('bkGuruBerdaftar_', e); }
                 return { nama: String(g.nama), jawatan: jaw };
             });
         }
@@ -25056,7 +25095,7 @@ const r = hasil_bkRender_3; try { tpKemaskiniBadge_(); } catch (e) { } return r;
         }
         // Format sama seperti surat Amaran/Gantung Tugas/Lucut (modul Surat): kepala surat sekolah, tarikh, "Kepada", PERKARA, badan surat, tandatangan.
         function bkBinaSuratTurun_(p, x, snap) {
-            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { }
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { ralatDiam_('bkBinaSuratTurun_', e); }
             const tm = pcTempoh_(p), tt = snap.penandatangan || {};
             const namaTT = tt.nama ? escapeHtml(tt.nama) : '_______________________';
             const bodyStyle = 'style="line-height:1.4; text-align:justify; font-size:10pt; margin-top:5px;"';
@@ -25286,7 +25325,7 @@ const r = hasil_tpKira__9;
                 const tg = String(s.tarikh || '').slice(0, 10);
                 if (tg >= mula) w.push(jenisSurat[s.jenis] + ' bertarikh ' + bkTarikhPendek_(tg));
             });
-            try { if (getGantungAktifPadaTarikh(p.id, hari)) w.push('Sedang digantung tugas'); } catch (e) { }
+            try { if (getGantungAktifPadaTarikh(p.id, hari)) w.push('Sedang digantung tugas'); } catch (e) { ralatDiam_('bkSemakSebelumNaik_', e); }
             let dem = 0;
             (state.kesalahan || []).forEach(function(k) {
                 if (!k || k.kategori === 'Lembaga' || normalizeId(k.pId) !== normalizeId(p.id)) return;
@@ -25341,7 +25380,7 @@ const r = hasil_tpKira__9;
                 tambahan: (m2Nilai_(awalan + '-tambahan') || '').trim() };
         }
         function bkSuratStd_(p, snap, perkara, paras) {
-            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { }
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { ralatDiam_('bkSuratStd_', e); }
             const tt = snap.penandatangan || {}, namaTT = tt.nama ? escapeHtml(tt.nama) : '_______________________';
             const sigLine = 'style="border-top:1px solid black; width:180px; text-align:center; padding-top:5px; margin-top:35px; font-size:9pt;"';
             let h = getPrintHeader();
@@ -25357,7 +25396,7 @@ const r = hasil_tpKira__9;
             return h;
         }
         function bkBinaSuratKeputusan_(jenis, p, snap, b) {
-            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { }
+            let sesiP = ''; try { sesiP = getSesiPengawas(p) || ''; } catch (e) { ralatDiam_('bkBinaSuratKeputusan_', e); }
             const tgl = escapeHtml(formatTarikhSuratPanjang(snap.kuatkuasa)).toUpperCase();
             const ulasan = b && b.guru && b.guru.pengesahan && b.guru.pengesahan.ulasan ? String(b.guru.pengesahan.ulasan).trim() : '';
             let n = 1; const paras = [];
@@ -25529,7 +25568,7 @@ const r = hasil_tpKira__9;
                 a.download = 'Sandaran_SPP_SMKJD_' + getRealTimeTodayStr() + '.json';
                 document.body.appendChild(a); a.click(); a.remove();
                 setTimeout(function() { URL.revokeObjectURL(a.href); }, 4000);
-                try { localStorage.setItem(SDL_KUNCI_, String(Date.now())); } catch (e) { }
+                try { localStorage.setItem(SDL_KUNCI_, String(Date.now())); } catch (e) { ralatDiam_('sdlMuatTurun', e); }
                 recordAuditLog('Muat Turun Sandaran', 'Salinan tempatan (' + (blob.size / 1048576).toFixed(2) + ' MB) dimuat turun'); saveStateToLocal();
                 sdrPapar_(); tpKemaskiniBadge_();
                 showCustomAlert('Sandaran dimuat turun. Simpan fail ini di tempat selamat (cth. pemacu luar atau Drive peribadi). Kata laluan dan token tidak disertakan.', 'success');
@@ -25546,14 +25585,14 @@ const r = hasil_tpKira__9;
             if (state.currentUser !== 'admin') return;
             const url = state.settings.scriptUrl; if (!url || !url.trim()) return;
             if (!paksa) {
-                try { const c = JSON.parse(sessionStorage.getItem('spp_sdl_arkib') || 'null'); if (c && Date.now() - c.t < 12 * 3600 * 1000) { _sdlArkib_ = c; return; } } catch (e) { }
+                try { const c = JSON.parse(sessionStorage.getItem('spp_sdl_arkib') || 'null'); if (c && Date.now() - c.t < 12 * 3600 * 1000) { _sdlArkib_ = c; return; } } catch (e) { ralatDiam_('sdlMuatArkib_', e); }
             }
             try {
                 const res = await fetch(`${url}?action=listArkibTahunan&token=${encodeURIComponent(state.sessionToken || '')}`);
                 const d = await res.json();
                 if (d.status !== 'success') return;
                 _sdlArkib_ = { t: Date.now(), ok: true, tahun: (d.senarai || []).map(function(x) { return x.tahun; }) };
-                try { sessionStorage.setItem('spp_sdl_arkib', JSON.stringify(_sdlArkib_)); } catch (e) { }
+                try { sessionStorage.setItem('spp_sdl_arkib', JSON.stringify(_sdlArkib_)); } catch (e) { ralatDiam_('sdlMuatArkib_', e); }
                 tpKemaskiniBadge_();
                 const tp = m2El_('tab-tindakan-perlu'); if (tp && !tp.classList.contains('hidden')) tpRender();
                 sdrPapar_();
@@ -25604,7 +25643,7 @@ const AUD_KUMPULAN_ = {
 // ---------- (3) LAPORAN RINGKAS: PERCUBAAN / KENAIKAN / PENURUNAN ----------
 
         // Muat status arkib tahunan selepas log masuk Admin (senyap)
-        setTimeout(function() { try { if (state.currentUser === 'admin') sdlMuatArkib_(); } catch (e) { } }, 6000);
+        setTimeout(function() { try { if (state.currentUser === 'admin') sdlMuatArkib_(); } catch (e) { ralatDiam_('audIsiPelaku_', e); } }, 6000);
         // =====================================================================
         //  MODUL 12 -- (2) Pulihkan daripada fail sandaran, (5) Jejak masa jawatan diperkaya,
         //  (7) Semakan sebelum Reset & Arkib Tahunan
@@ -25698,7 +25737,7 @@ const AUD_KUMPULAN_ = {
             const mohon = (state.permohonanPengawas || []).filter(function(m) { return m && (m.status || 'Menunggu') === 'Menunggu'; }).length;
             if (mohon) tambah('amaran', mohon + ' permohonan pengawas masih menunggu', 'Terima atau tolak dahulu.');
             let ralat = 0, amaranD = 0;
-            try { sgKumpul_().forEach(function(x) { if (x.tahap === 'ralat') ralat++; else amaranD++; }); } catch (e) { }
+            try { sgKumpul_().forEach(function(x) { if (x.tahap === 'ralat') ralat++; else amaranD++; }); } catch (e) { ralatDiam_('rsSemak_', e); }
             if (ralat) tambah('gagal', ralat + ' ralat data ditemui', 'Buka Semakan Sistem dan betulkan sebelum Reset.');
             else if (amaranD) tambah('amaran', amaranD + ' amaran data ganjil', 'Lihat Semakan Sistem.');
             else tambah('ok', 'Tiada data ganjil', '');
@@ -25724,7 +25763,7 @@ const AUD_KUMPULAN_ = {
                 <ul class="space-y-1.5 text-sm">${r.map(function(x) { return `<li class="flex gap-2"><i class="fas ${ikon[x.tahap][0]} ${ikon[x.tahap][1]} mt-0.5"></i><span><b class="text-slate-700">${m2Esc_(x.tajuk)}</b>${x.butir ? ' <span class="text-slate-500">&mdash; ' + m2Esc_(x.butir) + '</span>' : ''}</span></li>`; }).join('')}</ul>`;
         }
         async function rsSegarkan() {
-            try { await sdrSemak(true); await sdlMuatArkib_(true); } catch (e) { }
+            try { await sdrSemak(true); await sdlMuatArkib_(true); } catch (e) { ralatDiam_('rsSegarkan', e); }
             rsRender();
         }
 
@@ -26032,7 +26071,7 @@ eksPasangButang_();
             window.__MOD_LATIHAN__ = true;
             // 1) Bekukan semua simpanan & rangkaian SEBELUM menyentuh state (data sebenar dalam localStorage kekal utuh)
             window._bekukanSimpanTempatan = true;
-            try { Storage.prototype.setItem = function() { }; Storage.prototype.removeItem = function() { }; } catch (e) { }
+            try { Storage.prototype.setItem = function() { }; Storage.prototype.removeItem = function() { }; } catch (e) { ralatDiam_('mlMasuk', e); }
             window.fetch = function() { return Promise.resolve(new Response(JSON.stringify({ status: 'success', message: 'Mod Latihan: tiada data dihantar ke pelayan.' }), { status: 200 })); };
             // 2) Gantikan state dengan data contoh
             const d = mlBinaData_();
@@ -26054,7 +26093,7 @@ eksPasangButang_();
             s.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#b45309;color:#fff;font:700 12px system-ui,sans-serif;padding:6px 12px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap';
             s.innerHTML = '<span><i class="fas fa-graduation-cap"></i> MOD LATIHAN &mdash; data contoh sahaja, tiada apa dihantar ke pelayan</span><button type="button" onclick="mlKeluar()" style="background:#fff;color:#b45309;border-radius:8px;padding:2px 10px;font-weight:800">Keluar</button>';
             document.body.appendChild(s);
-            try { hideLoginViewWithTransition(false); } catch (e) { }
+            try { hideLoginViewWithTransition(false); } catch (e) { ralatDiam_('mlMasuk', e); }
             updateUIRoles(); switchTab('dashboard'); renderAll(); updateDashboard();
         }
         function mlKeluar() { window.onbeforeunload = null; window.removeEventListener('beforeunload', flushSimpanTempatan); location.reload(); }
@@ -26105,7 +26144,7 @@ eksPasangButang_();
         (function() {
             let _t = null;
             function jadual() { clearTimeout(_t); _t = setTimeout(function() { a11yPerbaiki_(document); }, 250); }
-            try { new MutationObserver(jadual).observe(document.body, { childList: true, subtree: true }); } catch (e) { }
+            try { new MutationObserver(jadual).observe(document.body, { childList: true, subtree: true }); } catch (e) { ralatDiam_('jadual', e); }
             document.addEventListener('DOMContentLoaded', jadual);
             jadual();
         })();
