@@ -32,7 +32,7 @@
          Excel (Sejarah Kehadiran, Rekod Kesalahan) -- lihat fungsi bertanda "IMPORT/EKSPORT". -->
     <!-- Chart.js TIDAK dimuat di sini lagi -- dimuat atas permintaan oleh muatSkripLuar_('chart'). Digunakan utk Carta Trend Antara Tahun (tab Reset Tahunan) --
          bandingkan statistik disiplin/kehadiran tahun semasa vs data arkib tahun lepas. -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -24005,7 +24005,7 @@ let e = hasil_jmEvent__14;
             }
             const bil = pending ? pending + ' perubahan' : 'Perubahan';
             const html = luar
-                ? `<i class="fas fa-wifi-slash"></i><span>Luar talian &mdash; ${tertunggak ? bil + ' disimpan pada peranti ini dan akan dihantar apabila ada sambungan.' : 'data baharu akan disimpan pada peranti ini.'}</span>`
+                ? `<i class="fas fa-plug-circle-xmark"></i><span>Luar talian &mdash; ${tertunggak ? bil + ' disimpan pada peranti ini dan akan dihantar apabila ada sambungan.' : 'data baharu akan disimpan pada peranti ini.'}</span>`
                 : `<i class="fas fa-triangle-exclamation"></i><span>${bil} belum berjaya dihantar ke pelayan.</span><button type="button" onclick="syncData('push')" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap">Hantar sekarang</button>`;
             if (el.getAttribute('data-h') !== html) { el.innerHTML = html; el.setAttribute('data-h', html); }
         }
