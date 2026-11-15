@@ -1050,6 +1050,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 <li id="nav-li-tetapan-soalan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-soalan')" id="nav-tetapan-soalan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-clipboard-question w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Soalan Kenaikan</div></li>
                 <li class="sidebar-sublabel super-admin-only sidebar-group-tetapan tetapan-subgroup-item pt-2 pb-0.5 px-3"><p class="text-[11px] font-semibold text-blue-300/60 pl-5">Sistem</p></li>
                 <li id="nav-li-tetapan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan')" id="nav-tetapan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-cog w-5 opacity-75 text-brand-yellow/80"></i> Tetapan & Segerak</div></li>
+                <li id="nav-li-tetapan-backend" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-backend')" id="nav-tetapan-backend" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-server w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Backend & Frontend</div></li>
                 <li id="nav-li-tetapan-akses" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-akses')" id="nav-tetapan-akses" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-5 opacity-75 text-brand-yellow/80"></i> Kebenaran Tab</div></li>
                 <li id="nav-li-log-aktiviti" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('log-aktiviti')" id="nav-log-aktiviti" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-history w-5 opacity-75 text-brand-yellow/80"></i> Log Aktiviti Sistem</div></li>
             </ul>
@@ -3838,35 +3839,6 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     <div id="tk-senarai" class="text-sm text-slate-400">Tekan &quot;Muat semula&quot;.</div>
                 </div>
 
-                <div id="ku-kad" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-emerald-500 mb-6">
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
-                        <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-gauge-high text-emerald-500"></i>Kuota &amp; Kesihatan Sistem</h3>
-                        <button onclick="kuMuat()" class="text-xs font-bold text-brand-blue hover:underline"><i class="fas fa-rotate mr-1"></i>Muat semula</button>
-                    </div>
-                    <p class="text-[11px] text-slate-500 mb-3">Baki kuota e-mel harian Apps Script, saiz pangkalan data, ruang Drive dan status sandaran, dengan amaran awal.</p>
-                    <div id="ku-isi" class="text-sm text-slate-400">Tekan &quot;Muat semula&quot;.</div>
-                </div>
-
-                <div id="ks-kad" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-indigo-500 mb-6">
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
-                        <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-code-compare text-indigo-500"></i>Versi &amp; Integriti Data</h3>
-                        <button onclick="ksMuat()" class="text-xs font-bold text-brand-blue hover:underline"><i class="fas fa-rotate mr-1"></i>Muat semula</button>
-                    </div>
-                    <p class="text-[11px] text-slate-500 mb-3">Pastikan frontend (GitHub) dan backend (Apps Script) sama versi selepas kemas kini, dan semak helaian Google Sheets tiada baris berganda. Semakan ini hanya membaca, tiada data diubah.</p>
-                    <div id="ks-versi" class="text-sm text-slate-700 mb-4"></div>
-                    <button id="ks-btn-konsistensi" onclick="ksSemakKonsistensi()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition disabled:opacity-60"><i class="fas fa-list-check"></i>Semak Konsistensi Helaian</button>
-                    <div id="ks-konsistensi" class="mt-3"></div>
-                </div>
-
-                <div id="rl-kad" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-orange-500 mb-6">
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
-                        <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-bug text-orange-500"></i>Ralat Pelayar Dilaporkan</h3>
-                        <button onclick="rlMuat()" class="text-xs font-bold text-brand-blue hover:underline"><i class="fas fa-rotate mr-1"></i>Muat semula</button>
-                    </div>
-                    <p class="text-[11px] text-slate-500 mb-3">Ralat JavaScript yang dialami pengguna (tanpa data peribadi; IC/e-mel ditapis). Dikumpulkan mengikut mesej yang sama.</p>
-                    <div id="rl-senarai" class="text-sm text-slate-400">Tekan &quot;Muat semula&quot;.</div>
-                </div>
-
                 <div id="lg-kad" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-red-500 mb-6">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
                         <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-user-lock text-red-500"></i>Log Masuk Gagal &amp; Akaun Dikunci</h3>
@@ -4260,15 +4232,6 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                             </label>
                             <button onclick="saveSettings('autopush')" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs active:scale-[0.98]">Simpan Tetapan Push Automatik</button>
                         </div>
-                        <div class="border-t border-slate-100 pt-4 mt-4">
-                            <h4 class="text-xs font-bold uppercase tracking-wider mb-1 text-slate-600"><i class="fas fa-shield-alt mr-1"></i>Sandaran Data</h4>
-                            <div id="sdr-status" class="admin-only-block"></div>
-                            <p class="text-[11px] text-slate-500 mb-2.5">Simpan salinan pangkalan data semasa ke Google Drive sebagai jaring keselamatan. Sistem juga automatik buat sandaran setiap minggu jika telah ditetapkan (lihat Code.gs).</p>
-                            <div class="flex gap-2">
-                                <button onclick="handleBackupSekarang()" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs active:scale-[0.98]"><i class="fas fa-shield-alt mr-1"></i>Backup Sekarang</button>
-                                <button onclick="openSenaraiSandaranModal()" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs active:scale-[0.98] admin-only-block"><i class="fas fa-history mr-1"></i>Senarai Sandaran</button>
-                            </div>
-                        </div>
                         <div class="border-t border-slate-100 pt-4 mt-4 admin-only-block">
                             <h4 class="text-xs font-bold uppercase tracking-wider mb-1 text-slate-600"><i class="fas fa-file-excel mr-1"></i>Templat &amp; Import Tetapan (Excel)</h4>
                             <p class="text-[11px] text-slate-500 mb-2.5">Muat turun templat Excel (mengandungi data semasa), tambah baris baharu untuk jawatan, kelas, lokasi bertugas, minggu dan guru, kemudian import semula. Import hanya <b>menambah</b> data yang belum ada &mdash; tiada data dipadam.</p>
@@ -4299,45 +4262,95 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         </div>
                     </div>
 
-                    <!-- Status Sistem (Health Check) -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 admin-only-block md:col-span-2">
-                        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
-                            <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-heart-pulse text-rose-500"></i>Status Sistem (Health Check)</h3>
-                            <button onclick="refreshHealthCheck()" class="text-xs font-bold text-brand-blue hover:text-blue-800 flex items-center gap-1"><i class="fas fa-rotate"></i> Semak Semula</button>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
-                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                                <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Sync Terakhir</p>
-                                <p id="hc-last-sync" class="text-sm font-bold text-slate-800">-</p>
-                            </div>
-                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                                <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Sambungan Apps Script</p>
-                                <p id="hc-connection" class="text-sm font-bold text-slate-400"><i class="fas fa-spinner fa-spin"></i> Menyemak...</p>
-                            </div>
-                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                                <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Rekod Belum Disegerakkan</p>
-                                <p id="hc-pending" class="text-sm font-bold text-slate-800">-</p>
-                            </div>
-                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                                <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Kegagalan Berturut-turut</p>
-                                <p id="hc-fail-streak" class="text-sm font-bold text-slate-800">-</p>
-                            </div>
-                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                                <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Saiz Pangkalan Data</p>
-                                <p id="hc-saiz-db" class="text-sm font-bold text-slate-800">-</p>
-                            </div>
-                        </div>
-                        <div id="hc-saiz-db-amaran" class="hidden text-xs rounded-xl p-3 mb-4"></div>
-                        <div>
-                            <h4 class="text-xs font-bold uppercase tracking-wider mb-2 text-slate-600">Log Ralat Terkini (10 Terakhir)</h4>
-                            <div id="hc-error-log" class="border border-slate-100 rounded-xl overflow-hidden max-h-48 overflow-y-auto"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <!-- TAB: Tetapan Kelas -->
             <!-- TAB: Tetapan Akses Tab (RBAC boleh dikonfigurasi oleh Admin) -->
+            <div id="tab-tetapan-backend" class="tab-content hidden">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Tetapan Backend &amp; Frontend</h2>
+                        <p class="text-xs text-slate-500 mt-1">Kesihatan sambungan, versi, sandaran, kuota dan ralat sistem. URL Apps Script dan penyegerakan Push/Pull kekal di tab Tetapan &amp; Segerak.</p>
+                    </div>
+                </div>
+
+                <div id="ks-kad" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-indigo-500 mb-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                        <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-code-compare text-indigo-500"></i>Versi &amp; Integriti Data</h3>
+                        <button onclick="ksMuat()" class="text-xs font-bold text-brand-blue hover:underline"><i class="fas fa-rotate mr-1"></i>Muat semula</button>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mb-3">Pastikan frontend (GitHub) dan backend (Apps Script) sama versi selepas kemas kini, dan semak helaian Google Sheets tiada baris berganda. Semakan ini hanya membaca, tiada data diubah.</p>
+                    <div id="ks-versi" class="text-sm text-slate-700 mb-4"></div>
+                    <button id="ks-btn-konsistensi" onclick="ksSemakKonsistensi()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition disabled:opacity-60"><i class="fas fa-list-check"></i>Semak Konsistensi Helaian</button>
+                    <div id="ks-konsistensi" class="mt-3"></div>
+                </div>
+
+                <!-- Status Sistem (Health Check) -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 admin-only-block mb-6">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
+                        <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-heart-pulse text-rose-500"></i>Status Sistem (Health Check)</h3>
+                        <button onclick="refreshHealthCheck()" class="text-xs font-bold text-brand-blue hover:text-blue-800 flex items-center gap-1"><i class="fas fa-rotate"></i> Semak Semula</button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Sync Terakhir</p>
+                            <p id="hc-last-sync" class="text-sm font-bold text-slate-800">-</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Sambungan Apps Script</p>
+                            <p id="hc-connection" class="text-sm font-bold text-slate-400"><i class="fas fa-spinner fa-spin"></i> Menyemak...</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Rekod Belum Disegerakkan</p>
+                            <p id="hc-pending" class="text-sm font-bold text-slate-800">-</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Kegagalan Berturut-turut</p>
+                            <p id="hc-fail-streak" class="text-sm font-bold text-slate-800">-</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Saiz Pangkalan Data</p>
+                            <p id="hc-saiz-db" class="text-sm font-bold text-slate-800">-</p>
+                        </div>
+                    </div>
+                    <div id="hc-saiz-db-amaran" class="hidden text-xs rounded-xl p-3 mb-4"></div>
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider mb-2 text-slate-600">Log Ralat Terkini (10 Terakhir)</h4>
+                        <div id="hc-error-log" class="border border-slate-100 rounded-xl overflow-hidden max-h-48 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                <div id="ku-kad" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-emerald-500 mb-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                        <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-gauge-high text-emerald-500"></i>Kuota &amp; Kesihatan Sistem</h3>
+                        <button onclick="kuMuat()" class="text-xs font-bold text-brand-blue hover:underline"><i class="fas fa-rotate mr-1"></i>Muat semula</button>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mb-3">Baki kuota e-mel harian Apps Script, saiz pangkalan data, ruang Drive dan status sandaran, dengan amaran awal.</p>
+                    <div id="ku-isi" class="text-sm text-slate-400">Tekan &quot;Muat semula&quot;.</div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 admin-only-block mb-6">
+                    <h3 class="font-bold text-base text-slate-800 mb-3 border-b border-slate-100 pb-2 flex items-center gap-2"><i class="fas fa-shield-alt text-amber-500"></i>Sandaran Data</h3>
+                    <div>
+                                                <div id="sdr-status" class="admin-only-block"></div>
+                        <p class="text-[11px] text-slate-500 mb-2.5">Simpan salinan pangkalan data semasa ke Google Drive sebagai jaring keselamatan. Sistem juga automatik buat sandaran setiap minggu jika telah ditetapkan (lihat Code.gs).</p>
+                        <div class="flex gap-2">
+                            <button onclick="handleBackupSekarang()" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs active:scale-[0.98]"><i class="fas fa-shield-alt mr-1"></i>Backup Sekarang</button>
+                            <button onclick="openSenaraiSandaranModal()" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs active:scale-[0.98] admin-only-block"><i class="fas fa-history mr-1"></i>Senarai Sandaran</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="rl-kad" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-orange-500 mb-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                        <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-bug text-orange-500"></i>Ralat Pelayar Dilaporkan</h3>
+                        <button onclick="rlMuat()" class="text-xs font-bold text-brand-blue hover:underline"><i class="fas fa-rotate mr-1"></i>Muat semula</button>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mb-3">Ralat JavaScript yang dialami pengguna (tanpa data peribadi; IC/e-mel ditapis). Dikumpulkan mengikut mesej yang sama.</p>
+                    <div id="rl-senarai" class="text-sm text-slate-400">Tekan &quot;Muat semula&quot;.</div>
+                </div>
+            </div>
             <div id="tab-tetapan-akses" class="tab-content hidden">
                 <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b-2 border-brand-yellow pb-2">
                     <div>
@@ -7507,7 +7520,7 @@ asal_ambilLogAktivitiTertapis__12: {
         //  toggleSidebarPin() supaya konsisten dgn seluruh sistem.
         // =========================================================================
         const TETAPAN_GROUP_EXPANDED_KEY = 'sppSmkjdTetapanGroupExpandedV1';
-        const TETAPAN_GROUP_TAB_IDS = ['tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'tetapan-minggu', 'tetapan-kalendar', 'tetapan-soalan', 'log-aktiviti'];
+        const TETAPAN_GROUP_TAB_IDS = ['tetapan', 'tetapan-backend', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'tetapan-minggu', 'tetapan-kalendar', 'tetapan-soalan', 'log-aktiviti'];
 
         function setTetapanSidebarGroupExpanded(expanded) {
             document.querySelectorAll('.tetapan-subgroup-item').forEach(li => {
@@ -9377,7 +9390,7 @@ asal_updateUIRoles_6: {
             let jawatan = '';
 
             // Hide all tab elements in sidebar first
-            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'kewangan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'dokumen-rasmi', 'pengumuman', 'laporan-ringkas', 'semakan-sistem', 'tetapan', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'tetapan-kalendar', 'tetapan-soalan', 'tindakan-perlu', 'borang-kenaikan', 'borang-saya', 'log-aktiviti'];
+            const navTabs = ['dashboard', 'pendaftaran', 'permohonan-pengawas', 'perjanjian', 'kehadiran', 'sejarah-kehadiran', 'kesalahan', 'surat', 'tunjuk-sebab', 'kemenjadian', 'penilaian-prestasi', 'profil-disiplin', 'rehat', 'perhimpunan', 'bilik-disiplin', 'minit', 'laporan', 'sejarah-laporan', 'kewangan', 'guru', 'akses-pengawas', 'arkib', 'carta-organisasi-lengkap', 'dokumen-rasmi', 'pengumuman', 'laporan-ringkas', 'semakan-sistem', 'tetapan', 'tetapan-backend', 'tetapan-akses', 'tetapan-jawatan', 'tetapan-bidang-tugas', 'tetapan-lokasi', 'tetapan-kelas', 'reset-tahunan', 'tetapan-minggu', 'tetapan-kalendar', 'tetapan-soalan', 'tindakan-perlu', 'borang-kenaikan', 'borang-saya', 'log-aktiviti'];
             navTabs.forEach(nav => {
                 const el = document.getElementById(`nav-li-${nav}`);
                 if (el) el.style.display = 'none';
@@ -9619,7 +9632,7 @@ asal_switchTab_21: {
                 renderYuranTable();
                 renderPenyataKewangan();
             }
-            if (tabId === 'tetapan') {
+            if (tabId === 'tetapan-backend') {
                 refreshHealthCheck();
             }
             if (tabId === 'perjanjian') {
@@ -9712,7 +9725,7 @@ asal_switchTab_21: {
                     if (tabId === 'dokumen-rasmi') dokInit_();
                     else if (tabId === 'pengumuman') { pgmCatatSblm_(); pgmRender(); pgmTandaDilihat_(); }
                     else if (tabId === 'laporan-ringkas') lrInit_();
-                    else if (tabId === 'semakan-sistem') { sqRender(); try { lgMuat(); tfaMuat(); tkMuat(); kuMuat(); ksMuat(); rlMuat(); } catch (e) { ralatDiam_('switchTab', e); } }
+                    else if (tabId === 'semakan-sistem') { sqRender(); try { lgMuat(); tfaMuat(); tkMuat(); } catch (e) { ralatDiam_('switchTab', e); } }
                     else if (tabId === 'tetapan-kalendar') kalRender();
                     else if (tabId === 'tetapan-soalan') sqkRender();
                     else if (tabId === 'borang-kenaikan') bkRender();
@@ -9720,7 +9733,7 @@ asal_switchTab_21: {
                     else if (tabId === 'tindakan-perlu') tpRender();
                     else if (tabId === 'reset-tahunan') rsRender();
                     else if (tabId === 'penilaian-prestasi') rpRender();
-                    else if (tabId === 'tetapan') { sdrPapar_(); sdrSemak(false); }
+                    else if (tabId === 'tetapan-backend') { sdrPapar_(); sdrSemak(false); try { kuMuat(); ksMuat(); rlMuat(); } catch (e) { ralatDiam_('switchTab', e); } }
                 } catch (e) { console.warn('Cangkuk tab gagal:', e); }
                 return r;
             }
@@ -26255,7 +26268,7 @@ eksPasangButang_();
         function ksBinaItem_(d) {
             const items = [];
             (d.amaran || []).forEach(function(a) {
-                items.push({ tahap: a.aras === 'kritikal' ? 2 : 3, tajuk: a.aras === 'kritikal' ? 'Amaran sistem (kritikal)' : 'Amaran sistem', butir: a.teks, aksi: [{ label: 'Semakan Sistem', js: "tpAksi('tab','semakan-sistem')" }] });
+                items.push({ tahap: a.aras === 'kritikal' ? 2 : 3, tajuk: a.aras === 'kritikal' ? 'Amaran sistem (kritikal)' : 'Amaran sistem', butir: a.teks, aksi: [{ label: 'Tetapan Backend & Frontend', js: "tpAksi('tab','tetapan-backend')" }] });
             });
             if (!d.versiBackend) {
                 items.push({ tahap: 2, tajuk: 'Backend belum dikemas kini', butir: 'Frontend versi ' + VERSI_FRONTEND_ + ', tetapi backend (Apps Script) belum menyokong semakan versi. Pasang Code_GS.txt terkini (Deploy > Manage deployments > Edit > New version).', aksi: [] });
