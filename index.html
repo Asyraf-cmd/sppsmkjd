@@ -472,6 +472,10 @@ html[data-saiz="lebih"]{font-size:20px}
 .sync-pill.sp-tunggu{color:#92400e;background:#fffbeb;border-color:#fcd34d}
 .sync-pill.sp-tunggu .sp-dot,.sync-pill.sp-salah .sp-dot,.sync-pill.sp-proses .sp-dot{animation:spDenyut 1.4s ease-in-out infinite}
 .sync-pill.sp-luar{color:#475569;background:#f1f5f9;border-color:#cbd5e1}
+.sync-kad.sync-ringkas{padding:.5rem .875rem;margin-bottom:1rem;gap:.5rem}
+.sync-kad.sync-ringkas .sync-ikon{display:none}
+.sync-kad.sync-ringkas h4{font-size:.8125rem}
+.sync-kad.sync-ringkas button{padding:.375rem .75rem}
 .sync-pill.sp-salah{color:#b91c1c;background:#fef2f2;border-color:#fecaca}
 .sync-pill.sp-proses{color:#1d4ed8;background:#eff6ff;border-color:#bfdbfe}
 @keyframes spDenyut{50%{opacity:.35;transform:scale(.8)}}
@@ -860,7 +864,13 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     <div class="flex justify-center gap-2">
                         <button type="button" onclick="mlMasuk('admin')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">Admin</button>
                         <button type="button" onclick="mlMasuk('guru')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">Guru</button>
-                        <button type="button" onclick="mlMasuk('prefect')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">Pengawas</button>
+                    </div>
+                    <div class="flex justify-center gap-2 mt-2 flex-wrap">
+                        <select id="ml-jawatan" aria-label="Jawatan pengawas / AJK" class="px-2 py-1.5 rounded-lg bg-slate-100 font-bold text-slate-700 text-xs max-w-[14rem]">
+                            <option>Ketua Pengawas</option><option>Penolong Ketua Pengawas 1</option><option>Penolong Ketua Pengawas 2</option><option>Setiausaha</option><option>AJK Disiplin</option><option>AJK Blok</option><option>AJK Maklumat</option><option>AJK Peralatan</option><option>AJK Spotcheck</option><option>AJK Perhimpunan / Arena</option><option>Pengawas Biasa</option><option>Pengawas Percubaan</option>
+                        </select>
+                        <select id="ml-sesi" aria-label="Sesi" class="px-2 py-1.5 rounded-lg bg-slate-100 font-bold text-slate-700 text-xs"><option>Petang</option><option>Pagi</option></select>
+                        <button type="button" onclick="mlMasuk('prefect', document.getElementById('ml-jawatan').value, document.getElementById('ml-sesi').value)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">Pengawas / AJK</button>
                     </div>
                 </details>
             </div>
@@ -923,7 +933,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
 
                 <!-- Divider 1a: Pengurusan Pengawas (kitaran hidup pengawas) -->
                 <li class="pt-3 pb-1 px-3">
-                    <p id="divider-pendaftaran-akaun" onclick="toggleSidebarGroup('pendaftaran-akaun')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
+                    <p id="divider-pendaftaran-akaun" onclick="toggleSidebarGroup('pendaftaran-akaun')" class="text-[10px] font-black uppercase tracking-widest text-blue-200/85 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
                         <span class="flex-1 h-px bg-blue-800"></span>
                         Pengurusan Pengawas
                         <i id="chevron-pendaftaran-akaun" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
@@ -942,7 +952,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
 
                 <!-- Divider 1b: Operasi & Tugasan Harian -->
                 <li class="pt-3 pb-1 px-3">
-                    <p id="divider-operasi-harian" onclick="toggleSidebarGroup('operasi-harian')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
+                    <p id="divider-operasi-harian" onclick="toggleSidebarGroup('operasi-harian')" class="text-[10px] font-black uppercase tracking-widest text-blue-200/85 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
                         <span class="flex-1 h-px bg-blue-800"></span>
                         Operasi &amp; Tugasan Harian
                         <i id="chevron-operasi-harian" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
@@ -958,7 +968,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
 
                 <!-- Divider 1c: Disiplin & Tindakan -->
                 <li class="pt-3 pb-1 px-3">
-                    <p id="divider-disiplin" onclick="toggleSidebarGroup('disiplin')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
+                    <p id="divider-disiplin" onclick="toggleSidebarGroup('disiplin')" class="text-[10px] font-black uppercase tracking-widest text-blue-200/85 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
                         <span class="flex-1 h-px bg-blue-800"></span>
                         Disiplin &amp; Tindakan
                         <i id="chevron-disiplin" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
@@ -973,7 +983,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
 
                 <!-- Divider 1d: Pencapaian & Prestasi -->
                 <li class="pt-3 pb-1 px-3">
-                    <p id="divider-pencapaian" onclick="toggleSidebarGroup('pencapaian')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
+                    <p id="divider-pencapaian" onclick="toggleSidebarGroup('pencapaian')" class="text-[10px] font-black uppercase tracking-widest text-blue-200/85 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
                         <span class="flex-1 h-px bg-blue-800"></span>
                         Pencapaian &amp; Prestasi
                         <i id="chevron-pencapaian" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
@@ -986,7 +996,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
 
                 <!-- Divider 1e: Mesyuarat & Laporan -->
                 <li class="pt-3 pb-1 px-3">
-                    <p id="divider-mesyuarat-laporan" onclick="toggleSidebarGroup('mesyuarat-laporan')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
+                    <p id="divider-mesyuarat-laporan" onclick="toggleSidebarGroup('mesyuarat-laporan')" class="text-[10px] font-black uppercase tracking-widest text-blue-200/85 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
                         <span class="flex-1 h-px bg-blue-800"></span>
                         Mesyuarat &amp; Laporan
                         <i id="chevron-mesyuarat-laporan" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
@@ -1002,7 +1012,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
 
                 <!-- Divider: Pentadbiran (Kewangan & Guru) -->
                 <li class="pt-3 pb-1 px-3">
-                    <p id="divider-kewangan" onclick="toggleSidebarGroup('kewangan')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
+                    <p id="divider-kewangan" onclick="toggleSidebarGroup('kewangan')" class="text-[10px] font-black uppercase tracking-widest text-blue-200/85 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
                         <span class="flex-1 h-px bg-blue-800"></span>
                         Pentadbiran
                         <i id="chevron-kewangan" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
@@ -1016,7 +1026,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
 
                 <!-- Divider 3: Tetapan Sistem -->
                 <li class="pt-3 pb-1 px-3 super-admin-only">
-                    <p id="divider-tetapan" onclick="toggleSidebarGroup('tetapan')" class="text-[9px] font-black uppercase tracking-widest text-blue-300/60 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
+                    <p id="divider-tetapan" onclick="toggleSidebarGroup('tetapan')" class="text-[10px] font-black uppercase tracking-widest text-blue-200/85 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
                         <span class="flex-1 h-px bg-blue-800"></span>
                         Tetapan Sistem
                         <i id="chevron-tetapan" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
@@ -1099,9 +1109,9 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 <div id="dash-pengumuman-wrap" class="hidden mb-6"></div>
                 <div id="dash-berisiko-wrap" class="hidden mb-6"></div>
                 
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm">
+                <div id="dash-sync-kad" class="sync-kad bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm">
                     <div class="flex items-center gap-4">
-                        <div class="relative p-3 bg-white text-brand-blue rounded-xl flex items-center justify-center shadow-sm border border-blue-100">
+                        <div class="sync-ikon relative p-3 bg-white text-brand-blue rounded-xl flex items-center justify-center shadow-sm border border-blue-100">
                             <i class="fas fa-sync-alt text-xl animate-spin-slow"></i>
                             <!-- Ikon Status Sync (titik warna): hijau = selari, kuning = ada perubahan
                                  belum push, merah = belum pernah sync -- dikemaskini oleh updateDashboard(). -->
@@ -1113,11 +1123,11 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         </div>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                        <button id="dash-sync-pull" onclick="syncData('pull')" class="flex-1 sm:flex-initial bg-brand-blue hover:bg-blue-850 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition shadow-md shadow-blue-900/10 active:scale-95">
-                            <i class="fas fa-cloud-download-alt"></i> Muat Turun (Pull)
+                        <button id="dash-sync-pull" title="Ambil data terkini dari Google Sheets (Muat Turun / Pull)" onclick="syncData('pull')" class="flex-1 sm:flex-initial bg-brand-blue hover:bg-blue-850 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition shadow-md shadow-blue-900/10 active:scale-95">
+                            <i class="fas fa-cloud-download-alt"></i> Ambil Data Terkini
                         </button>
-                        <button id="dash-sync-push" onclick="syncData('push')" class="flex-1 sm:flex-initial bg-brand-green hover:bg-green-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition shadow-md shadow-green-900/10 active:scale-95">
-                            <i class="fas fa-cloud-upload-alt"></i> Muat Naik (Push)
+                        <button id="dash-sync-push" title="Hantar perubahan anda ke Google Sheets (Muat Naik / Push)" onclick="syncData('push')" class="flex-1 sm:flex-initial bg-brand-green hover:bg-green-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition shadow-md shadow-green-900/10 active:scale-95">
+                            <i class="fas fa-cloud-upload-alt"></i> Hantar Data
                         </button>
                     </div>
                 </div>
@@ -3837,6 +3847,17 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     <div id="ku-isi" class="text-sm text-slate-400">Tekan &quot;Muat semula&quot;.</div>
                 </div>
 
+                <div id="ks-kad" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-indigo-500 mb-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                        <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-code-compare text-indigo-500"></i>Versi &amp; Integriti Data</h3>
+                        <button onclick="ksMuat()" class="text-xs font-bold text-brand-blue hover:underline"><i class="fas fa-rotate mr-1"></i>Muat semula</button>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mb-3">Pastikan frontend (GitHub) dan backend (Apps Script) sama versi selepas kemas kini, dan semak helaian Google Sheets tiada baris berganda. Semakan ini hanya membaca, tiada data diubah.</p>
+                    <div id="ks-versi" class="text-sm text-slate-700 mb-4"></div>
+                    <button id="ks-btn-konsistensi" onclick="ksSemakKonsistensi()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition disabled:opacity-60"><i class="fas fa-list-check"></i>Semak Konsistensi Helaian</button>
+                    <div id="ks-konsistensi" class="mt-3"></div>
+                </div>
+
                 <div id="rl-kad" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-orange-500 mb-6">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
                         <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-bug text-orange-500"></i>Ralat Pelayar Dilaporkan</h3>
@@ -4225,8 +4246,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         <div class="border-t border-slate-100 pt-4">
                             <h4 class="text-xs font-bold uppercase tracking-wider mb-2.5 text-slate-600">Penyegerakan Manual (Google Sheets)</h4>
                             <div class="flex gap-2">
-                                <button onclick="syncData('pull')" class="flex-1 bg-brand-blue text-white py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-blue-800 transition active:scale-[0.98] shadow-sm"><i class="fas fa-cloud-download-alt mr-1"></i>Muat Turun (Pull)</button>
-                                <button onclick="syncData('push')" class="flex-1 bg-brand-green text-white py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-green-700 transition active:scale-[0.98] shadow-sm"><i class="fas fa-cloud-upload-alt mr-1"></i>Muat Naik (Push)</button>
+                                <button onclick="syncData('pull')" class="flex-1 bg-brand-blue text-white py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-blue-800 transition active:scale-[0.98] shadow-sm"><i class="fas fa-cloud-download-alt mr-1"></i>Ambil Data Terkini (Pull)</button>
+                                <button onclick="syncData('push')" class="flex-1 bg-brand-green text-white py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-green-700 transition active:scale-[0.98] shadow-sm"><i class="fas fa-cloud-upload-alt mr-1"></i>Hantar Data (Push)</button>
                             </div>
                             <button onclick="saveSettings('script')" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs mt-3 active:scale-[0.98]">Simpan Pautan API</button>
                         </div>
@@ -9230,26 +9251,57 @@ asal_applySyncedState_16: {
         const SIDEBAR_GROUP_STORAGE_KEY = 'spp_smkjd_sidebar_groups';
         const SIDEBAR_GROUPS = ['pendaftaran-akaun', 'operasi-harian', 'disiplin', 'pencapaian', 'mesyuarat-laporan', 'kewangan', 'tetapan'];
 
+        let _sidebarGroupMem_ = null; // salinan dalam memori: kekal betul walau localStorage disekat (cth. Mod Latihan)
         function getSidebarGroupState() {
+            if (_sidebarGroupMem_) return _sidebarGroupMem_;
+            let hasil = null;
             try {
                 const saved = localStorage.getItem(SIDEBAR_GROUP_STORAGE_KEY);
-                return saved ? JSON.parse(saved) : {};
-            } catch (e) {
-                return {};
+                if (saved) hasil = JSON.parse(saved);
+            } catch (e) { hasil = null; }
+            if (!hasil) {
+                // Kali pertama: ringkaskan menu panjang Admin/Guru (kumpulan jarang digunakan dilipat);
+                // pengawas tidak terjejas kerana senarai tab mereka sudah pendek.
+                const u = (typeof state !== 'undefined') ? state.currentUser : '';
+                if (!u) return {}; // belum log masuk: jangan kunci keadaan lalai lagi
+                hasil = (u === 'admin' || u === 'guru') ? { 'pencapaian': true, 'mesyuarat-laporan': true, 'kewangan': true, 'tetapan': true } : {};
             }
+            _sidebarGroupMem_ = hasil;
+            return hasil;
+        }
+        function simpanSidebarGroupState_(groupState) {
+            _sidebarGroupMem_ = groupState;
+            try { localStorage.setItem(SIDEBAR_GROUP_STORAGE_KEY, JSON.stringify(groupState)); } catch (e) { /* storan disekat -- kekal dalam memori */ }
         }
 
         function toggleSidebarGroup(namaKumpulan) {
             const groupState = getSidebarGroupState();
             const kiniTertutup = !!groupState[namaKumpulan];
             groupState[namaKumpulan] = !kiniTertutup; // togol
-            localStorage.setItem(SIDEBAR_GROUP_STORAGE_KEY, JSON.stringify(groupState));
+            simpanSidebarGroupState_(groupState);
             applySidebarGroupState();
         }
 
         // Sapukan status lipat/kembang tersimpan kepada sidebar -- dipanggil semasa mula (window.onload)
         // dan setiap kali togol berlaku. Diasingkan daripada kebenaran peranan (admin-or-guru dsb.),
         // supaya kedua-dua tapisan boleh berfungsi serentak tanpa berlanggar.
+        // Buka kumpulan yang mengandungi tab aktif supaya pengguna tidak 'kehilangan' tab yang sedang dibuka.
+        function bukaKumpulanUntukTab_(tabId) {
+            try {
+                const li = document.getElementById('nav-li-' + tabId);
+                if (!li) return;
+                const groupState = getSidebarGroupState();
+                let berubah = false;
+                SIDEBAR_GROUPS.forEach(nama => {
+                    if (li.classList.contains('sidebar-group-' + nama) && groupState[nama]) { groupState[nama] = false; berubah = true; }
+                });
+                if (berubah) {
+                    simpanSidebarGroupState_(groupState);
+                    applySidebarGroupState();
+                }
+            } catch (e) { ralatDiam_('bukaKumpulanUntukTab_', e); }
+        }
+
         function applySidebarGroupState() {
             const groupState = getSidebarGroupState();
             SIDEBAR_GROUPS.forEach(nama => {
@@ -9413,7 +9465,7 @@ asal_updateUIRoles_6: {
 
                 if (prefObj) {
                     jawatan = prefObj.jawatan;
-                    roleText = `${escapeHtml(prefObj.nama)} <span class="text-amber-600">(${escapeHtml(jawatan)})</span>`;
+                    roleText = `${escapeHtml(prefObj.nama)} <span class="text-amber-600">(${escapeHtml(String(jawatan || '').replace(/\s*\(Sesi\s*(Pagi|Petang)\)\s*$/i, ' \u2013 Sesi $1'))})</span>`;
                 } else {
                     jawatan = 'Pengawas Biasa';
                     roleText = 'Pengawas Sekolah';
@@ -9512,6 +9564,7 @@ const r = hasil_updateUIRoles_5; try { tpKemaskiniBadge_(); } catch (e) { ralatD
                     showCustomAlert('Anda tidak mempunyai akses ke halaman ini.', 'error');
                     tabId = 'dashboard'; arguments[0] = tabId;
                 }
+                bukaKumpulanUntukTab_(tabId);
                 let r;
 asal_switchTab_21: {
             if (tabId === 'kewangan' && state.currentUser === 'prefect') { showCustomAlert("Modul Kewangan hanya boleh diakses oleh akaun Guru.", "error"); { break asal_switchTab_21; } }
@@ -9659,7 +9712,7 @@ asal_switchTab_21: {
                     if (tabId === 'dokumen-rasmi') dokInit_();
                     else if (tabId === 'pengumuman') { pgmCatatSblm_(); pgmRender(); pgmTandaDilihat_(); }
                     else if (tabId === 'laporan-ringkas') lrInit_();
-                    else if (tabId === 'semakan-sistem') { sqRender(); try { lgMuat(); tfaMuat(); tkMuat(); kuMuat(); rlMuat(); } catch (e) { ralatDiam_('switchTab', e); } }
+                    else if (tabId === 'semakan-sistem') { sqRender(); try { lgMuat(); tfaMuat(); tkMuat(); kuMuat(); ksMuat(); rlMuat(); } catch (e) { ralatDiam_('switchTab', e); } }
                     else if (tabId === 'tetapan-kalendar') kalRender();
                     else if (tabId === 'tetapan-soalan') sqkRender();
                     else if (tabId === 'borang-kenaikan') bkRender();
@@ -9880,7 +9933,7 @@ asal_switchTab_21: {
                 if (dotEl) {
                     dotEl.classList.remove('bg-slate-300', 'bg-red-500', 'bg-amber-400', 'bg-brand-green', 'sync-dot-pulse');
                     if (belumPernahSync && adaDataTempatan) {
-                        dotEl.classList.add('bg-red-500', 'sync-dot-pulse');
+                        dotEl.classList.add('bg-amber-400', 'sync-dot-pulse');
                         dotEl.title = 'Belum pernah disegerakkan ke Google Sheets';
                     } else if (perluFull || jumlahPending > 0) {
                         dotEl.classList.add('bg-amber-400', 'sync-dot-pulse');
@@ -9894,6 +9947,8 @@ asal_switchTab_21: {
                     }
                 }
 
+                const kadSyncEl_ = document.getElementById('dash-sync-kad');
+                if (kadSyncEl_) kadSyncEl_.classList.toggle('sync-ringkas', !!state.settings.lastSync && !perluFull && jumlahPending === 0);
                 let statusTambahan = '';
                 if (perluFull) {
                     statusTambahan = ` <span class="text-amber-600 font-semibold">(Ada suntingan/padaman belum disegerakkan -- akan cuba dihantar automatik bila sambungan internet online, atau tekan Push)</span>`;
@@ -9904,7 +9959,7 @@ asal_switchTab_21: {
                 if (belumPernahSync && adaDataTempatan && state.currentUser === 'admin') {
                     // Amaran khas: data wujud di peranti ini tapi belum PERNAH disegerakkan ke Google Sheets --
                     // ini bermakna RAW_DATABASE di Sheets kekal kosong sehingga Push kali pertama dibuat.
-                    syncStatusEl.innerHTML = `<span class="text-red-600 font-semibold"><i class="fas fa-triangle-exclamation mr-1"></i>Data belum pernah disegerakkan ke Google Sheets. Sila log masuk sebagai Admin, buka tab "Tetapan &amp; Segerak", dan tekan butang <b>PUSH (Muat Naik)</b> untuk mengisikan pangkalan data buat kali pertama.</span>`;
+                    syncStatusEl.innerHTML = `<span class="text-red-600 font-semibold"><i class="fas fa-triangle-exclamation mr-1"></i>Data belum pernah disegerakkan ke Google Sheets. Sila log masuk sebagai Admin, buka tab "Tetapan &amp; Segerak", dan tekan butang <b>Hantar Data (Push)</b> untuk mengisikan pangkalan data buat kali pertama.</span>`;
                 } else if (state.settings.lastSync) {
                     syncStatusEl.innerHTML = `Penyegerakan Terakhir: <b class="text-brand-green font-semibold">${escapeHtml(state.settings.lastSync)}</b> (Google Sheets & Peranti Selari).${statusTambahan}`;
                 } else {
@@ -13834,7 +13889,7 @@ asal_getProfilDisiplinPrintHTML_25: {
             markUnsynced();
             renderAll();
             hideForm('form-akses-pengawas');
-            showCustomAlert("Akses Log Masuk Pengawas berjaya disimpan! Sila lakukan 'Muat Naik (Push)' untuk mengemaskini Google Sheets.", "success");
+            showCustomAlert("Akses Log Masuk Pengawas berjaya disimpan! Sila lakukan 'Hantar Data' untuk mengemaskini Google Sheets.", "success");
         }
 
         function editAksesPengawas(id) {
@@ -16018,7 +16073,7 @@ const r = hasil_loadKehadiranForm_23;
                     saveStateToLocal();
                     markUnsynced();
                     renderAll();
-                    showCustomAlert(`${jumlahDibaiki} pautan rujukan surat berjaya dibaiki. Sila tekan 'Muat Naik (Push)' untuk menyegerakkan pembaikan ini ke Google Sheets.`, "success");
+                    showCustomAlert(`${jumlahDibaiki} pautan rujukan surat berjaya dibaiki. Sila tekan 'Hantar Data' untuk menyegerakkan pembaikan ini ke Google Sheets.`, "success");
                 }
             );
         }
@@ -21551,7 +21606,7 @@ asal_renderPenilaianPrestasiHistory_22: {
             } else if (typeof _pushSedangBerjalan !== 'undefined' && _pushSedangBerjalan) {
                 kelas = 'sp-proses'; teks = 'Menyegerak…'; tajuk = 'Sedang menghantar data ke Google Sheets.';
             } else if (!state.settings.lastSync && adaData) {
-                kelas = 'sp-salah'; teks = 'Belum pernah disegerak'; tajuk = 'Data belum pernah dihantar ke Google Sheets. Klik untuk hantar.';
+                kelas = 'sp-tunggu'; teks = 'Belum disegerak'; tajuk = 'Data belum pernah dihantar ke Google Sheets. Klik untuk hantar.';
             } else if (tertunggak) {
                 kelas = 'sp-tunggu'; teks = (pending ? pending + ' perubahan' : 'Perubahan') + ' belum dihantar'; tajuk = 'Klik untuk hantar perubahan ke Google Sheets sekarang.';
             } else {
@@ -25274,6 +25329,7 @@ const r = hasil_tpKira__9;
                     if (umur > SDL_HARI_AMARAN_) r.push({ tahap: 3, tajuk: 'Sandaran ke komputer sudah lama', butir: t ? 'Terakhir dimuat turun ' + Math.floor(umur) + ' hari lalu.' : 'Belum pernah dimuat turun daripada pelayar ini.', aksi: [btn('Muat Turun Sandaran', 'sdlMuatTurun()')] });
                     const mb = sdlSaizMB_();
                     if (mb > SDL_MB_AMARAN_) r.push({ tahap: 2, tajuk: 'Data dalam pelayar hampir penuh (' + mb.toFixed(1) + ' MB)', butir: 'Had pelayar kira-kira 5 MB. Muat turun sandaran dan lakukan Reset & Arkib Tahunan sebelum data gagal disimpan.', aksi: [btn('Muat Turun Sandaran', 'sdlMuatTurun()'), btn('Reset Tahunan', "tpAksi('tab','reset-tahunan')")] });
+                    (window._kesihatanItems_ || []).forEach(function(x) { r.push({ tahap: x.tahap, tajuk: x.tajuk, butir: x.butir, aksi: x.aksi || [] }); });
                     r.sort(function(a, b) { return a.tahap - b.tahap; });
                 } catch (e) { /* abaikan */ }
                 return r;
@@ -26027,12 +26083,12 @@ eksPasangButang_();
             const d = new Date(getRealTimeTodayStr() + 'T00:00:00'); d.setDate(d.getDate() + ofset);
             return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
         }
-        function mlBinaData_() {
+        function mlBinaData_(jawatanAjk, sesiAjk) {
             const nama = ['Aiman Hakim', 'Nurul Izzah', 'Daniel Haikal', 'Siti Aisyah', 'Muhammad Irfan', 'Farah Nabila', 'Amirul Hafiz', 'Nur Sofea', 'Zulhilmi', 'Alya Batrisya', 'Haziq Danish', 'Balqis Humaira', 'Syafiq Iskandar', 'Qistina', 'Adib Fikri', 'Husna Maisarah', 'Ikmal Hisyam', 'Dhia Damia', 'Raif Arsyad', 'Lyana Sofia', 'Imran Mikail', 'Aleesya', 'Hanif Zikri', 'Maisara', 'Faris Danial'];
             const kls = ['1 Titanium', '2 Platinum', '3 Magnesium', '4 Neon', '5 Aluminium'];
             const pengawas = nama.map(function(n, i) {
                 const perc = i >= 22;
-                const p = { id: 9001 + i, nama: n.toUpperCase(), ic: '', jantina: i % 2 ? 'Perempuan' : 'Lelaki', kelas: kls[i % 5], tel: '', ibubapa: '', telibubapa: '', jawatan: i === 0 ? 'Ketua Pengawas' : (perc ? 'Pengawas Percubaan' : 'Pengawas Biasa'), tarikhLantikan: mlTarikh_(perc ? -80 : -400), status: 'Aktif', tarikhArkib: '', sebabArkib: '', sesi: i % 2 ? 'Pagi' : 'Petang' };
+                const p = { id: 9001 + i, nama: n.toUpperCase(), ic: '', jantina: i % 2 ? 'Perempuan' : 'Lelaki', kelas: i === 0 ? (sesiAjk === 'Pagi' ? '4 Neon' : '1 Titanium') : kls[i % 5], tel: '', ibubapa: '', telibubapa: '', jawatan: i === 0 ? ((jawatanAjk || 'Ketua Pengawas') + ' (Sesi ' + (sesiAjk === 'Pagi' ? 'Pagi' : 'Petang') + ')') : (perc ? 'Pengawas Percubaan' : 'Pengawas Biasa'), tarikhLantikan: mlTarikh_(perc ? -80 : -400), status: 'Aktif', tarikhArkib: '', sebabArkib: '', sesi: i % 2 ? 'Pagi' : 'Petang' };
                 if (perc) p.percubaanTamat = mlTarikh_(i === 22 ? -3 : (i === 23 ? 5 : 40));
                 return p;
             });
@@ -26054,8 +26110,30 @@ eksPasangButang_();
                 { id: 'ml-o2', pId: 9003, tarikh: mlTarikh_(-3), kategori: 'Sekolah', jenis: 'Tidak memakai tanda nama', butiran: 'Contoh latihan', raw: {}, demerit: 3, pelapor: 'Cikgu Latihan', pengawasPelapor: '' },
                 { id: 'ml-o3', pId: 9010, tarikh: mlTarikh_(-2), kategori: 'Lembaga', jenis: 'Tidak hadir mesyuarat', butiran: 'Contoh latihan', raw: {}, demerit: 0, pelapor: 'Cikgu Latihan', pengawasPelapor: '' }
             ];
+            const skorKunci = ['kerjasama', 'penyelesaian', 'kehadiran', 'akademik', 'inisiatif'];
+            const tambahan = {
+                minit: [{ id: 'ml-m1', sesi: 'Petang', tarikh: mlTarikh_(-7), hari: 'Isnin', mula: '14:00', tamat: '15:00', hadir: '20 daripada 22 pengawas hadir (contoh).', penyediaId: '9001', agenda: 'Contoh minit: bincang jadual bertugas dan hal disiplin.' }],
+                permohonanPengawas: [
+                    { id: 'ml-pm1', tarikhMohon: mlTarikh_(-5), nama: 'CONTOH PEMOHON SATU', tingkatan: '1', kelas: '1 Titanium', sumber: 'Borang Murid', status: 'Menunggu' },
+                    { id: 'ml-pm2', tarikhMohon: mlTarikh_(-4), nama: 'CONTOH PEMOHON DUA', tingkatan: '2', kelas: '2 Platinum', sumber: 'Cadangan Guru', status: 'Menunggu' },
+                    { id: 'ml-pm3', tarikhMohon: mlTarikh_(-9), nama: 'CONTOH PEMOHON TIGA', tingkatan: '3', kelas: '3 Magnesium', sumber: 'Borang Murid', status: 'Diterima' }
+                ],
+                kewanganTransaksi: [
+                    { id: 'ml-kw1', tarikh: mlTarikh_(-30), jenis: 'Pendapatan', kategori: 'Yuran', keterangan: 'Kutipan yuran (contoh)', jumlah: 150, pautanResit: '', direkodOlehNama: 'Cikgu Latihan', status: 'Selesai', diluluskanOlehNama: '', tarikhDiluluskan: '', catatanKelulusan: '' },
+                    { id: 'ml-kw2', tarikh: mlTarikh_(-10), jenis: 'Perbelanjaan', kategori: 'Lain-lain', keterangan: 'Pembelian tanda nama (contoh)', jumlah: 40, pautanResit: '', direkodOlehNama: 'Cikgu Latihan', status: 'Selesai', diluluskanOlehNama: '', tarikhDiluluskan: '', catatanKelulusan: '' },
+                    { id: 'ml-kw3', tarikh: mlTarikh_(-2), jenis: 'Perbelanjaan', kategori: 'Lain-lain', keterangan: 'Baju seragam baharu (contoh)', jumlah: 300, pautanResit: '', direkodOlehNama: 'Cikgu Latihan', status: 'Menunggu Kelulusan', diluluskanOlehNama: '', tarikhDiluluskan: '', catatanKelulusan: '' }
+                ],
+                yuranPengawas: pengawas.slice(0, 8).map(function(p, i) { return { id: 'YRN-' + p.id + '-latihan', pengawasId: p.id, sesiTahun: String(new Date().getFullYear()), jumlahDikenakan: 10, status: i < 5 ? 'Sudah Bayar' : 'Belum Bayar', tarikhBayar: i < 5 ? mlTarikh_(-20) : '', catatan: '' }; }),
+                suratLog: [{ id: 'ml-s1', pId: 9003, kIds: ['ml-o1', 'ml-o2'], refSuratId: null, refSuratIds: [], jenis: 'amaran1', tarikh: mlTarikh_(-3), sebab: 'Datang lewat; Tidak memakai tanda nama (contoh)', extra: '', tarikhMulaGantung: null, tarikhAkhirGantung: null, saksiId: null }],
+                borangKenaikan: [{ id: 'ml-bk1', pId: 9023, nama: pengawas[22].nama, kelas: pengawas[22].kelas, dibukaPada: new Date().toISOString(), murid: {}, guru: {}, status: 'Dibuka' }],
+                penilaianPrestasiLog: [9001, 9002].map(function(pid, i) {
+                    const sc = {}; skorKunci.forEach(function(k) { sc[k] = 4 - i; });
+                    const jum = skorKunci.length * (4 - i);
+                    return { id: 'ml-pp' + i, pId: pid, tahun: new Date().getFullYear(), scores: sc, jumlahSkor: jum, peratusan: parseFloat((jum / 50 * 100).toFixed(1)), gred: 'Contoh', taraf: 'Data contoh', catatan: 'Contoh latihan', tarikhPenilaian: mlTarikh_(-15), tempoh: 'Penggal 1' };
+                })
+            };
             return {
-                pengawas: pengawas, kehadiranLog: kehadiran, kesalahan: kesalahan,
+                pengawas: pengawas, kehadiranLog: kehadiran, kesalahan: kesalahan, tambahan: tambahan,
                 teachers: [
                     { id: 9901, username: 'admin.latihan', nama: 'Admin Latihan', peranan: 'Penyelaras (Admin)', jawatan: 'Penyelaras (Admin)' },
                     { id: 9902, username: 'guru.latihan', nama: 'Cikgu Latihan', peranan: 'Guru Pengawas', jawatan: 'Guru Pengawas' }
@@ -26066,7 +26144,7 @@ eksPasangButang_();
                 suratTunjukSebabLog: [{ id: 'ml-t1', tarikh: mlTarikh_(-4), pengirimGuruId: 9902, pId: 9003, tajuk: 'Datang lewat berulang', tarikhInsiden: mlTarikh_(-6), masaInsiden: '', lokasi: 'Pintu pagar', butiranKesalahan: 'Contoh', kesanKesalahan: 'Contoh', tarikhAkhirJawapan: mlTarikh_(1), masaAkhirJawapan: '', akibatTindakan: 'Contoh' }]
             };
         }
-        function mlMasuk(peranan) {
+        function mlMasuk(peranan, jawatanAjk, sesiAjk) {
             if (window.__MOD_LATIHAN__) return;
             window.__MOD_LATIHAN__ = true;
             // 1) Bekukan semua simpanan & rangkaian SEBELUM menyentuh state (data sebenar dalam localStorage kekal utuh)
@@ -26074,9 +26152,10 @@ eksPasangButang_();
             try { Storage.prototype.setItem = function() { }; Storage.prototype.removeItem = function() { }; } catch (e) { ralatDiam_('mlMasuk', e); }
             window.fetch = function() { return Promise.resolve(new Response(JSON.stringify({ status: 'success', message: 'Mod Latihan: tiada data dihantar ke pelayan.' }), { status: 200 })); };
             // 2) Gantikan state dengan data contoh
-            const d = mlBinaData_();
-            Object.keys(d).forEach(function(k) { state[k] = d[k]; });
+            const d = mlBinaData_(jawatanAjk, sesiAjk);
+            Object.keys(d).forEach(function(k) { if (k !== 'tambahan') state[k] = d[k]; });
             ['minit', 'suratLog', 'laporanLog', 'profilDisiplinCatatan', 'pendaftaranGuru', 'mingguSettings', 'jadualRehat', 'kemenjadianLog', 'penilaianPrestasiLog', 'perhimpunanLog', 'bilikDisiplinLog', 'auditLog', 'permohonanPengawas', 'kewanganTransaksi', 'yuranPengawas', 'borangKenaikan', 'dokumenPengawasLog'].forEach(function(k) { state[k] = []; });
+            Object.keys(d.tambahan).forEach(function(k) { state[k] = d.tambahan[k]; });
             state.settings.scriptUrl = ''; state.settings.autoPushEnabled = false;
             state.pendingDeltas = []; state.needsFullSync = false; state.hasUnsyncedChanges = false;
             state.sessionToken = 'mod-latihan';
@@ -26090,8 +26169,14 @@ eksPasangButang_();
             // 3) Sepanduk tetap
             const s = document.createElement('div');
             s.id = 'ml-sepanduk';
-            s.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#b45309;color:#fff;font:700 12px system-ui,sans-serif;padding:6px 12px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap';
-            s.innerHTML = '<span><i class="fas fa-graduation-cap"></i> MOD LATIHAN &mdash; data contoh sahaja, tiada apa dihantar ke pelayan</span><button type="button" onclick="mlKeluar()" style="background:#fff;color:#b45309;border-radius:8px;padding:2px 10px;font-weight:800">Keluar</button>';
+            // Sepanduk ringkas (1-2 baris pada telefon) supaya tidak menutup kandungan.
+            s.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#b45309;color:#fff;font:700 11px system-ui,sans-serif;padding:4px 10px;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:nowrap;line-height:1.25;text-align:center';
+            let adaTetapan = true;
+            if (peranan === 'prefect') adaTetapan = !!(state.settings && state.settings.aksesTab && state.settings.aksesTab[d.pengawas[0].jawatan]);
+            const hurai = peranan === 'prefect' ? ' \u00b7 ' + m2Esc_(d.pengawas[0].jawatan.replace(/\s*\(Sesi\s*(Pagi|Petang)\)\s*$/i, ' \u2013 Sesi $1')) : '';
+            const catatAkses = (peranan === 'prefect' && !adaTetapan) ? ' \u00b7 akses tab lalai' : '';
+            s.innerHTML = '<span style="min-width:0"><i class="fas fa-graduation-cap"></i> MOD LATIHAN' + hurai + catatAkses + ' &mdash; data contoh</span><button type="button" onclick="mlKeluar()" style="flex:none;background:#fff;color:#b45309;border-radius:8px;padding:1px 10px;font-weight:800">Keluar</button>';
+            s.title = (peranan === 'prefect' ? (adaTetapan ? 'Akses tab: Tetapan Akses peranti ini. ' : 'Akses tab: LALAI (peranti belum Pull tetapan sebenar). ') : '') + 'Tiada apa dihantar ke pelayan.';
             document.body.appendChild(s);
             try { hideLoginViewWithTransition(false); } catch (e) { ralatDiam_('mlMasuk', e); }
             updateUIRoles(); switchTab('dashboard'); renderAll(); updateDashboard();
@@ -26148,6 +26233,105 @@ eksPasangButang_();
             document.addEventListener('DOMContentLoaded', jadual);
             jadual();
         })();
+        // =========================================================================
+        //  X. KESIHATAN SISTEM: versi frontend/backend, storan kekal, semakan konsistensi helaian,
+        //     dan amaran Admin (saiz pangkalan data, sandaran, versi tidak sepadan) dalam Tindakan Perlu.
+        // =========================================================================
+        // Label keluaran disuntik semasa bina (src/VERSI). Mesti sama dengan VERSI_BACKEND_ dalam Code_GS.txt.
+        const VERSI_FRONTEND_ = '2026.11.15';
+        window._kesihatanItems_ = [];
+        let _kesihatanMasa_ = 0;
+        let _storanKekal_ = null; // true / false / null (tidak diketahui)
+
+        // ---------- 1. Storan kekal: minta pelayar jangan buang data setempat (perubahan belum dihantar) ----------
+        async function mintaStoranKekal_() {
+            try {
+                if (!navigator.storage || !navigator.storage.persist) return;
+                _storanKekal_ = (await navigator.storage.persisted()) || (await navigator.storage.persist());
+            } catch (e) { ralatDiam_('mintaStoranKekal_', e); }
+        }
+
+        // ---------- 2. Semakan kesihatan senyap (Admin): sumber amaran Tindakan Perlu ----------
+        function ksBinaItem_(d) {
+            const items = [];
+            (d.amaran || []).forEach(function(a) {
+                items.push({ tahap: a.aras === 'kritikal' ? 2 : 3, tajuk: a.aras === 'kritikal' ? 'Amaran sistem (kritikal)' : 'Amaran sistem', butir: a.teks, aksi: [{ label: 'Semakan Sistem', js: "tpAksi('tab','semakan-sistem')" }] });
+            });
+            if (!d.versiBackend) {
+                items.push({ tahap: 2, tajuk: 'Backend belum dikemas kini', butir: 'Frontend versi ' + VERSI_FRONTEND_ + ', tetapi backend (Apps Script) belum menyokong semakan versi. Pasang Code_GS.txt terkini (Deploy > Manage deployments > Edit > New version).', aksi: [] });
+            } else if (d.versiBackend !== VERSI_FRONTEND_) {
+                items.push({ tahap: 2, tajuk: 'Versi frontend dan backend tidak sepadan', butir: 'Frontend ' + VERSI_FRONTEND_ + ', backend ' + d.versiBackend + '. Pasang semula yang lebih lama, kemudian minta pengguna reload.', aksi: [] });
+            }
+            return items;
+        }
+        async function kesihatanDiamDiam_(paksa) {
+            try {
+                if (state.currentUser !== 'admin' || window.__MOD_LATIHAN__) return;
+                const url = state.settings && state.settings.scriptUrl;
+                if (!url || !String(url).trim() || !state.sessionToken) return;
+                if (typeof navigator !== 'undefined' && navigator.onLine === false) return;
+                if (!paksa && Date.now() - _kesihatanMasa_ < 6 * 3600 * 1000) return;
+                _kesihatanMasa_ = Date.now();
+                const res = await fetch(url + '?action=statusKuota&token=' + encodeURIComponent(state.sessionToken));
+                const d = await res.json();
+                if (d && d.status === 'success') {
+                    window._kesihatanItems_ = ksBinaItem_(d);
+                    try { if (typeof tpRender === 'function') tpRender(); } catch (e) { ralatDiam_('kesihatanDiamDiam_.tpRender', e); }
+                }
+            } catch (e) { _kesihatanMasa_ = 0; /* rangkaian -- cuba lagi pada giliran seterusnya */ }
+        }
+        setInterval(function() {
+            if (state.currentUser) { if (_storanKekal_ === null) mintaStoranKekal_(); kesihatanDiamDiam_(false); }
+        }, 60 * 1000);
+
+        // ---------- 3. Kad "Versi & Integriti Data" dalam Semakan Sistem (Admin) ----------
+        async function ksMuat() {
+            const kad = m2El_('ks-kad'), host = m2El_('ks-versi');
+            if (!kad || !host) return;
+            if (state.currentUser !== 'admin' || window.__MOD_LATIHAN__) { kad.classList.add('hidden'); return; }
+            kad.classList.remove('hidden');
+            await mintaStoranKekal_();
+            const storan = _storanKekal_ === true ? '<span class="text-emerald-600 font-bold">dilindungi</span>' : (_storanKekal_ === false ? '<span class="text-amber-600 font-bold">tidak dijamin (pelayar boleh membuangnya jika ruang kurang)</span>' : '<span class="text-slate-500">tidak diketahui</span>');
+            let versiBe = '<span class="text-slate-400">memuatkan...</span>', sepadan = '';
+            host.innerHTML = '<div>Frontend: <b>' + m2Esc_(VERSI_FRONTEND_) + '</b> &middot; Backend: ' + versiBe + '</div><div class="mt-1">Storan peranti ini: ' + storan + '</div>';
+            try {
+                const url = state.settings.scriptUrl;
+                if (!url || !String(url).trim()) { host.innerHTML += '<div class="mt-1 text-slate-500">URL Apps Script belum ditetapkan.</div>'; return; }
+                const res = await fetch(url + '?action=statusKuota&token=' + encodeURIComponent(state.sessionToken || ''));
+                const d = await res.json();
+                if (d.status !== 'success') throw new Error(d.message || 'Gagal.');
+                if (!d.versiBackend) { versiBe = '<b class="text-amber-600">belum menyokong semakan versi</b>'; sepadan = '<div class="mt-1 text-amber-700 text-xs font-semibold"><i class="fas fa-triangle-exclamation mr-1"></i>Pasang Code_GS.txt terkini di Apps Script.</div>'; }
+                else if (d.versiBackend !== VERSI_FRONTEND_) { versiBe = '<b class="text-amber-600">' + m2Esc_(d.versiBackend) + '</b>'; sepadan = '<div class="mt-1 text-amber-700 text-xs font-semibold"><i class="fas fa-triangle-exclamation mr-1"></i>Versi tidak sepadan. Pastikan frontend dan backend kedua-duanya terkini.</div>'; }
+                else { versiBe = '<b class="text-emerald-600">' + m2Esc_(d.versiBackend) + '</b>'; sepadan = '<div class="mt-1 text-emerald-700 text-xs font-semibold"><i class="fas fa-circle-check mr-1"></i>Versi sepadan.</div>'; }
+                host.innerHTML = '<div>Frontend: <b>' + m2Esc_(VERSI_FRONTEND_) + '</b> &middot; Backend: ' + versiBe + '</div>' + sepadan + '<div class="mt-1">Storan peranti ini: ' + storan + '</div>';
+            } catch (e) { host.innerHTML += '<div class="mt-1 text-red-600 text-xs">' + m2Esc_(e.message) + '</div>'; }
+        }
+
+        // ---------- 4. Semakan konsistensi helaian Google Sheets (baca sahaja) ----------
+        async function ksSemakKonsistensi() {
+            const out = m2El_('ks-konsistensi'), btn = m2El_('ks-btn-konsistensi');
+            if (!out) return;
+            const url = state.settings.scriptUrl;
+            if (!url || !String(url).trim()) { out.textContent = 'URL Apps Script belum ditetapkan.'; return; }
+            if (btn) btn.disabled = true;
+            out.innerHTML = '<span class="text-slate-500"><i class="fas fa-spinner fa-spin mr-1"></i>Menyemak semua helaian... (boleh ambil beberapa saat)</span>';
+            try {
+                const res = await fetch(url + '?action=semakKonsistensi&token=' + encodeURIComponent(state.sessionToken || ''));
+                const d = await res.json();
+                if (d.status !== 'success') throw new Error(d.message || 'Gagal menyemak.');
+                const baris = (d.helaian || []).map(function(h) {
+                    const masalah = h.ganda > 0;
+                    const ikon = h.wujud === false ? '<i class="fas fa-minus text-slate-400"></i>' : (masalah ? '<i class="fas fa-triangle-exclamation text-red-600"></i>' : '<i class="fas fa-circle-check text-emerald-600"></i>');
+                    const teks = h.wujud === false ? 'belum wujud' : (h.bil + ' baris, ' + h.ganda + ' berganda');
+                    return '<li class="flex items-center gap-2 py-1 border-b border-slate-100 last:border-0"><span class="w-4 text-center">' + ikon + '</span><span class="flex-1 font-semibold text-slate-700">' + m2Esc_(h.nama) + '</span><span class="text-xs ' + (masalah ? 'text-red-700 font-bold' : 'text-slate-500') + '">' + m2Esc_(teks) + '</span></li>';
+                }).join('');
+                const ringkas = d.bilMasalah === 0
+                    ? '<div class="text-emerald-700 font-bold text-sm mb-2"><i class="fas fa-circle-check mr-1"></i>Tiada helaian dengan baris berganda.</div>'
+                    : '<div class="text-red-700 font-bold text-sm mb-2"><i class="fas fa-triangle-exclamation mr-1"></i>' + m2Esc_(d.bilMasalah) + ' helaian ada baris berganda. Jalankan Push penuh untuk menulis semula helaian, kemudian semak semula.</div>';
+                out.innerHTML = ringkas + '<ul class="text-sm">' + baris + '</ul>';
+            } catch (e) { out.innerHTML = '<span class="text-red-600 text-sm">' + m2Esc_(e.message) + '</span>'; }
+            finally { if (btn) btn.disabled = false; }
+        }
 </script>
 </body>
 </html>
