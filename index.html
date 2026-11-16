@@ -26251,7 +26251,7 @@ eksPasangButang_();
         //     dan amaran Admin (saiz pangkalan data, sandaran, versi tidak sepadan) dalam Tindakan Perlu.
         // =========================================================================
         // Label keluaran disuntik semasa bina (src/VERSI). Mesti sama dengan VERSI_BACKEND_ dalam Code_GS.txt.
-        const VERSI_FRONTEND_ = '2026.11.16';
+        const VERSI_FRONTEND_ = '2026.11.15';
         window._kesihatanItems_ = [];
         let _kesihatanMasa_ = 0;
         let _storanKekal_ = null; // true / false / null (tidak diketahui)
@@ -26345,6 +26345,47 @@ eksPasangButang_();
             } catch (e) { out.innerHTML = '<span class="text-red-600 text-sm">' + m2Esc_(e.message) + '</span>'; }
             finally { if (btn) btn.disabled = false; }
         }
+// Banner "Versi baharu tersedia" di bawah skrin. Membandingkan versi dalam halaman yang sedang dibuka
+// dengan versi di pelayan (index.html terkini). Tidak memuat semula sendiri supaya borang tidak hilang.
+(function () {
+    if (window.__MOD_LATIHAN__ || !/^https?:$/.test(location.protocol)) return;
+    var BANNER_ID = 'banner-versi-baharu';
+    var sedangSemak = false;
+    function tunjuk_(versiBaharu) {
+        if (document.getElementById(BANNER_ID)) return;
+        var d = document.createElement('div');
+        d.id = BANNER_ID; d.setAttribute('role', 'status'); d.setAttribute('aria-live', 'polite');
+        d.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:9990;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 14px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:#1e3a8a;color:#fff;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.25)';
+        var t = document.createElement('span');
+        t.textContent = 'Versi baharu sistem tersedia (' + versiBaharu + '). Simpan kerja anda dahulu, kemudian muat semula.';
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = 'Muat semula';
+        b.style.cssText = 'background:#facc15;color:#1e293b;font-weight:700;border:0;border-radius:8px;padding:6px 14px;cursor:pointer';
+        b.onclick = function () { try { location.reload(); } catch (e) { location.href = location.href; } };
+        var x = document.createElement('button');
+        x.type = 'button'; x.textContent = 'Nanti'; x.setAttribute('aria-label', 'Tutup notis versi baharu');
+        x.style.cssText = 'background:transparent;color:#bfdbfe;border:1px solid #93c5fd;border-radius:8px;padding:5px 12px;cursor:pointer';
+        x.onclick = function () { d.remove(); window.__bannerVersiDitutup__ = versiBaharu; };
+        d.appendChild(t); d.appendChild(b); d.appendChild(x);
+        document.body.appendChild(d);
+    }
+    function semakVersiBaharu_() {
+        if (sedangSemak || document.hidden) return;
+        sedangSemak = true;
+        fetch(location.pathname + '?v=' + Date.now(), { cache: 'no-store', credentials: 'same-origin' })
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .then(function (h) {
+                var m = /const VERSI_FRONTEND_ = '([^']+)'/.exec(h || '');
+                if (m && m[1] && m[1] !== VERSI_FRONTEND_ && window.__bannerVersiDitutup__ !== m[1]) tunjuk_(m[1]);
+            })
+            .catch(function () {})
+            .then(function () { sedangSemak = false; });
+    }
+    window.semakVersiBaharu_ = semakVersiBaharu_;
+    setTimeout(semakVersiBaharu_, 20000);
+    setInterval(semakVersiBaharu_, 5 * 60 * 1000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) semakVersiBaharu_(); });
+})();
 </script>
 </body>
 </html>
