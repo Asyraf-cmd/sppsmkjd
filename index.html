@@ -21355,17 +21355,17 @@ asal_renderPenilaianPrestasiHistory_22: {
         function getPerjanjianAkuJanjiPrintHTML(p, namaGuru, jawatanGuru) {
             return `
                 ${getPrintHeader()}
-                <div style="font-size:10pt; line-height:1.32;">
+                <div style="font-size:9.5pt; line-height:1.25;">
                     <h2 style="text-align:center; text-transform:uppercase; margin:6px 0 8px 0; font-size:12.5pt; text-decoration:underline;">Perjanjian dan Aku Janji Pengawas Sekolah</h2>
                     <p style="margin:0 0 6px 0;">Saya, <b>${escapeHtml(p.nama)}</b>, dengan sesungguhnya mengaku dan berjanji bahawa saya akan mematuhi perkara berikut:</p>
                     <p style="font-weight:bold; margin:0 0 2px 0;">1. Integriti dan Disiplin Diri</p>
-                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                    <ul style="margin:0 0 4px 0; padding-left:18px; line-height:1.25;">
                         <li>Mematuhi dan menghormati semua peraturan sekolah pada setiap masa.</li>
                         <li>Menjadi contoh yang baik dari segi sahsiah, kekemasan pakaian, tingkah laku dan pertuturan.</li>
                         <li>Sentiasa jujur, amanah, mesra dan adil tanpa pilih kasih.</li>
                     </ul>
                     <p style="font-weight:bold; margin:0 0 2px 0;">2. Tanggungjawab dan Pelaksanaan Tugas</p>
-                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                    <ul style="margin:0 0 4px 0; padding-left:18px; line-height:1.25;">
                         <li>Menjalankan tugas yang diamanahkan dengan dedikasi, proaktif dan bertanggungjawab.</li>
                         <li>Hadir bertugas mengikut jadual dan menepati masa.</li>
                         <li>Membantu guru mengawal disiplin semasa perhimpunan, waktu rehat, program khas dan majlis rasmi.</li>
@@ -21374,27 +21374,36 @@ asal_renderPenilaianPrestasiHistory_22: {
                         <li>Membimbing pengawas percubaan dalam melaksanakan tugas harian.</li>
                     </ul>
                     <p style="font-weight:bold; margin:0 0 2px 0;">3. Pencapaian Akademik</p>
-                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                    <ul style="margin:0 0 4px 0; padding-left:18px; line-height:1.25;">
                         <li>Mengimbangi tanggungjawab kepimpinan dengan prestasi akademik supaya kekal cemerlang dan memuaskan.</li>
                     </ul>
                     <p style="font-weight:bold; margin:0 0 2px 0;">4. Tindakan Disiplin dan Pelucutan Jawatan</p>
                     <p style="margin:0 0 2px 0;">Pihak sekolah berhak mengenakan tindakan disiplin, gantung tugas atau melucutkan jawatan jika pengawas:</p>
-                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                    <ul style="margin:0 0 4px 0; padding-left:18px; line-height:1.25;">
                         <li>Melakukan kesalahan disiplin sederhana atau berat di bawah peraturan sekolah.</li>
                         <li>Melakukan kesalahan ringan berulang kali.</li>
                         <li>Gagal menjalankan tugas tanpa alasan yang munasabah secara berulang.</li>
                         <li>Menunjukkan kemerosotan sahsiah, akademik atau prestasi tugas yang menjejaskan imej Badan Pengawas.</li>
                     </ul>
-                    <p style="margin:0 0 3px 0;">Tindakan mengikut mata demerit adalah seperti Jadual 9.2: Amaran Pertama (10 demerit), Amaran Kedua (20), Amaran Ketiga dan Gantung Tugas selama seminggu (30), dan pelucutan jawatan (40).</p>
+                    <p style="margin:0 0 3px 0;">Tindakan mengikut mata demerit adalah seperti jadual berikut:</p>
+                    <table style="width:100%; border-collapse:collapse; font-size:9pt; margin:0 0 5px 0;">
+                        <thead><tr style="background:#f1f5f9;"><th style="border:1px solid black; padding:2px 6px; text-align:left; width:18%;">Jumlah demerit</th><th style="border:1px solid black; padding:2px 6px; text-align:left;">Tindakan</th><th style="border:1px solid black; padding:2px 6px; text-align:left; width:34%;">Jenis surat</th></tr></thead>
+                        <tbody>
+                            <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">10</td><td style="border:1px solid black; padding:2px 6px;">Amaran Pertama</td><td style="border:1px solid black; padding:2px 6px;">Surat Amaran 1</td></tr>
+                            <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">20</td><td style="border:1px solid black; padding:2px 6px;">Amaran Kedua</td><td style="border:1px solid black; padding:2px 6px;">Surat Amaran 2</td></tr>
+                            <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">30</td><td style="border:1px solid black; padding:2px 6px;">Amaran Ketiga dan Gantung Tugas selama seminggu</td><td style="border:1px solid black; padding:2px 6px;">Surat Gantung Tugas (Amaran Ketiga)</td></tr>
+                            <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">40</td><td style="border:1px solid black; padding:2px 6px;">Dilucutkan daripada jawatan pengawas</td><td style="border:1px solid black; padding:2px 6px;">Surat Lucut Jawatan</td></tr>
+                        </tbody>
+                    </table>
                     <p style="margin:0 0 6px 0;">Bagi pengawas yang meletak jawatan atau dilucutkan jawatan, senarai semak pemberhentian dalam Bab 10.1 digunakan. Pengawas yang ingin meletak jawatan perlu menghantar surat rasmi kepada Guru Pengawas.</p>
                     <p style="font-weight:bold; margin:0 0 2px 0;">5. Kerahsiaan dan Penggunaan Kuasa</p>
-                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                    <ul style="margin:0 0 4px 0; padding-left:18px; line-height:1.25;">
                         <li>Menyimpan dengan rahsia maklumat peribadi murid, rekod kesalahan dan perkara yang dibincangkan dalam mesyuarat pengawas.</li>
                         <li>Tidak menyalahgunakan kuasa sebagai pengawas untuk kepentingan diri sendiri atau rakan.</li>
                         <li>Menjaga etika di media sosial: tidak memuat naik gambar, nama atau rekod disiplin murid, dan tidak memburukkan nama sekolah atau Badan Pengawas.</li>
                     </ul>
                     <p style="font-weight:bold; margin:0 0 2px 0;">6. Akaun Sistem dan Amanah Jawatan</p>
-                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                    <ul style="margin:0 0 4px 0; padding-left:18px; line-height:1.25;">
                         <li>Tidak berkongsi ID dan kata laluan SPP dengan sesiapa, dan log keluar selepas menggunakan peranti yang dikongsi.</li>
                         <li>Menggunakan akses SPP hanya untuk tugas yang diamanahkan.</li>
                         <li>Merekod kesalahan dengan adil, tepat dan berdasarkan bukti.</li>
