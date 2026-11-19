@@ -21355,32 +21355,80 @@ asal_renderPenilaianPrestasiHistory_22: {
         function getPerjanjianAkuJanjiPrintHTML(p, namaGuru, jawatanGuru) {
             return `
                 ${getPrintHeader()}
+                <div style="font-size:10pt; line-height:1.32;">
+                    <h2 style="text-align:center; text-transform:uppercase; margin:6px 0 8px 0; font-size:12.5pt; text-decoration:underline;">Perjanjian dan Aku Janji Pengawas Sekolah</h2>
+                    <p style="margin:0 0 6px 0;">Saya, <b>${escapeHtml(p.nama)}</b>, dengan sesungguhnya mengaku dan berjanji bahawa saya akan mematuhi perkara berikut:</p>
+                    <p style="font-weight:bold; margin:0 0 2px 0;">1. Integriti dan Disiplin Diri</p>
+                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                        <li>Mematuhi dan menghormati semua peraturan sekolah pada setiap masa.</li>
+                        <li>Menjadi contoh yang baik dari segi sahsiah, kekemasan pakaian, tingkah laku dan pertuturan.</li>
+                        <li>Sentiasa jujur, amanah, mesra dan adil tanpa pilih kasih.</li>
+                    </ul>
+                    <p style="font-weight:bold; margin:0 0 2px 0;">2. Tanggungjawab dan Pelaksanaan Tugas</p>
+                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                        <li>Menjalankan tugas yang diamanahkan dengan dedikasi, proaktif dan bertanggungjawab.</li>
+                        <li>Hadir bertugas mengikut jadual dan menepati masa.</li>
+                        <li>Membantu guru mengawal disiplin semasa perhimpunan, waktu rehat, program khas dan majlis rasmi.</li>
+                        <li>Menghadiri semua perjumpaan, mesyuarat dan Kem Pengawas yang dianjurkan (Bab 14).</li>
+                        <li>Membawa 3 barang wajib semasa bertugas, iaitu buku nota, pengetip kuku dan pen.</li>
+                        <li>Membimbing pengawas percubaan dalam melaksanakan tugas harian.</li>
+                    </ul>
+                    <p style="font-weight:bold; margin:0 0 2px 0;">3. Pencapaian Akademik</p>
+                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                        <li>Mengimbangi tanggungjawab kepimpinan dengan prestasi akademik supaya kekal cemerlang dan memuaskan.</li>
+                    </ul>
+                    <p style="font-weight:bold; margin:0 0 2px 0;">4. Tindakan Disiplin dan Pelucutan Jawatan</p>
+                    <p style="margin:0 0 2px 0;">Pihak sekolah berhak mengenakan tindakan disiplin, gantung tugas atau melucutkan jawatan jika pengawas:</p>
+                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                        <li>Melakukan kesalahan disiplin sederhana atau berat di bawah peraturan sekolah.</li>
+                        <li>Melakukan kesalahan ringan berulang kali.</li>
+                        <li>Gagal menjalankan tugas tanpa alasan yang munasabah secara berulang.</li>
+                        <li>Menunjukkan kemerosotan sahsiah, akademik atau prestasi tugas yang menjejaskan imej Badan Pengawas.</li>
+                    </ul>
+                    <p style="margin:0 0 3px 0;">Tindakan mengikut mata demerit adalah seperti Jadual 9.2: Amaran Pertama (10 demerit), Amaran Kedua (20), Amaran Ketiga dan Gantung Tugas selama seminggu (30), dan pelucutan jawatan (40).</p>
+                    <p style="margin:0 0 6px 0;">Bagi pengawas yang meletak jawatan atau dilucutkan jawatan, senarai semak pemberhentian dalam Bab 10.1 digunakan. Pengawas yang ingin meletak jawatan perlu menghantar surat rasmi kepada Guru Pengawas.</p>
+                    <p style="font-weight:bold; margin:0 0 2px 0;">5. Kerahsiaan dan Penggunaan Kuasa</p>
+                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                        <li>Menyimpan dengan rahsia maklumat peribadi murid, rekod kesalahan dan perkara yang dibincangkan dalam mesyuarat pengawas.</li>
+                        <li>Tidak menyalahgunakan kuasa sebagai pengawas untuk kepentingan diri sendiri atau rakan.</li>
+                        <li>Menjaga etika di media sosial: tidak memuat naik gambar, nama atau rekod disiplin murid, dan tidak memburukkan nama sekolah atau Badan Pengawas.</li>
+                    </ul>
+                    <p style="font-weight:bold; margin:0 0 2px 0;">6. Akaun Sistem dan Amanah Jawatan</p>
+                    <ul style="margin:0 0 6px 0; padding-left:20px; line-height:1.32;">
+                        <li>Tidak berkongsi ID dan kata laluan SPP dengan sesiapa, dan log keluar selepas menggunakan peranti yang dikongsi.</li>
+                        <li>Menggunakan akses SPP hanya untuk tugas yang diamanahkan.</li>
+                        <li>Merekod kesalahan dengan adil, tepat dan berdasarkan bukti.</li>
+                    </ul>
+                </div>
+                ${getBidangTugasSatuJawatanHTML_(p.jawatan, getSesiPengawas(p))}
+                <div class="page-break"></div>
+                ${getPrintHeader()}
                 <h3 style="font-size:12.5pt; text-align:center; text-transform:uppercase; margin-bottom:6px;">Tandatangan dan Pengesahan</h3>
                 <p class="letter-content" style="margin-top:0; text-align:center;">Selepas membaca dan memahami perjanjian ini, kami bersetuju memeterai perjanjian ini sebagai tanda komitmen dan sokongan penuh terhadap pelantikan jawatan ini serta akan mematuhi Buku Peraturan Pengawas SMK Jalan Damai ini.</p>
 
-                <div style="margin-top:30px; padding:14px 16px; border:1px solid black;">
+                <div style="margin-top:14px; padding:10px 14px; border:1px solid black;">
                     <p style="font-weight:bold; text-transform:uppercase; margin:0 0 6px 0;">Aku Janji Pengawas</p>
-                    <p style="font-style:italic; margin:0 0 45px 0;">"Saya mengaku telah membaca, memahami, dan bersetuju untuk mematuhi semua terma aku janji ini."</p>
+                    <p style="font-style:italic; margin:0 0 34px 0;">"Saya mengaku telah membaca, memahami, dan bersetuju untuk mematuhi semua terma aku janji ini."</p>
                     <div style="border-top:1px solid black; width:260px; padding-top:5px; font-size:10pt;">Tandatangan Murid</div>
-                    <p style="margin:10px 0 4px 0;">Nama: <b>${escapeHtml(p.nama)}</b></p>
+                    <p style="margin:6px 0 3px 0;">Nama: <b>${escapeHtml(p.nama)}</b></p>
                     <p style="margin:0;">Tarikh: _______________</p>
                 </div>
 
-                <div style="margin-top:20px; padding:14px 16px; border:1px solid black;">
+                <div style="margin-top:12px; padding:10px 14px; border:1px solid black;">
                     <p style="font-weight:bold; text-transform:uppercase; margin:0 0 6px 0;">Sokongan Ibu Bapa / Penjaga</p>
-                    <p style="font-style:italic; margin:0 0 45px 0;">"Saya menyokong pelantikan ini dan akan memastikan anak/jagaan saya mematuhi aku janji ini."</p>
+                    <p style="font-style:italic; margin:0 0 34px 0;">"Saya menyokong pelantikan ini dan akan memastikan anak/jagaan saya mematuhi aku janji ini."</p>
                     <div style="border-top:1px solid black; width:260px; padding-top:5px; font-size:10pt;">Tandatangan Ibu Bapa / Penjaga</div>
-                    <p style="margin:10px 0 4px 0;">Nama: ______________________________</p>
-                    <p style="margin:0 0 4px 0;">No. Tel: ______________________________</p>
+                    <p style="margin:6px 0 3px 0;">Nama: ______________________________</p>
+                    <p style="margin:0 0 3px 0;">No. Tel: ______________________________</p>
                     <p style="margin:0;">Tarikh: _______________</p>
                 </div>
 
-                <div style="margin-top:20px; padding:14px 16px; border:1px solid black;">
+                <div style="margin-top:12px; padding:10px 14px; border:1px solid black;">
                     <p style="font-weight:bold; text-transform:uppercase; margin:0 0 6px 0;">Pengesahan Sekolah</p>
-                    <p style="font-style:italic; margin:0 0 45px 0;">"Disahkan oleh pihak Pentadbiran / Pengurusan Badan Pengawas Sekolah."</p>
+                    <p style="font-style:italic; margin:0 0 34px 0;">"Disahkan oleh pihak Pentadbiran / Pengurusan Badan Pengawas Sekolah."</p>
                     <div style="border-top:1px solid black; width:260px; padding-top:5px; font-size:10pt;">Tandatangan &amp; Cop Rasmi</div>
-                    <p style="margin:10px 0 4px 0;">Nama: ${namaGuru ? `<b>${escapeHtml(namaGuru)}</b>` : '______________________________'}</p>
-                    <p style="margin:0 0 4px 0;">Jawatan: ${jawatanGuru ? escapeHtml(jawatanGuru) : '______________________________'}</p>
+                    <p style="margin:6px 0 3px 0;">Nama: ${namaGuru ? `<b>${escapeHtml(namaGuru)}</b>` : '______________________________'}</p>
+                    <p style="margin:0 0 3px 0;">Jawatan: ${jawatanGuru ? escapeHtml(jawatanGuru) : '______________________________'}</p>
                     <p style="margin:0;">Tarikh: _______________</p>
                 </div>
             `;
