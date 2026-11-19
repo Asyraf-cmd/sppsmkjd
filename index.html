@@ -4592,11 +4592,11 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-2">
                             <div class="border border-slate-100 rounded-xl p-4">
                                 <h4 class="text-xs font-bold uppercase tracking-wider text-slate-600 mb-3">Kesalahan & Demerit</h4>
-                                <canvas id="chart-trend-kesalahan" height="220"></canvas>
+                                <div id="chart-trend-kesalahan" class="min-h-[220px]"></div>
                             </div>
                             <div class="border border-slate-100 rounded-xl p-4">
                                 <h4 class="text-xs font-bold uppercase tracking-wider text-slate-600 mb-3">Status Kehadiran</h4>
-                                <canvas id="chart-trend-tahunan-kehadiran" height="220"></canvas>
+                                <div id="chart-trend-tahunan-kehadiran" class="min-h-[220px]"></div>
                             </div>
                         </div>
                         <p class="text-[10px] text-slate-400 mt-1"><i class="fas fa-info-circle mr-1"></i>Tahun semasa (<span id="trend-tahun-semasa-label"></span>) dikira drpd data hidup dalam sistem sekarang -- boleh berubah sehingga Reset Tahunan seterusnya dilaksanakan. Tahun-tahun lepas dikira drpd fail arkib yang disimpan semasa Reset Tahunan.</p>
@@ -17240,10 +17240,8 @@ asal_renderPenilaianPrestasiHistory_22: {
         //  CARTA TREND ANTARA TAHUN -- bandingkan statistik disiplin/kehadiran tahun
         //  semasa (data hidup dlm sistem) vs tahun-tahun lepas (fail arkib Reset Tahunan
         //  di Google Drive, lihat handleSenaraiArkibTahunan()/handleStatistikArkibTahun()
-        //  di Code.gs). Guna Chart.js (dimuatkan di <head>).
+        //  di Code.gs). Carta dibina sebagai SVG tulen (tiada pustaka luar).
         // =========================================================================
-        let _chartTrendKesalahan = null;
-        let _chartTrendKehadiran = null;
 
         // Kira ringkasan statistik tahun SEMASA drpd data hidup (state.kesalahan/kehadiranLog) --
         // guna kaedah pengiraan SAMA spt handleStatistikArkibTahun() di Code.gs supaya banding adil.
@@ -17316,51 +17314,51 @@ asal_renderPenilaianPrestasiHistory_22: {
             }
         }
 
-        async function renderCartaTrendTahunan_(semuaTahun) {
-            try { await muatSkripLuar_('chart'); } catch (errMuat) { showCustomAlert(errMuat.message, "error"); return; }
-
-            const label = semuaTahun.map(t => t.tahun + (t.semasa ? ' (Semasa)' : ''));
-
-            // --- Carta 1: Kesalahan & Demerit ---
-            const ctxKesalahan = document.getElementById('chart-trend-kesalahan').getContext('2d');
-            if (_chartTrendKesalahan) _chartTrendKesalahan.destroy();
-            _chartTrendKesalahan = new Chart(ctxKesalahan, {
-                type: 'bar',
-                data: {
-                    labels: label,
-                    datasets: [
-                        { label: 'Jumlah Kesalahan', data: semuaTahun.map(t => t.jumlahKesalahan), backgroundColor: '#3b82f6', borderRadius: 4 },
-                        { label: 'Jumlah Demerit', data: semuaTahun.map(t => t.jumlahDemerit), backgroundColor: '#ef4444', borderRadius: 4 }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } },
-                    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+        // Carta dibina sebagai SVG tulen (tiada Chart.js / tiada internet diperlukan) supaya sentiasa terpapar.
+        // siri: [{nama, warna, nilai:[...]}]; bertindan=true utk bar bertindan.
+        function binaCartaBarSVG_(label, siri, bertindan) {
+            const W = 520, H = 260, kiri = 40, kanan = 10, atas = 10, bawah = 34;
+            const lebar = W - kiri - kanan, tinggi = H - atas - bawah;
+            const jumlahLajur = label.map((_, i) => siri.reduce((j, s) => j + (s.nilai[i] || 0), 0));
+            let maks = bertindan ? Math.max(...jumlahLajur, 1) : Math.max(...siri.map(s => Math.max(...s.nilai, 0)), 1);
+            const langkah = Math.pow(10, Math.floor(Math.log10(maks)));
+            const unit = [1, 2, 5, 10].map(m => m * langkah).find(u => maks / u <= 5) || langkah * 10;
+            maks = Math.ceil(maks / unit) * unit;
+            const y = v => atas + tinggi - (v / maks) * tinggi;
+            let g = '';
+            for (let v = 0; v <= maks; v += unit) {
+                g += `<line x1="${kiri}" x2="${W - kanan}" y1="${y(v)}" y2="${y(v)}" stroke="#e2e8f0" stroke-width="1"/><text x="${kiri - 5}" y="${y(v) + 3}" text-anchor="end" font-size="9" fill="#64748b">${v}</text>`;
+            }
+            const lebarKumpulan = lebar / label.length;
+            label.forEach((lb, i) => {
+                const x0 = kiri + i * lebarKumpulan;
+                const jarak = lebarKumpulan * 0.18;
+                if (bertindan) {
+                    const bw = lebarKumpulan - jarak * 2; let baki = 0;
+                    siri.forEach(s => { const v = s.nilai[i] || 0; if (v <= 0) return; const h = (v / maks) * tinggi; g += `<rect x="${x0 + jarak}" y="${y(baki + v)}" width="${bw}" height="${h}" fill="${s.warna}"><title>${escapeHtml(lb)} - ${escapeHtml(s.nama)}: ${v}</title></rect>`; baki += v; });
+                } else {
+                    const bw = (lebarKumpulan - jarak * 2) / siri.length;
+                    siri.forEach((s, j) => { const v = s.nilai[i] || 0; const h = (v / maks) * tinggi; g += `<rect x="${x0 + jarak + j * bw}" y="${y(v)}" width="${bw - 2}" height="${h}" rx="3" fill="${s.warna}"><title>${escapeHtml(lb)} - ${escapeHtml(s.nama)}: ${v}</title></rect>`; if (v > 0) g += `<text x="${x0 + jarak + j * bw + (bw - 2) / 2}" y="${y(v) - 3}" text-anchor="middle" font-size="9" fill="#334155">${v}</text>`; });
                 }
+                g += `<text x="${x0 + lebarKumpulan / 2}" y="${H - bawah + 14}" text-anchor="middle" font-size="10" fill="#334155">${escapeHtml(lb)}</text>`;
             });
+            const legenda = siri.map(s => `<span class="inline-flex items-center gap-1 mr-3 text-[10px] text-slate-600"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${s.warna}"></span>${escapeHtml(s.nama)}</span>`).join('');
+            return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;" role="img">${g}</svg><div class="mt-1 flex flex-wrap">${legenda}</div>`;
+        }
 
-            // --- Carta 2: Status Kehadiran (dikumpul) ---
+        function renderCartaTrendTahunan_(semuaTahun) {
+            const label = semuaTahun.map(t => String(t.tahun) + (t.semasa ? ' (Semasa)' : ''));
+            const el1 = document.getElementById('chart-trend-kesalahan');
+            if (el1) el1.innerHTML = binaCartaBarSVG_(label, [
+                { nama: 'Jumlah Kesalahan', warna: '#3b82f6', nilai: semuaTahun.map(t => t.jumlahKesalahan || 0) },
+                { nama: 'Jumlah Demerit', warna: '#ef4444', nilai: semuaTahun.map(t => t.jumlahDemerit || 0) }
+            ], false);
             const statusSenarai = ['Hadir', 'Tidak Hadir', 'Lewat', 'Sakit (MC)', 'Tugas Rasmi', 'Digantung Tugas'];
             const warnaStatus = { 'Hadir': '#22c55e', 'Tidak Hadir': '#ef4444', 'Lewat': '#f59e0b', 'Sakit (MC)': '#a855f7', 'Tugas Rasmi': '#3b82f6', 'Digantung Tugas': '#64748b' };
-            const ctxKehadiran = document.getElementById('chart-trend-tahunan-kehadiran').getContext('2d');
-            if (_chartTrendKehadiran) _chartTrendKehadiran.destroy();
-            _chartTrendKehadiran = new Chart(ctxKehadiran, {
-                type: 'bar',
-                data: {
-                    labels: label,
-                    datasets: statusSenarai.map(s => ({
-                        label: s,
-                        data: semuaTahun.map(t => (t.kiraStatusKehadiran && t.kiraStatusKehadiran[s]) || 0),
-                        backgroundColor: warnaStatus[s]
-                    }))
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { position: 'bottom', labels: { font: { size: 9 }, boxWidth: 10 } } },
-                    scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } }
-                }
-            });
+            const el2 = document.getElementById('chart-trend-tahunan-kehadiran');
+            if (el2) el2.innerHTML = binaCartaBarSVG_(label, statusSenarai.map(s => ({
+                nama: s, warna: warnaStatus[s], nilai: semuaTahun.map(t => (t.kiraStatusKehadiran && t.kiraStatusKehadiran[s]) || 0)
+            })), true);
         }
 
         // =====================================================================
