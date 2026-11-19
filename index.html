@@ -858,6 +858,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             </form>
             
             <div class="mt-4 pt-4 border-t border-gray-100 text-center">
+                <p id="login-versi" class="text-[10px] text-slate-400 mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.19</p>
                 <details class="text-xs text-slate-500">
                     <summary class="cursor-pointer font-semibold text-slate-600 hover:text-brand-blue select-none"><i class="fas fa-graduation-cap mr-1"></i>Mod Latihan (data contoh)</summary>
                     <p class="mt-2 mb-2 text-[11px]">Cuba sistem tanpa log masuk. Data contoh sahaja; data sebenar tidak disentuh.</p>
@@ -1056,6 +1057,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             </ul>
         </nav>
         <div class="p-4 border-t border-blue-950">
+            <p id="sidebar-versi" class="text-[10px] text-blue-200/70 text-center mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.19</p>
             <button onclick="logout()" id="btn-logout-sidebar" class="w-full flex items-center justify-center px-4 py-2.5 bg-red-600 hover:bg-red-700 active:scale-[0.98] rounded-xl text-sm transition font-bold shadow-lg shadow-red-950/20"><i class="fas fa-sign-out-alt mr-2"></i> Log Keluar</button>
         </div>
     </aside>
@@ -3859,7 +3861,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         <h3 class="font-bold text-base text-slate-800 flex items-center gap-2"><i class="fas fa-id-badge text-amber-500"></i>Kelengkapan Belum Dipulangkan</h3>
                         <button onclick="sqExcel('kelengkapan')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-file-excel"></i>Excel</button>
                     </div>
-                    <p class="text-[11px] text-slate-500 mb-3">Pengawas yang sudah tamat, letak atau dilucutkan jawatan tetapi lencana, uniform atau buku belum ditanda dipulangkan dalam senarai semak offboarding. <span id="sq-kelengkapan-nota" class="font-bold"></span></p>
+                    <p class="text-[11px] text-slate-500 mb-3">Pengawas yang sudah tamat, letak atau dilucutkan jawatan tetapi lencana, tali leher, tag atau buku belum ditanda dipulangkan dalam senarai semak offboarding. <span id="sq-kelengkapan-nota" class="font-bold"></span></p>
                     <div class="overflow-x-auto rounded-xl border border-slate-100">
                         <table class="w-full text-sm text-left border-collapse">
                             <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b"><tr><th class="px-4 py-3 font-bold">Nama</th><th class="px-4 py-3 font-bold">Status</th><th class="px-4 py-3 font-bold">Tarikh Tamat</th><th class="px-4 py-3 font-bold">Belum Dipulangkan</th><th class="px-4 py-3"></th></tr></thead>
@@ -11084,12 +11086,12 @@ asal_switchTab_21: {
             { key: 'bukuPanduan', label: 'Buku peraturan/panduan pengawas diserahkan' },
             { key: 'taklimatTugas', label: 'Taklimat tugas & tanggungjawab diberikan' },
             { key: 'akaunSistem', label: 'Akaun sistem (jika berkenaan) didaftarkan' },
-            { key: 'uniform', label: 'Uniform/aksesori pengawas (tali pinggang, beret, dsb) diserahkan' },
+            { key: 'uniform', label: 'Aksesori pengawas (tali leher dan tag pengawas) diserahkan' },
             { key: 'perkenalan', label: 'Diperkenalkan kepada AJK/Ketua Pengawas & rakan sesi' }
         ];
         const SENARAI_SEMAK_OFFBOARDING_PENGAWAS = [
             { key: 'pulangLencana', label: 'Lencana/Badge pengawas dipulangkan' },
-            { key: 'pulangUniform', label: 'Uniform/aksesori pengawas dipulangkan' },
+            { key: 'pulangUniform', label: 'Aksesori pengawas (tali leher dan tag pengawas) dipulangkan' },
             { key: 'pulangBuku', label: 'Buku peraturan/panduan dipulangkan (jika berkenaan)' },
             { key: 'nyahaktifAkaun', label: 'Akaun sistem (jika ada) dinyahaktifkan/dipadam' },
             { key: 'sesiPemakluman', label: 'Sesi/taklimat pemakluman sebab pemberhentian dijalankan' },
@@ -23345,7 +23347,7 @@ asal_auditRingkasan__11: {
             const d = new Date(String(s).slice(0, 10) + 'T00:00:00'); if (isNaN(d)) return null;
             return Math.floor((new Date(getRealTimeTodayStr() + 'T00:00:00') - d) / 86400000);
         }
-        const SQ_ITEM_KEMBALI_ = [['pulangLencana', 'Lencana'], ['pulangUniform', 'Uniform/aksesori'], ['pulangBuku', 'Buku panduan']];
+        const SQ_ITEM_KEMBALI_ = [['pulangLencana', 'Lencana'], ['pulangUniform', 'Tali leher dan tag'], ['pulangBuku', 'Buku panduan']];
 
         // Pengawas tidak aktif yang masih belum memulangkan kelengkapan (ikut senarai semak offboarding)
         function sqKelengkapan_() {
@@ -23447,7 +23449,7 @@ asal_auditRingkasan__11: {
                     <td class="px-4 py-2.5 text-xs text-slate-600 whitespace-nowrap">${x.tarikh ? m2Esc_(formatTarikhPendek(x.tarikh)) : '-'}${x.hari != null ? `<div class="text-[10px] ${x.hari > 7 ? 'text-red-600 font-bold' : 'text-slate-400'}">${x.hari} hari lalu</div>` : ''}</td>
                     <td class="px-4 py-2.5 text-xs text-red-600 font-semibold">${m2Esc_(x.belum.join(', '))}</td>
                     <td class="px-4 py-2.5 text-right"><button type="button" onclick="bukaChecklistSemakan_('${escapeJsStr(x.id)}')" class="text-xs font-bold text-brand-blue hover:underline">Kemas kini</button></td></tr>`;
-            }).join('') : keadaanKosongHTML(5, 'fa-circle-check', 'Semua kelengkapan telah dipulangkan', 'Tiada pengawas tidak aktif yang masih menyimpan lencana, uniform atau buku.');
+            }).join('') : keadaanKosongHTML(5, 'fa-circle-check', 'Semua kelengkapan telah dipulangkan', 'Tiada pengawas tidak aktif yang masih menyimpan lencana, tali leher, tag atau buku.');
             const kn = m2El_('sq-kelengkapan-nota'); if (kn) kn.textContent = kel.length ? `${kel.length} pengawas belum memulangkan kelengkapan.` : '';
 
             const jenis = m2Nilai_('sq-kualiti-jenis') || 'semua';
@@ -26189,7 +26191,7 @@ eksPasangButang_();
         //     dan amaran Admin (saiz pangkalan data, sandaran, versi tidak sepadan) dalam Tindakan Perlu.
         // =========================================================================
         // Label keluaran disuntik semasa bina (src/VERSI). Mesti sama dengan VERSI_BACKEND_ dalam Code_GS.txt.
-        const VERSI_FRONTEND_ = '2026.11.18';
+        const VERSI_FRONTEND_ = '2026.11.19';
         window._kesihatanItems_ = [];
         let _kesihatanMasa_ = 0;
         let _storanKekal_ = null; // true / false / null (tidak diketahui)
