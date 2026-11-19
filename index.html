@@ -20466,6 +20466,8 @@ asal_renderPenilaianPrestasiHistory_22: {
                     <h3 style="font-size:12.5pt; text-align:center; text-transform:uppercase; margin:0 0 3px 0; text-decoration:underline;">Bidang Tugas Jawatankuasa</h3>
                     <p style="text-align:center; font-weight:bold; font-size:12pt; margin:0 0 14px 0; text-transform:uppercase;">${escapeHtml(padanan ? _namaSemasaEntriBidangTugas_(sesi, padanan) : namaJawatan)}</p>
                     <ul style="padding-left:22px; margin:0;">${senaraiTugas}</ul>
+                    <p style="font-weight:bold; margin:16px 0 4px 0;">Tindakan Mengikut Mata Demerit</p>
+                    ${getJadualTindakanDemeritHTML_('10pt', '0')}
                 </div>`;
         }
 
@@ -21351,6 +21353,20 @@ asal_renderPenilaianPrestasiHistory_22: {
             if(s) executePrint(getSuratPrintHTML(s));
         }
 
+        // Jadual tindakan mengikut jumlah mata demerit (kotak) -- digunakan dlm Aku Janji (bahagian 4)
+        // dan halaman Bidang Tugas dlm dokumen Perjanjian supaya kedua-duanya sentiasa sama.
+        function getJadualTindakanDemeritHTML_(saiz, jarak) {
+            return `<table style="width:100%; border-collapse:collapse; font-size:${saiz}; margin:${jarak};">
+                <thead><tr style="background:#f1f5f9;"><th style="border:1px solid black; padding:2px 6px; text-align:left; width:18%;">Jumlah demerit</th><th style="border:1px solid black; padding:2px 6px; text-align:left;">Tindakan</th><th style="border:1px solid black; padding:2px 6px; text-align:left; width:34%;">Jenis surat</th></tr></thead>
+                <tbody>
+                    <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">10</td><td style="border:1px solid black; padding:2px 6px;">Amaran Pertama</td><td style="border:1px solid black; padding:2px 6px;">Surat Amaran 1</td></tr>
+                    <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">20</td><td style="border:1px solid black; padding:2px 6px;">Amaran Kedua</td><td style="border:1px solid black; padding:2px 6px;">Surat Amaran 2</td></tr>
+                    <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">30</td><td style="border:1px solid black; padding:2px 6px;">Amaran Ketiga dan Gantung Tugas selama seminggu</td><td style="border:1px solid black; padding:2px 6px;">Surat Gantung Tugas (Amaran Ketiga)</td></tr>
+                    <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">40</td><td style="border:1px solid black; padding:2px 6px;">Dilucutkan daripada jawatan pengawas</td><td style="border:1px solid black; padding:2px 6px;">Surat Lucut Jawatan</td></tr>
+                </tbody>
+            </table>`;
+        }
+
         // --- PERJANJIAN & AKU JANJI PENGAWAS SEKOLAH ---
         function getPerjanjianAkuJanjiPrintHTML(p, namaGuru, jawatanGuru) {
             return `
@@ -21386,15 +21402,7 @@ asal_renderPenilaianPrestasiHistory_22: {
                         <li>Menunjukkan kemerosotan sahsiah, akademik atau prestasi tugas yang menjejaskan imej Badan Pengawas.</li>
                     </ul>
                     <p style="margin:0 0 3px 0;">Tindakan mengikut mata demerit adalah seperti jadual berikut:</p>
-                    <table style="width:100%; border-collapse:collapse; font-size:9pt; margin:0 0 5px 0;">
-                        <thead><tr style="background:#f1f5f9;"><th style="border:1px solid black; padding:2px 6px; text-align:left; width:18%;">Jumlah demerit</th><th style="border:1px solid black; padding:2px 6px; text-align:left;">Tindakan</th><th style="border:1px solid black; padding:2px 6px; text-align:left; width:34%;">Jenis surat</th></tr></thead>
-                        <tbody>
-                            <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">10</td><td style="border:1px solid black; padding:2px 6px;">Amaran Pertama</td><td style="border:1px solid black; padding:2px 6px;">Surat Amaran 1</td></tr>
-                            <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">20</td><td style="border:1px solid black; padding:2px 6px;">Amaran Kedua</td><td style="border:1px solid black; padding:2px 6px;">Surat Amaran 2</td></tr>
-                            <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">30</td><td style="border:1px solid black; padding:2px 6px;">Amaran Ketiga dan Gantung Tugas selama seminggu</td><td style="border:1px solid black; padding:2px 6px;">Surat Gantung Tugas (Amaran Ketiga)</td></tr>
-                            <tr><td style="border:1px solid black; padding:2px 6px; text-align:center; font-weight:bold;">40</td><td style="border:1px solid black; padding:2px 6px;">Dilucutkan daripada jawatan pengawas</td><td style="border:1px solid black; padding:2px 6px;">Surat Lucut Jawatan</td></tr>
-                        </tbody>
-                    </table>
+                    ${getJadualTindakanDemeritHTML_('9pt', '0 0 5px 0')}
                     <p style="margin:0 0 6px 0;">Bagi pengawas yang meletak jawatan atau dilucutkan jawatan, senarai semak pemberhentian dalam Bab 10.1 digunakan. Pengawas yang ingin meletak jawatan perlu menghantar surat rasmi kepada Guru Pengawas.</p>
                     <p style="font-weight:bold; margin:0 0 2px 0;">5. Kerahsiaan dan Penggunaan Kuasa</p>
                     <ul style="margin:0 0 4px 0; padding-left:18px; line-height:1.25;">
