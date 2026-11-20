@@ -858,7 +858,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             </form>
             
             <div class="mt-4 pt-4 border-t border-gray-100 text-center">
-                <p id="login-versi" class="text-[10px] text-slate-400 mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.19b</p>
+                <p id="login-versi" class="text-[10px] text-slate-400 mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.20</p>
                 <details class="text-xs text-slate-500">
                     <summary class="cursor-pointer font-semibold text-slate-600 hover:text-brand-blue select-none"><i class="fas fa-graduation-cap mr-1"></i>Mod Latihan (data contoh)</summary>
                     <p class="mt-2 mb-2 text-[11px]">Cuba sistem tanpa log masuk. Data contoh sahaja; data sebenar tidak disentuh.</p>
@@ -1057,7 +1057,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             </ul>
         </nav>
         <div class="p-4 border-t border-blue-950">
-            <p id="sidebar-versi" class="text-[10px] text-blue-200/70 text-center mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.19b</p>
+            <p id="sidebar-versi" class="text-[10px] text-blue-200/70 text-center mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.20</p>
+            <button onclick="paparModalTukarKLSendiri()" id="btn-tukar-kl-sidebar" class="w-full flex items-center justify-center px-4 py-2 mb-2 bg-blue-900/60 hover:bg-blue-800 active:scale-[0.98] rounded-xl text-xs transition font-bold border border-blue-700/60"><i class="fas fa-key mr-2"></i> Tukar Kata Laluan</button>
             <button onclick="logout()" id="btn-logout-sidebar" class="w-full flex items-center justify-center px-4 py-2.5 bg-red-600 hover:bg-red-700 active:scale-[0.98] rounded-xl text-sm transition font-bold shadow-lg shadow-red-950/20"><i class="fas fa-sign-out-alt mr-2"></i> Log Keluar</button>
         </div>
     </aside>
@@ -1459,8 +1460,9 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     <label class="block text-sm font-semibold text-slate-700 mb-2">2. Tandakan Nama Pengawas <span class="text-red-500">*</span> <span class="text-slate-500 font-normal">(boleh pilih ramai untuk cetakan pukal)</span></label>
                     <div id="perjanjian-mount" class="mb-4"></div>
 
-                    <p class="text-[11px] text-slate-500 mb-5">Nota: Setiap pengawas yang ditanda akan dicetak sebagai dokumen berasingan (bermula pada muka surat baharu). Ruangan tandatangan Murid dan Ibu Bapa/Penjaga dibiarkan kosong untuk ditandatangani secara fizikal.</p>
-                    <button onclick="printPerjanjianAkuJanji()" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2.5 px-5 rounded-xl transition shadow-md shadow-blue-900/10 active:scale-98 text-sm"><i class="fas fa-print mr-1.5"></i>Cetak Perjanjian &amp; Aku Janji (<span id="perjanjian-bilangan-btn">0</span>)</button>
+                    <p class="text-[11px] text-slate-500 mb-5">Nota: Ada dua jenis cetakan. <b>Cetak Penuh</b> menghasilkan 3 muka surat setiap pengawas (Aku Janji, Bidang Tugas jawatan dan Tandatangan). <b>Cetak Tandatangan Sahaja</b> menghasilkan 1 muka surat tandatangan setiap pengawas. Setiap pengawas yang ditanda dicetak sebagai dokumen berasingan (bermula pada muka surat baharu). Ruangan tandatangan Murid dan Ibu Bapa/Penjaga dibiarkan kosong untuk ditandatangani secara fizikal.</p>
+                    <button onclick="printPerjanjianAkuJanji('penuh')" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2.5 px-5 rounded-xl transition shadow-md shadow-blue-900/10 active:scale-98 text-sm"><i class="fas fa-print mr-1.5"></i>Cetak Penuh: Aku Janji, Bidang Tugas &amp; Tandatangan (<span id="perjanjian-bilangan-btn">0</span>)</button>
+                    <button onclick="printPerjanjianAkuJanji('tandatangan')" class="bg-white hover:bg-slate-50 text-brand-blue border border-brand-blue font-bold py-2.5 px-5 rounded-xl transition active:scale-98 text-sm ml-2 mt-2 sm:mt-0"><i class="fas fa-signature mr-1.5"></i>Cetak Tandatangan Sahaja</button>
                 </div>
             </div>
 
@@ -4288,6 +4290,13 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     <div id="ks-versi" class="text-sm text-slate-700 mb-4"></div>
                     <button id="ks-btn-konsistensi" onclick="ksSemakKonsistensi()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition disabled:opacity-60"><i class="fas fa-list-check"></i>Semak Konsistensi Helaian</button>
                     <div id="ks-konsistensi" class="mt-3"></div>
+                </div>
+
+                <!-- Keselamatan Kata Laluan -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 admin-only-block mb-6">
+                    <h3 class="font-bold text-base text-slate-800 flex items-center gap-2 mb-1"><i class="fas fa-key text-amber-500"></i>Keselamatan Kata Laluan</h3>
+                    <p class="text-[11px] text-slate-500 mb-3">Akaun baharu dan akaun yang ditetapkan semula wajib menukar kata laluan semasa log masuk, dan Admin tidak dapat melihat kata laluan yang telah ditukar pengguna. Akaun lama (sebelum ciri ini) tidak dipaksa menukar. Gunakan butang di bawah untuk mewajibkan semua akaun lama menukar kata laluan.</p>
+                    <button onclick="wajibkanSemuaTukarKL()" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-user-lock"></i>Wajibkan Semua Akaun Lama Tukar Kata Laluan</button>
                 </div>
 
                 <!-- Status Sistem (Health Check) -->
@@ -8804,6 +8813,99 @@ asal_applySyncedState_16: {
                 }
                 btn.disabled = false; btn.textContent = 'Simpan & Log Masuk';
             };
+        }
+
+        // Semakan kata laluan lemah (cermin pelayan -- _ralatKataLaluanBaharu_). Pulangkan mesej atau ''.
+        const KATA_LALUAN_LEMAH_LIST_ = ['12345678', '123456789', '1234567890', '11111111', '00000000', '87654321', 'password', 'password1', 'password123', 'kata laluan', 'katalaluan', 'abcd1234', 'abc12345', 'qwertyui', 'qwerty123', 'iloveyou', 'admin123', 'admin1234', 'pengawas', 'pengawas123', 'smkjalandamai', 'smkjd1234'];
+        function kataLaluanLemahMesej_(kl, idPengguna) {
+            kl = String(kl || '');
+            if (kl.length < 8) return 'Kata laluan kurang daripada 8 aksara.';
+            if (idPengguna && kl.toLowerCase() === String(idPengguna).trim().toLowerCase()) return 'Kata laluan sama dengan ID Pengguna.';
+            if (KATA_LALUAN_LEMAH_LIST_.indexOf(kl.toLowerCase()) !== -1 || /^(.)\1+$/.test(kl)) return 'Kata laluan ini terlalu mudah diteka.';
+            return '';
+        }
+
+        // Pengguna menukar kata laluan sendiri bila-bila masa (butang "Tukar Kata Laluan" di bar sisi).
+        function paparModalTukarKLSendiri() {
+            if (!state.sessionToken) { showCustomAlert('Sila log masuk dahulu.', 'error'); return; }
+            const lama = document.getElementById('modal-kl-sendiri');
+            if (lama) lama.remove();
+            const lapis = document.createElement('div');
+            lapis.id = 'modal-kl-sendiri';
+            lapis.setAttribute('role', 'dialog');
+            lapis.setAttribute('aria-modal', 'true');
+            lapis.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,.65);display:flex;align-items:center;justify-content:center;padding:16px;';
+            const medan = (id, teks, ac) => `<label style="display:block;font-size:12px;font-weight:700;color:#334155;margin-bottom:4px;">${teks}</label><input id="${id}" type="password" autocomplete="${ac}" maxlength="100" style="width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:9px 12px;font-size:14px;margin-bottom:10px;box-sizing:border-box;">`;
+            lapis.innerHTML = `
+                <form id="form-kl-sendiri" style="background:#fff;border-radius:16px;max-width:420px;width:100%;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.35);font-family:inherit;">
+                    <h3 style="margin:0 0 6px 0;font-size:18px;font-weight:800;color:#0f172a;">Tukar Kata Laluan</h3>
+                    <p style="margin:0 0 14px 0;font-size:13px;color:#475569;line-height:1.5;">Kata laluan baharu anda tidak boleh dilihat oleh Admin. Sesi anda di peranti lain akan ditamatkan.</p>
+                    ${medan('kls-lama', 'Kata laluan semasa', 'current-password')}
+                    ${medan('kls-baharu', 'Kata laluan baharu (sekurang-kurangnya 8 aksara)', 'new-password')}
+                    ${medan('kls-sah', 'Sahkan kata laluan baharu', 'new-password')}
+                    <p id="kls-ralat" style="display:none;margin:0 0 8px 0;font-size:12px;font-weight:700;color:#dc2626;"></p>
+                    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px;">
+                        <button type="button" id="kls-batal" style="padding:9px 14px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;font-size:13px;font-weight:700;cursor:pointer;">Batal</button>
+                        <button type="submit" id="kls-simpan" style="padding:9px 16px;border-radius:10px;border:0;background:#1d4ed8;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Simpan</button>
+                    </div>
+                </form>`;
+            document.body.appendChild(lapis);
+            const ralat = lapis.querySelector('#kls-ralat'), btn = lapis.querySelector('#kls-simpan');
+            const tunjuk = (m) => { ralat.textContent = m; ralat.style.display = 'block'; };
+            lapis.querySelector('#kls-batal').onclick = () => lapis.remove();
+            lapis.querySelector('#kls-lama').focus();
+            lapis.querySelector('#form-kl-sendiri').onsubmit = async (ev) => {
+                ev.preventDefault();
+                const lamaKl = lapis.querySelector('#kls-lama').value.trim();
+                const baharu = lapis.querySelector('#kls-baharu').value.trim();
+                const sah = lapis.querySelector('#kls-sah').value.trim();
+                ralat.style.display = 'none';
+                if (!lamaKl) return tunjuk('Masukkan kata laluan semasa.');
+                if (baharu !== sah) return tunjuk('Pengesahan kata laluan tidak sama.');
+                if (baharu === lamaKl) return tunjuk('Kata laluan baharu mesti berbeza daripada kata laluan semasa.');
+                const lemah = kataLaluanLemahMesej_(baharu, state.currentTeacherUsername || state.currentPrefectUsername || '');
+                if (lemah) return tunjuk(lemah.replace('Kata laluan kurang daripada 8 aksara.', 'Kata laluan baharu mesti sekurang-kurangnya 8 aksara.'));
+                btn.disabled = true; btn.textContent = 'Menyimpan...';
+                try {
+                    const res = await fetch(state.settings.scriptUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'tukarKataLaluanSendiri', token: state.sessionToken, passwordLama: lamaKl, passwordBaharu: baharu, deviceId: getDeviceId_() })
+                    });
+                    const h = await res.json();
+                    if (h.status === 'success') {
+                        lapis.remove();
+                        showCustomAlert('Kata laluan berjaya ditukar.', 'success');
+                        return;
+                    }
+                    if (h.sesiTamat) { lapis.remove(); showCustomAlert(h.message || 'Sesi tamat.', 'error'); return; }
+                    tunjuk(h.message || 'Gagal menukar kata laluan.');
+                } catch (errTukar) {
+                    tunjuk('Ralat sambungan: ' + errTukar.message);
+                }
+                btn.disabled = false; btn.textContent = 'Simpan';
+            };
+        }
+
+        // Admin: wajibkan SEMUA akaun lama (guru & pengawas) menukar kata laluan pada log masuk seterusnya.
+        function wajibkanSemuaTukarKL() {
+            if (state.currentUser !== 'admin' || !state.sessionToken) { showCustomAlert('Hanya Admin boleh melakukan ini.', 'error'); return; }
+            showCustomConfirm('Wajibkan Semua Tukar Kata Laluan',
+                'Semua akaun guru dan pengawas yang belum menetapkan kata laluan sendiri akan diminta menukar kata laluan pada log masuk seterusnya, dan sesi mereka yang sedang aktif ditamatkan. Kata laluan semasa kekal kelihatan kepada anda sehingga mereka menukarnya. Teruskan?',
+                async function() {
+                    try {
+                        const res = await fetch(state.settings.scriptUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify({ action: 'wajibkanSemuaTukarKL', token: state.sessionToken })
+                        });
+                        const h = await res.json();
+                        if (h.status !== 'success') { showCustomAlert(h.message || 'Gagal.', 'error'); return; }
+                        showCustomAlert(`Selesai: ${h.guru} akaun guru dan ${h.pengawas} akaun pengawas diwajibkan menukar kata laluan. Tekan Pull di tab Tetapan & Segerak untuk melihat lencana terkini.`, 'success');
+                    } catch (err) {
+                        showCustomAlert('Ralat sambungan: ' + err.message, 'error');
+                    }
+                });
         }
 
         // --- AUTHENTICATION ---
@@ -13780,6 +13882,16 @@ asal_getProfilDisiplinPrintHTML_25: {
             const nama = document.getElementById('guru-nama').value.trim();
             const peranan = document.getElementById('guru-peranan').value;
             let password = document.getElementById('guru-password').value.trim();
+            if (password && !window.__abaiKLLemah_) {
+                const mLemah = kataLaluanLemahMesej_(password, username);
+                if (mLemah) {
+                    showCustomConfirm('Kata Laluan Lemah', mLemah + ' Kata laluan sementara ini mudah diteka sebelum pengguna menukarnya. Teruskan juga?', function() {
+                        window.__abaiKLLemah_ = true;
+                        try { saveTeacher({ preventDefault: function() {} }); } finally { window.__abaiKLLemah_ = false; }
+                    });
+                    return;
+                }
+            }
 
             // Kata laluan hanya WAJIB utk akaun BAHARU. Semasa edit, jika dibiarkan
             // kosong, kekalkan kata laluan (hash) sedia ada -- elak borang menghantar
@@ -13909,6 +14021,16 @@ asal_getProfilDisiplinPrintHTML_25: {
             const pId = document.getElementById('akses-prefect-select').value;
             const username = document.getElementById('akses-username').value.trim();
             let password = document.getElementById('akses-password').value.trim();
+            if (password && !window.__abaiKLLemah_) {
+                const mLemah = kataLaluanLemahMesej_(password, username);
+                if (mLemah) {
+                    showCustomConfirm('Kata Laluan Lemah', mLemah + ' Kata laluan sementara ini mudah diteka sebelum pengguna menukarnya. Teruskan juga?', function() {
+                        window.__abaiKLLemah_ = true;
+                        try { saveAksesPengawas({ preventDefault: function() {} }); } finally { window.__abaiKLLemah_ = false; }
+                    });
+                    return;
+                }
+            }
 
             if (!id && !password) {
                 showCustomAlert("Kata laluan diperlukan untuk akaun pengawas baharu.", "error");
@@ -21459,7 +21581,48 @@ asal_renderPenilaianPrestasiHistory_22: {
         }
 
         // --- PERJANJIAN & AKU JANJI PENGAWAS SEKOLAH ---
-        function getPerjanjianAkuJanjiPrintHTML(p, namaGuru, jawatanGuru) {
+        // Halaman "Tandatangan dan Pengesahan" (tanpa pengepala) -- dikongsi cetakan penuh dan cetakan tandatangan sahaja.
+        function getPerjanjianTandatanganHTML_(p, namaGuru, jawatanGuru) {
+            return `
+                <h3 style="font-size:12.5pt; text-align:center; text-transform:uppercase; margin-bottom:6px;">Tandatangan dan Pengesahan</h3>
+                <p class="letter-content" style="margin-top:0; text-align:center;">Selepas membaca dan memahami perjanjian ini, kami bersetuju memeterai perjanjian ini sebagai tanda komitmen dan sokongan penuh terhadap pelantikan jawatan ini serta akan mematuhi Buku Peraturan Pengawas SMK Jalan Damai ini.</p>
+
+                <div style="margin-top:14px; padding:10px 14px; border:1px solid black;">
+                    <p style="font-weight:bold; text-transform:uppercase; margin:0 0 6px 0;">Aku Janji Pengawas</p>
+                    <p style="font-style:italic; margin:0 0 34px 0;">"Saya mengaku telah membaca, memahami, dan bersetuju untuk mematuhi semua terma aku janji ini."</p>
+                    <div style="border-top:1px solid black; width:260px; padding-top:5px; font-size:10pt;">Tandatangan Murid</div>
+                    <p style="margin:6px 0 3px 0;">Nama: <b>${escapeHtml(p.nama)}</b></p>
+                    <p style="margin:0;">Tarikh: _______________</p>
+                </div>
+
+                <div style="margin-top:12px; padding:10px 14px; border:1px solid black;">
+                    <p style="font-weight:bold; text-transform:uppercase; margin:0 0 6px 0;">Sokongan Ibu Bapa / Penjaga</p>
+                    <p style="font-style:italic; margin:0 0 34px 0;">"Saya menyokong pelantikan ini dan akan memastikan anak/jagaan saya mematuhi aku janji ini."</p>
+                    <div style="border-top:1px solid black; width:260px; padding-top:5px; font-size:10pt;">Tandatangan Ibu Bapa / Penjaga</div>
+                    <p style="margin:6px 0 3px 0;">Nama: ______________________________</p>
+                    <p style="margin:0 0 3px 0;">No. Tel: ______________________________</p>
+                    <p style="margin:0;">Tarikh: _______________</p>
+                </div>
+
+                <div style="margin-top:12px; padding:10px 14px; border:1px solid black;">
+                    <p style="font-weight:bold; text-transform:uppercase; margin:0 0 6px 0;">Pengesahan Sekolah</p>
+                    <p style="font-style:italic; margin:0 0 34px 0;">"Disahkan oleh pihak Pentadbiran / Pengurusan Badan Pengawas Sekolah."</p>
+                    <div style="border-top:1px solid black; width:260px; padding-top:5px; font-size:10pt;">Tandatangan &amp; Cop Rasmi</div>
+                    <p style="margin:6px 0 3px 0;">Nama: ${namaGuru ? `<b>${escapeHtml(namaGuru)}</b>` : '______________________________'}</p>
+                    <p style="margin:0 0 3px 0;">Jawatan: ${jawatanGuru ? escapeHtml(jawatanGuru) : '______________________________'}</p>
+                    <p style="margin:0;">Tarikh: _______________</p>
+                </div>
+            `;
+        }
+
+        // mod: 'penuh' (Aku Janji + Bidang Tugas + Tandatangan; lalai) atau 'tandatangan' (halaman Tandatangan sahaja)
+        function getPerjanjianAkuJanjiPrintHTML(p, namaGuru, jawatanGuru, mod) {
+            if (mod === 'tandatangan') {
+                return `
+                ${getPrintHeader()}
+                ${getPerjanjianTandatanganHTML_(p, namaGuru, jawatanGuru)}
+            `;
+            }
             return `
                 ${getPrintHeader()}
                 <div style="font-size:10.25pt; line-height:1.3;">
@@ -21510,34 +21673,7 @@ asal_renderPenilaianPrestasiHistory_22: {
                 ${getBidangTugasSatuJawatanHTML_(p.jawatan, getSesiPengawas(p))}
                 <div class="page-break"></div>
                 ${getPrintHeader()}
-                <h3 style="font-size:12.5pt; text-align:center; text-transform:uppercase; margin-bottom:6px;">Tandatangan dan Pengesahan</h3>
-                <p class="letter-content" style="margin-top:0; text-align:center;">Selepas membaca dan memahami perjanjian ini, kami bersetuju memeterai perjanjian ini sebagai tanda komitmen dan sokongan penuh terhadap pelantikan jawatan ini serta akan mematuhi Buku Peraturan Pengawas SMK Jalan Damai ini.</p>
-
-                <div style="margin-top:14px; padding:10px 14px; border:1px solid black;">
-                    <p style="font-weight:bold; text-transform:uppercase; margin:0 0 6px 0;">Aku Janji Pengawas</p>
-                    <p style="font-style:italic; margin:0 0 34px 0;">"Saya mengaku telah membaca, memahami, dan bersetuju untuk mematuhi semua terma aku janji ini."</p>
-                    <div style="border-top:1px solid black; width:260px; padding-top:5px; font-size:10pt;">Tandatangan Murid</div>
-                    <p style="margin:6px 0 3px 0;">Nama: <b>${escapeHtml(p.nama)}</b></p>
-                    <p style="margin:0;">Tarikh: _______________</p>
-                </div>
-
-                <div style="margin-top:12px; padding:10px 14px; border:1px solid black;">
-                    <p style="font-weight:bold; text-transform:uppercase; margin:0 0 6px 0;">Sokongan Ibu Bapa / Penjaga</p>
-                    <p style="font-style:italic; margin:0 0 34px 0;">"Saya menyokong pelantikan ini dan akan memastikan anak/jagaan saya mematuhi aku janji ini."</p>
-                    <div style="border-top:1px solid black; width:260px; padding-top:5px; font-size:10pt;">Tandatangan Ibu Bapa / Penjaga</div>
-                    <p style="margin:6px 0 3px 0;">Nama: ______________________________</p>
-                    <p style="margin:0 0 3px 0;">No. Tel: ______________________________</p>
-                    <p style="margin:0;">Tarikh: _______________</p>
-                </div>
-
-                <div style="margin-top:12px; padding:10px 14px; border:1px solid black;">
-                    <p style="font-weight:bold; text-transform:uppercase; margin:0 0 6px 0;">Pengesahan Sekolah</p>
-                    <p style="font-style:italic; margin:0 0 34px 0;">"Disahkan oleh pihak Pentadbiran / Pengurusan Badan Pengawas Sekolah."</p>
-                    <div style="border-top:1px solid black; width:260px; padding-top:5px; font-size:10pt;">Tandatangan &amp; Cop Rasmi</div>
-                    <p style="margin:6px 0 3px 0;">Nama: ${namaGuru ? `<b>${escapeHtml(namaGuru)}</b>` : '______________________________'}</p>
-                    <p style="margin:0 0 3px 0;">Jawatan: ${jawatanGuru ? escapeHtml(jawatanGuru) : '______________________________'}</p>
-                    <p style="margin:0;">Tarikh: _______________</p>
-                </div>
+                ${getPerjanjianTandatanganHTML_(p, namaGuru, jawatanGuru)}
             `;
         }
 
@@ -21657,7 +21793,8 @@ asal_renderPenilaianPrestasiHistory_22: {
             }
         }
 
-        function printPerjanjianAkuJanji() {
+        // mod: 'penuh' (lalai) atau 'tandatangan' (halaman tandatangan sahaja)
+        function printPerjanjianAkuJanji(mod) {
             const ids = PR.getSelected('perjanjian-mount');
             if (!ids.length) {
                 showCustomAlert("Sila tandakan sekurang-kurangnya seorang pengawas terlebih dahulu.", "error");
@@ -21670,7 +21807,7 @@ asal_renderPenilaianPrestasiHistory_22: {
             const namaGuru = (guruSel.options[guruSel.selectedIndex] && guruSel.value) ? guruSel.options[guruSel.selectedIndex].dataset.nama : '';
             const jawatanGuru = document.getElementById('perjanjian-jawatan-guru').value || '';
             const html = senarai.map(function(p, i) {
-                return (i === 0 ? '' : '<div class="page-break"></div>') + getPerjanjianAkuJanjiPrintHTML(p, namaGuru, jawatanGuru);
+                return (i === 0 ? '' : '<div class="page-break"></div>') + getPerjanjianAkuJanjiPrintHTML(p, namaGuru, jawatanGuru, mod === 'tandatangan' ? 'tandatangan' : 'penuh');
             }).join('');
             executePrint(html);
         }
@@ -26346,7 +26483,7 @@ eksPasangButang_();
         //     dan amaran Admin (saiz pangkalan data, sandaran, versi tidak sepadan) dalam Tindakan Perlu.
         // =========================================================================
         // Label keluaran disuntik semasa bina (src/VERSI). Mesti sama dengan VERSI_BACKEND_ dalam Code_GS.txt.
-        const VERSI_FRONTEND_ = '2026.11.19b';
+        const VERSI_FRONTEND_ = '2026.11.20';
         window._kesihatanItems_ = [];
         let _kesihatanMasa_ = 0;
         let _storanKekal_ = null; // true / false / null (tidak diketahui)
