@@ -858,7 +858,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             </form>
             
             <div class="mt-4 pt-4 border-t border-gray-100 text-center">
-                <p id="login-versi" class="text-[10px] text-slate-400 mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.19</p>
+                <p id="login-versi" class="text-[10px] text-slate-400 mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.19b</p>
                 <details class="text-xs text-slate-500">
                     <summary class="cursor-pointer font-semibold text-slate-600 hover:text-brand-blue select-none"><i class="fas fa-graduation-cap mr-1"></i>Mod Latihan (data contoh)</summary>
                     <p class="mt-2 mb-2 text-[11px]">Cuba sistem tanpa log masuk. Data contoh sahaja; data sebenar tidak disentuh.</p>
@@ -1057,7 +1057,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             </ul>
         </nav>
         <div class="p-4 border-t border-blue-950">
-            <p id="sidebar-versi" class="text-[10px] text-blue-200/70 text-center mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.19</p>
+            <p id="sidebar-versi" class="text-[10px] text-blue-200/70 text-center mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.19b</p>
             <button onclick="logout()" id="btn-logout-sidebar" class="w-full flex items-center justify-center px-4 py-2.5 bg-red-600 hover:bg-red-700 active:scale-[0.98] rounded-xl text-sm transition font-bold shadow-lg shadow-red-950/20"><i class="fas fa-sign-out-alt mr-2"></i> Log Keluar</button>
         </div>
     </aside>
@@ -3295,6 +3295,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                                 <label class="block text-sm font-semibold mb-1 text-slate-700">Kata Laluan <span id="guru-password-required-mark" class="text-red-500">*</span></label>
                                 <input type="text" id="guru-password" placeholder="Kata laluan baharu..." class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm focus:border-brand-blue">
                                 <p id="guru-password-hint" class="hidden text-xs text-slate-400 font-semibold mt-1">Biarkan kosong jika tidak mahu tukar kata laluan sedia ada.</p>
+                                <p class="text-xs text-slate-500 mt-1"><i class="fas fa-key mr-1"></i>Kata laluan ini bersifat <b>sementara</b>: pengguna wajib menukarnya semasa log masuk. Selepas ditukar, Admin tidak dapat melihatnya lagi (hanya boleh set semula jika terlupa).</p>
                             </div>
                         </div>
                         <div class="mt-5 flex justify-end gap-2 border-t border-slate-100 pt-4">
@@ -3321,7 +3322,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                                     <th class="px-4 py-4 font-bold">Nama Guru</th>
                                     <th class="px-4 py-4 font-bold">Jawatan</th>
                                     <th class="px-4 py-4 font-bold">ID Pengguna</th>
-                                    <th class="px-4 py-4 font-bold">Kata Laluan</th>
+                                    <th class="px-4 py-4 font-bold">Kata Laluan / Status</th>
                                     <th class="px-4 py-4 text-right font-bold">Tindakan</th>
                                 </tr>
                             </thead>
@@ -3484,6 +3485,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                                 <label class="block text-sm font-semibold mb-1 text-slate-700">Kata Laluan (Password) <span id="akses-password-required-mark" class="text-red-500">*</span></label>
                                 <input type="text" id="akses-password" placeholder="Kata laluan baharu..." class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm focus:border-brand-blue">
                                 <p id="akses-password-hint" class="hidden text-xs text-slate-400 font-semibold mt-1">Biarkan kosong jika tidak mahu tukar kata laluan sedia ada.</p>
+                                <p class="text-xs text-slate-500 mt-1"><i class="fas fa-key mr-1"></i>Kata laluan ini bersifat <b>sementara</b>: pengguna wajib menukarnya semasa log masuk. Selepas ditukar, Admin tidak dapat melihatnya lagi (hanya boleh set semula jika terlupa).</p>
                             </div>
                         </div>
                         <div class="mt-5 flex justify-end gap-2 border-t border-slate-100 pt-4">
@@ -3510,7 +3512,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                                     <th class="px-4 py-4 font-bold">Nama Pengawas</th>
                                     <th class="px-4 py-4 font-bold">Jawatan Berdaftar</th>
                                     <th class="px-4 py-4 font-bold">ID Pengguna</th>
-                                    <th class="px-4 py-4 font-bold">Kata Laluan</th>
+                                    <th class="px-4 py-4 font-bold">Kata Laluan / Status</th>
                                     <th class="px-4 py-4 text-right font-bold">Tindakan</th>
                                 </tr>
                             </thead>
@@ -7447,6 +7449,7 @@ asal_ambilLogAktivitiTertapis__12: {
             if (username && state._petaKataLaluanAdmin && state._petaKataLaluanAdmin[username]) {
                 return state._petaKataLaluanAdmin[username];
             }
+            if (obj && obj.klSendiri) return '(ditetapkan sendiri oleh pengguna -- tidak boleh dilihat; guna Edit untuk set semula)';
             if (state.currentUser !== 'admin') return '(hanya Admin boleh papar kata laluan sebenar)';
             return '(tidak tersedia -- kata laluan perlu ditetapkan semula)';
         }
@@ -8742,6 +8745,67 @@ asal_applySyncedState_16: {
             setLoginLockoutData({ attempts: 0, lockedUntil: 0 });
         }
 
+        // --- KATA LALUAN WAJIB DITUKAR (akaun baharu / set semula oleh Admin) ---
+        // Modal tidak boleh ditutup tanpa menetapkan kata laluan baharu (hanya "Batal" -> kembali ke skrin log masuk).
+        // Gaya sebaris supaya sentiasa dipaparkan betul. Selepas berjaya, `selepas(kataLaluanBaharu)` dipanggil
+        // untuk log masuk automatik dgn kata laluan baharu.
+        function paparModalTukarKLWajib_(idPengguna, kataLaluanSementara, selepas) {
+            const lama = document.getElementById('modal-kl-wajib');
+            if (lama) lama.remove();
+            const lapis = document.createElement('div');
+            lapis.id = 'modal-kl-wajib';
+            lapis.setAttribute('role', 'dialog');
+            lapis.setAttribute('aria-modal', 'true');
+            lapis.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,.65);display:flex;align-items:center;justify-content:center;padding:16px;';
+            lapis.innerHTML = `
+                <form id="form-kl-wajib" style="background:#fff;border-radius:16px;max-width:420px;width:100%;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.35);font-family:inherit;">
+                    <h3 style="margin:0 0 6px 0;font-size:18px;font-weight:800;color:#0f172a;">Tetapkan Kata Laluan Baharu</h3>
+                    <p style="margin:0 0 14px 0;font-size:13px;color:#475569;line-height:1.5;">Akaun baharu dan kata laluan yang ditetapkan semula wajib ditukar oleh pengguna semasa log masuk. Kata laluan baharu anda <b>tidak boleh dilihat oleh Admin</b>.</p>
+                    <label style="display:block;font-size:12px;font-weight:700;color:#334155;margin-bottom:4px;">Kata laluan baharu (sekurang-kurangnya 8 aksara)</label>
+                    <input id="kl-baharu" type="password" autocomplete="new-password" maxlength="100" style="width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:9px 12px;font-size:14px;margin-bottom:10px;box-sizing:border-box;">
+                    <label style="display:block;font-size:12px;font-weight:700;color:#334155;margin-bottom:4px;">Sahkan kata laluan baharu</label>
+                    <input id="kl-sah" type="password" autocomplete="new-password" maxlength="100" style="width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:9px 12px;font-size:14px;margin-bottom:8px;box-sizing:border-box;">
+                    <p id="kl-ralat" style="display:none;margin:0 0 8px 0;font-size:12px;font-weight:700;color:#dc2626;"></p>
+                    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px;">
+                        <button type="button" id="kl-batal" style="padding:9px 14px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;font-size:13px;font-weight:700;cursor:pointer;">Batal</button>
+                        <button type="submit" id="kl-simpan" style="padding:9px 16px;border-radius:10px;border:0;background:#1d4ed8;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Simpan &amp; Log Masuk</button>
+                    </div>
+                </form>`;
+            document.body.appendChild(lapis);
+            const ralat = lapis.querySelector('#kl-ralat'), btn = lapis.querySelector('#kl-simpan');
+            const tunjuk = (m) => { ralat.textContent = m; ralat.style.display = 'block'; };
+            lapis.querySelector('#kl-batal').onclick = () => lapis.remove();
+            lapis.querySelector('#kl-baharu').focus();
+            lapis.querySelector('#form-kl-wajib').onsubmit = async (ev) => {
+                ev.preventDefault();
+                const baharu = lapis.querySelector('#kl-baharu').value.trim();
+                const sah = lapis.querySelector('#kl-sah').value.trim();
+                ralat.style.display = 'none';
+                if (baharu.length < 8) return tunjuk('Kata laluan baharu mesti sekurang-kurangnya 8 aksara.');
+                if (baharu !== sah) return tunjuk('Pengesahan kata laluan tidak sama.');
+                if (baharu === kataLaluanSementara) return tunjuk('Kata laluan baharu mesti berbeza daripada kata laluan sementara.');
+                if (baharu.toLowerCase() === String(idPengguna).toLowerCase()) return tunjuk('Kata laluan baharu tidak boleh sama dengan ID Pengguna.');
+                btn.disabled = true; btn.textContent = 'Menyimpan...';
+                try {
+                    const res = await fetch(state.settings.scriptUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'tukarKataLaluanWajib', username: idPengguna, passwordLama: kataLaluanSementara, passwordBaharu: baharu, deviceId: getDeviceId_() })
+                    });
+                    const h = await res.json();
+                    if (h.status === 'success') {
+                        lapis.remove();
+                        selepas(baharu);
+                        return;
+                    }
+                    tunjuk(h.message || 'Gagal menukar kata laluan.');
+                } catch (errTukar) {
+                    tunjuk('Ralat sambungan: ' + errTukar.message);
+                }
+                btn.disabled = false; btn.textContent = 'Simpan & Log Masuk';
+            };
+        }
+
         // --- AUTHENTICATION ---
         async function handleLogin(e) {
             e.preventDefault();
@@ -8795,6 +8859,20 @@ asal_applySyncedState_16: {
                 }
                 err.innerText = 'Ralat sambungan ke Google Sheets: ' + fetchErr.message;
                 err.classList.remove('hidden');
+                return;
+            }
+
+            // Akaun baharu / kata laluan ditetapkan semula oleh Admin: WAJIB tetapkan kata laluan baharu
+            // sebelum boleh log masuk (pelayan tidak mengeluarkan token/data sehingga itu).
+            if (hasil && hasil.perluTukarKL) {
+                if (submitBtn) {
+                    submitBtn.innerHTML = originalBtnHtml;
+                    submitBtn.disabled = false;
+                }
+                paparModalTukarKLWajib_(id, pass, (kataLaluanBaharu) => {
+                    document.getElementById('login-pass').value = kataLaluanBaharu;
+                    handleLogin(e);
+                });
                 return;
             }
 
@@ -13974,7 +14052,7 @@ asal_getProfilDisiplinPrintHTML_25: {
                     <td class="px-4 py-3.5 font-bold text-slate-800">${escapeHtml(nama)}${prefObj ? ` <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${getSesiPengawas(prefObj) === 'Pagi' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}">${getSesiPengawas(prefObj)}</span>` : ''}</td>
                     <td class="px-4 py-3.5 text-brand-blue font-semibold text-xs md:text-sm">${escapeHtml(jawatan)}</td>
                     <td class="px-4 py-3.5 font-mono text-xs md:text-sm text-slate-500">${escapeHtml(acc.username)}</td>
-                    <td class="px-4 py-3.5 font-mono text-xs md:text-sm text-slate-600">${escapeHtml(getDisplayPassword(acc))}</td>
+                    <td class="px-4 py-3.5 text-xs md:text-sm text-slate-600">${selKataLaluanHTML_(acc)}</td>
                     <td class="px-4 py-3.5 text-right whitespace-nowrap">
                         <button onclick="editAksesPengawas('${escapeJsStr(acc.id)}')" class="text-blue-600 hover:text-blue-900 mx-1.5" title="Edit"><i class="fas fa-edit"></i></button>
                         <button onclick="printIndividual('aksespengawas', '${escapeJsStr(acc.id)}')" class="text-slate-500 hover:text-slate-800 mx-1.5" title="Cetak Slip Akses"><i class="fas fa-print"></i></button>
@@ -13997,6 +14075,21 @@ asal_getProfilDisiplinPrintHTML_25: {
             });
         }
 
+        // Sel "Kata Laluan / Status" bagi jadual akses guru & pengawas:
+        //  * wajibTukarKL -> kata laluan SEMENTARA (Admin boleh lihat utk diserahkan) + lencana "Belum tukar KL"
+        //  * klSendiri    -> lencana "Ditetapkan sendiri" (Admin tidak boleh lihat; boleh set semula melalui Edit)
+        //  * lain-lain    -> akaun lama: papar seperti biasa
+        function selKataLaluanHTML_(akaun) {
+            const lencana = (teks, warna, latar) => `<span style="display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${latar};color:${warna};white-space:nowrap;">${teks}</span>`;
+            if (akaun && akaun.wajibTukarKL) {
+                return `<span class="font-mono">${escapeHtml(getDisplayPassword(akaun))}</span> ${lencana('Belum tukar KL', '#713f12', '#facc15')}`;
+            }
+            if (akaun && akaun.klSendiri) {
+                return `${lencana('Telah ditukar pengguna', '#14532d', '#bbf7d0')} <span class="text-[10px] text-slate-400">tidak boleh dilihat</span>`;
+            }
+            return `<span class="font-mono">${escapeHtml(getDisplayPassword(akaun))}</span>`;
+        }
+
         function renderTableTeachers() {
             const tbody = document.getElementById('table-teachers');
             if(!tbody) return;
@@ -14016,7 +14109,7 @@ asal_getProfilDisiplinPrintHTML_25: {
                     <td class="px-4 py-3.5 font-bold text-slate-800">${escapeHtml(t.nama)}</td>
                     <td class="px-4 py-3.5 text-brand-blue font-semibold text-xs md:text-sm">${escapeHtml(t.peranan) || '-'}</td>
                     <td class="px-4 py-3.5 font-mono text-xs md:text-sm text-slate-500">${escapeHtml(t.username)}</td>
-                    <td class="px-4 py-3.5 font-mono text-xs md:text-sm text-slate-600">${escapeHtml(getDisplayPassword(t))}</td>
+                    <td class="px-4 py-3.5 text-xs md:text-sm text-slate-600">${selKataLaluanHTML_(t)}</td>
                     <td class="px-4 py-3.5 text-right whitespace-nowrap">
                         <button onclick="editTeacher('${escapeJsStr(t.id)}')" class="text-blue-600 hover:text-blue-900 mx-1.5 text-sm" title="Edit"><i class="fas fa-edit"></i></button>
                         <button onclick="printIndividual('aksesguru', '${escapeJsStr(t.id)}')" class="text-slate-500 hover:text-slate-800 mx-1.5 text-sm" title="Cetak Slip Akses"><i class="fas fa-print"></i></button>
@@ -26253,7 +26346,7 @@ eksPasangButang_();
         //     dan amaran Admin (saiz pangkalan data, sandaran, versi tidak sepadan) dalam Tindakan Perlu.
         // =========================================================================
         // Label keluaran disuntik semasa bina (src/VERSI). Mesti sama dengan VERSI_BACKEND_ dalam Code_GS.txt.
-        const VERSI_FRONTEND_ = '2026.11.19';
+        const VERSI_FRONTEND_ = '2026.11.19b';
         window._kesihatanItems_ = [];
         let _kesihatanMasa_ = 0;
         let _storanKekal_ = null; // true / false / null (tidak diketahui)
