@@ -366,6 +366,13 @@ try{var _d=document.documentElement,_t=localStorage.getItem("spp_tema"),_s=local
     body.peranan-prefect [onclick*="padamPermohonanPengawas("],
     body.peranan-prefect [onclick*="padamTransaksiKewangan("],
     body.peranan-prefect [onclick*="'delete')"] { display: none !important; }
+
+        .hub-sub-item { display: none !important; }
+        .hub-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 16px 0; padding: 8px 10px; background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; }
+        .hub-bar-tajuk { font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #64748b; margin-right: 6px; }
+        .hub-pil { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px; border: 1px solid #e2e8f0; background: #f8fafc; color: #334155; cursor: pointer; }
+        .hub-pil:hover { background: #eff6ff; }
+        .hub-pil-aktif { background: #1e3a8a; border-color: #1e3a8a; color: #fff; }
     </style>
     <style id="dynamic-print-orientation">@page { size: A4 portrait; margin: 20mm; }</style>
 <style id="glass-theme">
@@ -858,22 +865,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
             </form>
             
             <div class="mt-4 pt-4 border-t border-gray-100 text-center">
-                <p id="login-versi" class="text-[10px] text-slate-400 mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.20</p>
-                <details class="text-xs text-slate-500">
-                    <summary class="cursor-pointer font-semibold text-slate-600 hover:text-brand-blue select-none"><i class="fas fa-graduation-cap mr-1"></i>Mod Latihan (data contoh)</summary>
-                    <p class="mt-2 mb-2 text-[11px]">Cuba sistem tanpa log masuk. Data contoh sahaja; data sebenar tidak disentuh.</p>
-                    <div class="flex justify-center gap-2">
-                        <button type="button" onclick="mlMasuk('admin')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">Admin</button>
-                        <button type="button" onclick="mlMasuk('guru')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">Guru</button>
-                    </div>
-                    <div class="flex justify-center gap-2 mt-2 flex-wrap">
-                        <select id="ml-jawatan" aria-label="Jawatan pengawas / AJK" class="px-2 py-1.5 rounded-lg bg-slate-100 font-bold text-slate-700 text-xs max-w-[14rem]">
-                            <option>Ketua Pengawas</option><option>Penolong Ketua Pengawas 1</option><option>Penolong Ketua Pengawas 2</option><option>Setiausaha</option><option>AJK Disiplin</option><option>AJK Blok</option><option>AJK Maklumat</option><option>AJK Peralatan</option><option>AJK Spotcheck</option><option>AJK Perhimpunan / Arena</option><option>Pengawas Biasa</option><option>Pengawas Percubaan</option>
-                        </select>
-                        <select id="ml-sesi" aria-label="Sesi" class="px-2 py-1.5 rounded-lg bg-slate-100 font-bold text-slate-700 text-xs"><option>Petang</option><option>Pagi</option></select>
-                        <button type="button" onclick="mlMasuk('prefect', document.getElementById('ml-jawatan').value, document.getElementById('ml-sesi').value)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">Pengawas / AJK</button>
-                    </div>
-                </details>
+                <p id="login-versi" class="text-[10px] text-slate-400 mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.20d</p>
             </div>
             <div class="mt-4 pt-4 border-t border-gray-100 text-center">
                 <p class="mt-3 text-[8px] text-slate-400 tracking-wide select-none">&copy; ARF2026</p>
@@ -946,10 +938,8 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 <li id="nav-li-pendaftaran" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('pendaftaran')" id="nav-pendaftaran" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-users w-6 opacity-85 text-brand-yellow"></i> Pendaftaran Pengawas</div></li>
                 <li id="nav-li-perjanjian" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('perjanjian')" id="nav-perjanjian" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-file-signature w-6 opacity-85 text-brand-yellow"></i> Perjanjian &amp; Aku Janji</div></li>
                 <li id="nav-li-dokumen-rasmi" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('dokumen-rasmi')" id="nav-dokumen-rasmi" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-envelope-open-text w-6 opacity-85 text-brand-yellow"></i> Dokumen Rasmi</div></li>
-                <li id="nav-li-akses-pengawas" class="super-admin-only sidebar-group-pendaftaran-akaun"><div onclick="switchTab('akses-pengawas')" id="nav-akses-pengawas" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-6 opacity-85 text-brand-yellow"></i> Akaun Pengawas</div></li>
                 <li id="nav-li-carta-organisasi-lengkap" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('carta-organisasi-lengkap')" id="nav-carta-organisasi-lengkap" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-diagram-project w-6 opacity-85 text-brand-yellow"></i> Carta Organisasi Lengkap</div></li>
                 <li id="nav-li-arkib" class="sidebar-group-pendaftaran-akaun"><div onclick="switchTab('arkib')" id="nav-arkib" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-archive w-6 opacity-85 text-brand-yellow"></i> Pengawas Tidak Aktif</div></li>
-                <li id="nav-li-reset-tahunan" class="super-admin-only sidebar-group-pendaftaran-akaun"><div onclick="switchTab('reset-tahunan')" id="nav-reset-tahunan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-check w-6 opacity-85 text-brand-yellow"></i> Reset Tahunan</div></li>
 
                 <!-- Divider 1b: Operasi & Tugasan Harian -->
                 <li class="pt-3 pb-1 px-3">
@@ -1015,15 +1005,25 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                 <li class="pt-3 pb-1 px-3">
                     <p id="divider-kewangan" onclick="toggleSidebarGroup('kewangan')" class="text-[10px] font-black uppercase tracking-widest text-blue-200/85 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
                         <span class="flex-1 h-px bg-blue-800"></span>
-                        Pentadbiran
+                        Kewangan
                         <i id="chevron-kewangan" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
                         <span class="flex-1 h-px bg-blue-800"></span>
                     </p>
                 </li>
                 <li id="nav-li-kewangan" class="sidebar-group-kewangan"><div onclick="switchTab('kewangan')" id="nav-kewangan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-wallet w-6 opacity-85 text-brand-yellow"></i> Kewangan Pengawas</div></li>
 
-                <li id="nav-li-pendaftaran-guru" class="super-admin-only sidebar-group-kewangan"><div onclick="switchTab('pendaftaran-guru')" id="nav-pendaftaran-guru" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-tie w-6 opacity-85 text-brand-yellow"></i> Pendaftaran Guru</div></li>
-                <li id="nav-li-guru" class="super-admin-only sidebar-group-kewangan"><div onclick="switchTab('guru')" id="nav-guru" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chalkboard-teacher w-6 opacity-85 text-brand-yellow"></i> Akaun Guru</div></li>
+
+                <li class="pt-3 pb-1 px-3 super-admin-only">
+                    <p id="divider-pengurusan-akaun" onclick="toggleSidebarGroup('pengurusan-akaun')" class="text-[10px] font-black uppercase tracking-widest text-blue-200/85 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
+                        <span class="flex-1 h-px bg-blue-800"></span>
+                        Pengurusan Akaun
+                        <i id="chevron-pengurusan-akaun" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
+                        <span class="flex-1 h-px bg-blue-800"></span>
+                    </p>
+                </li>
+                <li id="nav-li-guru" class="super-admin-only sidebar-group-pengurusan-akaun"><div onclick="switchTab('guru')" id="nav-guru" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chalkboard-teacher w-6 opacity-85 text-brand-yellow"></i> Akaun Guru</div></li>
+                <li id="nav-li-pendaftaran-guru" class="super-admin-only sidebar-group-pengurusan-akaun"><div onclick="switchTab('pendaftaran-guru')" id="nav-pendaftaran-guru" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-tie w-6 opacity-85 text-brand-yellow"></i> Pendaftaran Guru</div></li>
+                <li id="nav-li-akses-pengawas" class="super-admin-only sidebar-group-pengurusan-akaun"><div onclick="switchTab('akses-pengawas')" id="nav-akses-pengawas" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-6 opacity-85 text-brand-yellow"></i> Akaun Pengawas</div></li>
 
                 <!-- Divider 3: Tetapan Sistem -->
                 <li class="pt-3 pb-1 px-3 super-admin-only">
@@ -1041,23 +1041,33 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                         <i id="tetapan-group-chevron" class="fas fa-chevron-down text-xs opacity-60 transition-transform duration-200"></i>
                     </div>
                 </li>
-                <li class="sidebar-sublabel sidebar-group-tetapan tetapan-subgroup-item pt-2 pb-0.5 px-3"><p class="text-[11px] font-semibold text-blue-300/60 pl-5">Organisasi pengawas</p></li>
-                <li id="nav-li-tetapan-jawatan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-jawatan')" id="nav-tetapan-jawatan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-id-badge w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Jawatan</div></li>
-                <li id="nav-li-tetapan-bidang-tugas" class="sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-bidang-tugas')" id="nav-tetapan-bidang-tugas" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-file-signature w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Bidang Tugas Pengawas</div></li>
-                <li id="nav-li-tetapan-lokasi" class="sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-lokasi')" id="nav-tetapan-lokasi" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-map-marker-alt w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Lokasi Bertugas</div></li>
-                <li id="nav-li-tetapan-kelas" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-kelas')" id="nav-tetapan-kelas" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chalkboard w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Kelas</div></li>
-                <li id="nav-li-tetapan-minggu" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-minggu')" id="nav-tetapan-minggu" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-week w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Minggu</div></li>
-                <li id="nav-li-tetapan-kalendar" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-kalendar')" id="nav-tetapan-kalendar" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-days w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Kalendar</div></li>
-                <li id="nav-li-tetapan-soalan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-soalan')" id="nav-tetapan-soalan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-clipboard-question w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Soalan Kenaikan</div></li>
-                <li class="sidebar-sublabel super-admin-only sidebar-group-tetapan tetapan-subgroup-item pt-2 pb-0.5 px-3"><p class="text-[11px] font-semibold text-blue-300/60 pl-5">Sistem</p></li>
-                <li id="nav-li-tetapan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan')" id="nav-tetapan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-cog w-5 opacity-75 text-brand-yellow/80"></i> Tetapan & Segerak</div></li>
-                <li id="nav-li-tetapan-backend" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-backend')" id="nav-tetapan-backend" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-server w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Backend & Frontend</div></li>
-                <li id="nav-li-tetapan-akses" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('tetapan-akses')" id="nav-tetapan-akses" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-5 opacity-75 text-brand-yellow/80"></i> Kebenaran Tab</div></li>
-                <li id="nav-li-log-aktiviti" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="switchTab('log-aktiviti')" id="nav-log-aktiviti" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-history w-5 opacity-75 text-brand-yellow/80"></i> Log Aktiviti Sistem</div></li>
+                <li id="nav-li-hub-organisasi" class="sidebar-group-tetapan tetapan-subgroup-item"><div onclick="hubBuka_('organisasi')" id="nav-hub-organisasi" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-sitemap w-6 opacity-85 text-brand-yellow"></i> Tetapan Organisasi</div></li>
+                <li id="nav-li-hub-sistem" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="hubBuka_('sistem')" id="nav-hub-sistem" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-gear w-6 opacity-85 text-brand-yellow"></i> Tetapan Sistem</div></li>
+                <li id="nav-li-hub-pemantauan" class="super-admin-only sidebar-group-tetapan tetapan-subgroup-item"><div onclick="hubBuka_('pemantauan')" id="nav-hub-pemantauan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-heart-pulse w-6 opacity-85 text-brand-yellow"></i> Pemantauan</div></li>
+                <li id="nav-li-tetapan-jawatan" class="super-admin-only hub-sub-item"><div onclick="switchTab('tetapan-jawatan')" id="nav-tetapan-jawatan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-id-badge w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Jawatan</div></li>
+                <li id="nav-li-tetapan-bidang-tugas" class="hub-sub-item"><div onclick="switchTab('tetapan-bidang-tugas')" id="nav-tetapan-bidang-tugas" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-file-signature w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Bidang Tugas Pengawas</div></li>
+                <li id="nav-li-tetapan-lokasi" class="hub-sub-item"><div onclick="switchTab('tetapan-lokasi')" id="nav-tetapan-lokasi" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-map-marker-alt w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Lokasi Bertugas</div></li>
+                <li id="nav-li-tetapan-kelas" class="super-admin-only hub-sub-item"><div onclick="switchTab('tetapan-kelas')" id="nav-tetapan-kelas" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-chalkboard w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Kelas</div></li>
+                <li id="nav-li-tetapan-minggu" class="super-admin-only hub-sub-item"><div onclick="switchTab('tetapan-minggu')" id="nav-tetapan-minggu" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-week w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Minggu</div></li>
+                <li id="nav-li-tetapan-kalendar" class="super-admin-only hub-sub-item"><div onclick="switchTab('tetapan-kalendar')" id="nav-tetapan-kalendar" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-days w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Kalendar</div></li>
+                <li id="nav-li-tetapan-soalan" class="super-admin-only hub-sub-item"><div onclick="switchTab('tetapan-soalan')" id="nav-tetapan-soalan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-clipboard-question w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Soalan Kenaikan</div></li>
+                <li id="nav-li-tetapan" class="super-admin-only hub-sub-item"><div onclick="switchTab('tetapan')" id="nav-tetapan" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-cog w-5 opacity-75 text-brand-yellow/80"></i> Tetapan & Segerak</div></li>
+                <li id="nav-li-tetapan-backend" class="super-admin-only hub-sub-item"><div onclick="switchTab('tetapan-backend')" id="nav-tetapan-backend" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-server w-5 opacity-75 text-brand-yellow/80"></i> Tetapan Backend & Frontend</div></li>
+                <li id="nav-li-tetapan-akses" class="super-admin-only hub-sub-item"><div onclick="switchTab('tetapan-akses')" id="nav-tetapan-akses" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-user-lock w-5 opacity-75 text-brand-yellow/80"></i> Kebenaran Tab</div></li>
+                <li id="nav-li-log-aktiviti" class="super-admin-only hub-sub-item"><div onclick="switchTab('log-aktiviti')" id="nav-log-aktiviti" class="nav-btn flex items-center px-4 py-2.5 pl-8 rounded-xl text-[13px] hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-history w-5 opacity-75 text-brand-yellow/80"></i> Log Aktiviti Sistem</div></li>
+                <li class="pt-3 pb-1 px-3 super-admin-only">
+                    <p id="divider-bahaya" onclick="toggleSidebarGroup('bahaya')" class="text-[10px] font-black uppercase tracking-widest text-blue-200/85 flex items-center gap-2 cursor-pointer select-none hover:text-blue-200/80 transition-colors">
+                        <span class="flex-1 h-px bg-blue-800"></span>
+                        Tindakan Berbahaya
+                        <i id="chevron-bahaya" class="fas fa-chevron-down text-[8px] transition-transform duration-200"></i>
+                        <span class="flex-1 h-px bg-blue-800"></span>
+                    </p>
+                </li>
+                <li id="nav-li-reset-tahunan" class="super-admin-only sidebar-group-bahaya"><div onclick="switchTab('reset-tahunan')" id="nav-reset-tahunan" class="nav-btn flex items-center px-4 py-3 rounded-xl text-sm hover:bg-blue-800/60 border-l-4 border-transparent cursor-pointer transition-all" role="button"><i class="fas fa-calendar-check w-6 opacity-85 text-brand-yellow"></i> Reset Tahunan</div></li>
             </ul>
         </nav>
         <div class="p-4 border-t border-blue-950">
-            <p id="sidebar-versi" class="text-[10px] text-blue-200/70 text-center mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.20</p>
+            <p id="sidebar-versi" class="text-[10px] text-blue-200/70 text-center mb-2" title="Nombor versi sistem. Nyatakan nombor ini apabila melaporkan masalah.">Versi 2026.11.20d</p>
             <button onclick="paparModalTukarKLSendiri()" id="btn-tukar-kl-sidebar" class="w-full flex items-center justify-center px-4 py-2 mb-2 bg-blue-900/60 hover:bg-blue-800 active:scale-[0.98] rounded-xl text-xs transition font-bold border border-blue-700/60"><i class="fas fa-key mr-2"></i> Tukar Kata Laluan</button>
             <button onclick="logout()" id="btn-logout-sidebar" class="w-full flex items-center justify-center px-4 py-2.5 bg-red-600 hover:bg-red-700 active:scale-[0.98] rounded-xl text-sm transition font-bold shadow-lg shadow-red-950/20"><i class="fas fa-sign-out-alt mr-2"></i> Log Keluar</button>
         </div>
@@ -3287,7 +3297,7 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                             </div>
                             <div id="admin-jawatan-warning" class="md:col-span-2 hidden bg-amber-50 border border-amber-300 rounded-xl p-3 text-xs text-amber-800 font-semibold flex items-start gap-2">
                                 <i class="fas fa-shield-halved text-amber-500 mt-0.5"></i>
-                                <span>Guru ini berperanan <b>Penyelaras (Admin)</b> — akaun log masuk ini akan mendapat capaian ADMIN penuh ke seluruh sistem (termasuk tab "Tetapan Sistem"), bukan sekadar capaian Guru biasa. Sila pastikan ini memang disengajakan.</span>
+                                <span>Guru ini berperanan <b>Penyelaras (Admin)</b> — akaun log masuk ini akan mendapat capaian ADMIN penuh ke seluruh sistem (termasuk tab "Tetapan Sistem"), bukan sekadar capaian Guru biasa. Sila pastikan ini memang disengajakan. Admin boleh dilantik sehingga 5 orang; Admin baharu wajib menukar kata laluan semasa log masuk kali pertama.</span>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold mb-1 text-slate-700">ID Pengguna (Username) <span class="text-red-500">*</span></label>
@@ -4290,6 +4300,35 @@ html[data-tema="gelap"] .org-row .org-box::before,html[data-tema="gelap"] .org-r
                     <div id="ks-versi" class="text-sm text-slate-700 mb-4"></div>
                     <button id="ks-btn-konsistensi" onclick="ksSemakKonsistensi()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition disabled:opacity-60"><i class="fas fa-list-check"></i>Semak Konsistensi Helaian</button>
                     <div id="ks-konsistensi" class="mt-3"></div>
+                </div>
+
+                <!-- Tetapan Mod Latihan -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 admin-only-block mb-6">
+                    <h3 class="font-bold text-base text-slate-800 flex items-center gap-2 mb-1"><i class="fas fa-graduation-cap text-orange-500"></i>Tetapan Mod Latihan</h3>
+                    <p class="text-[11px] text-slate-500 mb-3">Mod Latihan dibuka dengan mengisi ID dan kata laluan akaun latihan pada skrin Log Masuk biasa. Ia hanya menggunakan data contoh: tiada data sebenar dipaparkan atau diubah, dan tiada apa dihantar ke pelayan. ID latihan tidak boleh sama dengan ID akaun sebenar. Biarkan ID kosong untuk menutup akaun latihan itu. Biarkan kata laluan kosong untuk mengekalkan kata laluan sedia ada.</p>
+                    <div id="latihan-baris" class="space-y-3 text-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-end" data-peranan="admin">
+                            <div class="md:col-span-3 font-bold text-slate-700 pb-2">Admin Latihan</div>
+                            <div class="md:col-span-4"><label class="block text-[11px] font-semibold text-slate-500 mb-1">ID Latihan</label><input type="text" data-medan="id" maxlength="40" autocomplete="off" class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm"></div>
+                            <div class="md:col-span-5"><label class="block text-[11px] font-semibold text-slate-500 mb-1">Kata Laluan (6 aksara ke atas)</label><input type="text" data-medan="kataLaluan" maxlength="100" autocomplete="off" class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-end" data-peranan="guru">
+                            <div class="md:col-span-3 font-bold text-slate-700 pb-2">Guru Latihan</div>
+                            <div class="md:col-span-4"><input type="text" data-medan="id" maxlength="40" autocomplete="off" aria-label="ID Guru Latihan" class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm"></div>
+                            <div class="md:col-span-5"><input type="text" data-medan="kataLaluan" maxlength="100" autocomplete="off" aria-label="Kata laluan Guru Latihan" class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-end" data-peranan="pengawas">
+                            <div class="md:col-span-3 font-bold text-slate-700 pb-2">Pengawas / AJK Latihan</div>
+                            <div class="md:col-span-3"><input type="text" data-medan="id" maxlength="40" autocomplete="off" aria-label="ID Pengawas Latihan" class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm"></div>
+                            <div class="md:col-span-3"><input type="text" data-medan="kataLaluan" maxlength="100" autocomplete="off" aria-label="Kata laluan Pengawas Latihan" class="w-full border border-slate-200 py-2 px-3 rounded-xl text-sm"></div>
+                            <div class="md:col-span-2"><select data-medan="jawatan" aria-label="Jawatan pengawas latihan" class="w-full border border-slate-200 py-2 px-2 rounded-xl text-xs bg-white"><option>Ketua Pengawas</option><option>Penolong Ketua Pengawas 1</option><option>Penolong Ketua Pengawas 2</option><option>Setiausaha</option><option>AJK Disiplin</option><option>AJK Blok</option><option>AJK Maklumat</option><option>AJK Peralatan</option><option>AJK Spotcheck</option><option>AJK Perhimpunan / Arena</option><option>Pengawas Biasa</option><option>Pengawas Percubaan</option></select></div>
+                            <div class="md:col-span-1"><select data-medan="sesi" aria-label="Sesi" class="w-full border border-slate-200 py-2 px-1 rounded-xl text-xs bg-white"><option>Petang</option><option>Pagi</option></select></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 mt-4">
+                        <button onclick="latihanSimpanTetapan()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"><i class="fas fa-floppy-disk"></i>Simpan Akaun Latihan</button>
+                        <span id="latihan-mesej" class="text-xs text-slate-500"></span>
+                    </div>
                 </div>
 
                 <!-- Keselamatan Kata Laluan -->
@@ -8799,7 +8838,7 @@ asal_applySyncedState_16: {
                     const res = await fetch(state.settings.scriptUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify({ action: 'tukarKataLaluanWajib', username: idPengguna, passwordLama: kataLaluanSementara, passwordBaharu: baharu, deviceId: getDeviceId_() })
+                        body: JSON.stringify({ action: 'tukarKataLaluanWajib', username: idPengguna, passwordLama: kataLaluanSementara, passwordBaharu: baharu, deviceId: getDeviceId_(), kodTotp: ((document.getElementById('login-totp') || {}).value || '').trim() })
                     });
                     const h = await res.json();
                     if (h.status === 'success') {
@@ -8961,6 +9000,18 @@ asal_applySyncedState_16: {
                 }
                 err.innerText = 'Ralat sambungan ke Google Sheets: ' + fetchErr.message;
                 err.classList.remove('hidden');
+                return;
+            }
+
+            // Akaun LATIHAN (ditetapkan Admin dalam Tetapan Mod Latihan): pelayan hanya mengesahkan ID/kata laluan
+            // dan memberi kebenaran masuk Mod Latihan (data contoh sahaja; tiada token, tiada data sebenar).
+            if (hasil && hasil.status === 'success' && hasil.latihan) {
+                if (submitBtn) {
+                    submitBtn.innerHTML = originalBtnHtml;
+                    submitBtn.disabled = false;
+                }
+                try { resetCubaanLogMasuk(); } catch (eReset) { /* tidak kritikal */ }
+                mlMasuk(hasil.peranan, hasil.jawatan || undefined, hasil.sesi || undefined);
                 return;
             }
 
@@ -9444,7 +9495,64 @@ asal_applySyncedState_16: {
 
         // --- SIDEBAR BOLEH DILIPAT (Collapsible Sections) ---
         const SIDEBAR_GROUP_STORAGE_KEY = 'spp_smkjd_sidebar_groups';
-        const SIDEBAR_GROUPS = ['pendaftaran-akaun', 'operasi-harian', 'disiplin', 'pencapaian', 'mesyuarat-laporan', 'kewangan', 'tetapan'];
+        const SIDEBAR_GROUPS = ['pendaftaran-akaun', 'operasi-harian', 'disiplin', 'pencapaian', 'mesyuarat-laporan', 'kewangan', 'pengurusan-akaun', 'tetapan', 'bahaya'];
+        // =========================================================================
+        //  HUB TETAPAN: tab-tab tetapan yang berkaitan dikumpul di bawah SATU entri sidebar dgn bar tab dalaman.
+        //  Setiap tab lama kekal wujud (id, kebenaran Akses Tab & pautan sedia ada tidak berubah); hanya navigasinya
+        //  dipermudah. Entri hub kelihatan jika mana-mana ahlinya dibenarkan bagi peranan semasa.
+        // =========================================================================
+        const HUB_TETAPAN_ = {
+            'organisasi': { label: 'Tetapan Organisasi', ahli: [['tetapan-jawatan', 'Jawatan'], ['tetapan-bidang-tugas', 'Bidang Tugas'], ['tetapan-lokasi', 'Lokasi'], ['tetapan-kelas', 'Kelas'], ['tetapan-minggu', 'Minggu'], ['tetapan-kalendar', 'Kalendar'], ['tetapan-soalan', 'Soalan Kenaikan']] },
+            'sistem': { label: 'Tetapan Sistem', ahli: [['tetapan', 'Segerak'], ['tetapan-backend', 'Backend & Frontend'], ['tetapan-akses', 'Kebenaran Tab']] },
+            'pemantauan': { label: 'Pemantauan', ahli: [['log-aktiviti', 'Log Aktiviti'], ['semakan-sistem', 'Semakan & Kualiti Data']] }
+        };
+        function hubAhliDibenarkan_(idHub) {
+            return HUB_TETAPAN_[idHub].ahli.filter(function(a) {
+                const li = document.getElementById('nav-li-' + a[0]);
+                return !li || li.style.display !== 'none';
+            });
+        }
+        function hubBuka_(idHub) {
+            const ada = hubAhliDibenarkan_(idHub);
+            if (!ada.length) return;
+            let sasaran = ada[0][0];
+            try { const terakhir = window._hubTerakhir_ && window._hubTerakhir_[idHub]; if (terakhir && ada.some(function(a) { return a[0] === terakhir; })) sasaran = terakhir; } catch (e) { /* abaikan */ }
+            switchTab(sasaran);
+        }
+        function hubDaripadaTab_(tabId) {
+            return Object.keys(HUB_TETAPAN_).filter(function(h) { return HUB_TETAPAN_[h].ahli.some(function(a) { return a[0] === tabId; }); })[0] || null;
+        }
+        function hubKemaskiniKelihatan_() {
+            Object.keys(HUB_TETAPAN_).forEach(function(h) {
+                const li = document.getElementById('nav-li-hub-' + h);
+                if (!li) return;
+                if (li.classList.contains('super-admin-only') && state.currentUser !== 'admin') { li.style.display = 'none'; return; }
+                li.style.display = (state.currentUser && hubAhliDibenarkan_(h).length) ? '' : 'none';
+            });
+        }
+        // Bar tab dalaman di bahagian atas setiap tab ahli hub + sorotan entri hub pada sidebar.
+        function hubSegarkan_(tabId) {
+            const h = hubDaripadaTab_(tabId);
+            document.querySelectorAll('[id^="nav-hub-"]').forEach(function(el) {
+                el.classList.remove('bg-blue-800/60', 'border-brand-yellow', 'text-white', 'font-bold', 'shadow-inner');
+                el.classList.add('border-transparent', 'text-blue-100');
+            });
+            if (!h) return;
+            window._hubTerakhir_ = window._hubTerakhir_ || {}; window._hubTerakhir_[h] = tabId;
+            const nav = document.getElementById('nav-hub-' + h);
+            if (nav) { nav.classList.add('bg-blue-800/60', 'border-brand-yellow', 'text-white', 'font-bold', 'shadow-inner'); nav.classList.remove('border-transparent', 'text-blue-100'); }
+            const tab = document.getElementById('tab-' + tabId);
+            if (!tab) return;
+            let bar = tab.querySelector(':scope > .hub-bar');
+            if (!bar) { bar = document.createElement('div'); bar.className = 'hub-bar no-print'; tab.insertBefore(bar, tab.firstChild); }
+            const ahli = hubAhliDibenarkan_(h);
+            if (ahli.length < 2) { bar.style.display = 'none'; return; }
+            bar.style.display = '';
+            bar.innerHTML = '<span class="hub-bar-tajuk">' + escapeHtml(HUB_TETAPAN_[h].label) + '</span>' + ahli.map(function(a) {
+                return '<button type="button" class="hub-pil' + (a[0] === tabId ? ' hub-pil-aktif' : '') + '" onclick="switchTab(\'' + a[0] + '\')">' + escapeHtml(a[1]) + '</button>';
+            }).join('');
+        }
+
 
         let _sidebarGroupMem_ = null; // salinan dalam memori: kekal betul walau localStorage disekat (cth. Mod Latihan)
         function getSidebarGroupState() {
@@ -9459,7 +9567,7 @@ asal_applySyncedState_16: {
                 // pengawas tidak terjejas kerana senarai tab mereka sudah pendek.
                 const u = (typeof state !== 'undefined') ? state.currentUser : '';
                 if (!u) return {}; // belum log masuk: jangan kunci keadaan lalai lagi
-                hasil = (u === 'admin' || u === 'guru') ? { 'pencapaian': true, 'mesyuarat-laporan': true, 'kewangan': true, 'tetapan': true } : {};
+                hasil = (u === 'admin' || u === 'guru') ? { 'pencapaian': true, 'mesyuarat-laporan': true, 'kewangan': true, 'tetapan': true, 'bahaya': true } : {};
             }
             _sidebarGroupMem_ = hasil;
             return hasil;
@@ -9730,6 +9838,7 @@ const r = hasil_updateUIRoles_5; try { tpKemaskiniBadge_(); } catch (e) { ralatD
         // kelihatan bagi peranan semasa (cth: pengawas biasa yang tiada akses ke mana-mana tab
         // dalam kumpulan "Mesyuarat & Laporan" tidak sepatutnya nampak tajuk kosong itu langsung).
         function hideEmptyDividers() {
+            try { hubKemaskiniKelihatan_(); } catch (eHub) { ralatDiam_('hubKemaskiniKelihatan_', eHub); }
             // Label sub-kumpulan (cth. "Organisasi pengawas" / "Sistem" dalam Tetapan): sembunyikan jika
             // tiada item di bawahnya kelihatan bagi peranan semasa. Dijalankan DAHULU supaya pengiraan
             // divider kumpulan di bawah turut mengambil kira label yang sudah disembunyikan.
@@ -9786,6 +9895,7 @@ asal_switchTab_21: {
             if (TETAPAN_GROUP_TAB_IDS.includes(tabId)) {
                 setTetapanSidebarGroupExpanded(true);
             }
+            try { hubSegarkan_(tabId); } catch (eHub) { ralatDiam_('hubSegarkan_', eHub); }
             if (tabId === 'tunjuk-sebab') {
                 const prev = document.getElementById('ts-tarikh-preview');
                 if (prev) prev.textContent = formatTarikhSuratPanjang(getRealTimeTodayStr());
@@ -9915,7 +10025,7 @@ asal_switchTab_21: {
                     else if (tabId === 'tindakan-perlu') tpRender();
                     else if (tabId === 'reset-tahunan') rsRender();
                     else if (tabId === 'penilaian-prestasi') rpRender();
-                    else if (tabId === 'tetapan-backend') { sdrPapar_(); sdrSemak(false); try { kuMuat(); ksMuat(); rlMuat(); } catch (e) { ralatDiam_('switchTab', e); } }
+                    else if (tabId === 'tetapan-backend') { sdrPapar_(); sdrSemak(false); try { kuMuat(); ksMuat(); rlMuat(); latihanMuatTetapan(); } catch (e) { ralatDiam_('switchTab', e); } }
                 } catch (e) { console.warn('Cangkuk tab gagal:', e); }
                 return r;
             }
@@ -13915,13 +14025,11 @@ asal_getProfilDisiplinPrintHTML_25: {
                 return;
             }
 
-            // Validate only one Penyelaras (Admin) allowed
-            if (peranan === 'Penyelaras (Admin)') {
-                const existingAdmin = state.teachers.find(t => t.peranan === 'Penyelaras (Admin)' && normalizeId(t.id) !== normalizeId(id));
-                if (existingAdmin) {
-                    showCustomAlert("Hanya seorang guru sahaja dibenarkan memegang jawatan 'Penyelaras (Admin)'. Sila keluarkan jawatan tersebut dari guru '" + existingAdmin.nama + "' terlebih dahulu.", "error");
-                    return;
-                }
+            // Admin boleh lebih daripada seorang (had MAKS_ADMIN_); pelayan menguatkuasakan semula.
+            {
+                const lamaGuru = id ? state.teachers.find(t => normalizeId(t.id) === normalizeId(id)) : null;
+                const ralatAdmin = ralatKiraanAdmin_(lamaGuru, { id: id, peranan: peranan });
+                if (ralatAdmin) { showCustomAlert(ralatAdmin, "error"); return; }
             }
 
             // KESELAMATAN/KETEKALAN: bandingkan CASE-INSENSITIVE (bukan "===" case-sensitive) --
@@ -14186,7 +14294,25 @@ asal_getProfilDisiplinPrintHTML_25: {
             updateBulkBar('aksespengawas');
         }
 
+        // Had & perlindungan Admin berbilang (cermin pelayan): had 5 Admin; tidak boleh padam/turunkan diri sendiri atau Admin terakhir.
+        const MAKS_ADMIN_ = 5;
+        function ralatKiraanAdmin_(lama, baharu) {
+            const ADM = 'Penyelaras (Admin)';
+            const lamaAdmin = !!(lama && lama.peranan === ADM), baharuAdmin = !!(baharu && baharu.peranan === ADM);
+            const lain = state.teachers.filter(t => t.peranan === ADM && !(lama && normalizeId(t.id) === normalizeId(lama.id))).length;
+            if (lamaAdmin && !baharuAdmin) {
+                const diri = String(state.currentTeacherUsername || '').trim().toLowerCase();
+                if (diri && String(lama.username || '').trim().toLowerCase() === diri) return 'Anda tidak boleh memadam atau menurunkan peranan akaun Admin anda sendiri. Minta Admin lain melakukannya.';
+                if (lain < 1) return 'Sekurang-kurangnya seorang Admin mesti kekal dalam sistem.';
+            }
+            if (!lamaAdmin && baharuAdmin && lain >= MAKS_ADMIN_) return 'Bilangan Admin dihadkan kepada ' + MAKS_ADMIN_ + ' orang.';
+            return '';
+        }
+
         function deleteTeacher(id) {
+            const guruPadam = state.teachers.find(x => normalizeId(x.id) === normalizeId(id));
+            const ralatPadam = ralatKiraanAdmin_(guruPadam, null);
+            if (ralatPadam) { showCustomAlert(ralatPadam, "error"); return; }
             showCustomConfirm("Padam Akaun Guru", "Adakah anda pasti untuk memadam akaun guru ini?", function() {
                 state.teachers = state.teachers.filter(x => normalizeId(x.id) !== normalizeId(id));
                 queueDeleteRecord('guru', id, 'Padam akaun guru');
@@ -26333,7 +26459,7 @@ eksPasangButang_();
             const kls = ['1 Titanium', '2 Platinum', '3 Magnesium', '4 Neon', '5 Aluminium'];
             const pengawas = nama.map(function(n, i) {
                 const perc = i >= 22;
-                const p = { id: 9001 + i, nama: n.toUpperCase(), ic: '', jantina: i % 2 ? 'Perempuan' : 'Lelaki', kelas: i === 0 ? (sesiAjk === 'Pagi' ? '4 Neon' : '1 Titanium') : kls[i % 5], tel: '', ibubapa: '', telibubapa: '', jawatan: i === 0 ? ((jawatanAjk || 'Ketua Pengawas') + ' (Sesi ' + (sesiAjk === 'Pagi' ? 'Pagi' : 'Petang') + ')') : (perc ? 'Pengawas Percubaan' : 'Pengawas Biasa'), tarikhLantikan: mlTarikh_(perc ? -80 : -400), status: 'Aktif', tarikhArkib: '', sebabArkib: '', sesi: i % 2 ? 'Pagi' : 'Petang' };
+                const p = { id: 9001 + i, nama: n.toUpperCase(), ic: '', jantina: i % 2 ? 'Perempuan' : 'Lelaki', kelas: i === 0 ? (sesiAjk === 'Pagi' ? '4 Neon' : '1 Titanium') : kls[i % 5], tel: '', ibubapa: '', telibubapa: '', jawatan: i === 0 ? ((jawatanAjk || 'Ketua Pengawas') + ' (Sesi ' + (sesiAjk === 'Pagi' ? 'Pagi' : 'Petang') + ')') : (perc ? 'Pengawas Percubaan' : 'Pengawas Biasa'), tarikhLantikan: mlTarikh_(perc ? -80 : -400), status: 'Aktif', tarikhArkib: '', sebabArkib: '' }; // sesi dikira daripada kelas oleh getSesiPengawas() -- sama seperti sistem sebenar
                 if (perc) p.percubaanTamat = mlTarikh_(i === 22 ? -3 : (i === 23 ? 5 : 40));
                 return p;
             });
@@ -26342,8 +26468,8 @@ eksPasangButang_();
                 if (o === -1) continue; // sengaja tinggalkan semalam supaya kad "Hari Ini" ada contoh
                 const t = mlTarikh_(o); const dow = new Date(t + 'T00:00:00').getDay();
                 if (dow === 0 || dow === 6) continue;
-                ['Petang'].forEach(function(sesi) {
-                    const rekod = pengawas.filter(function(p) { return (p.sesi || 'Petang') === sesi; }).map(function(p, k) {
+                ['Pagi', 'Petang'].forEach(function(sesi) {
+                    const rekod = pengawas.filter(function(p) { return getSesiPengawas(p) === sesi; }).map(function(p, k) {
                         const st = (k + o + 20) % 11 === 0 ? 'Tidak Hadir' : ((k + o + 20) % 7 === 0 ? 'Lewat' : 'Hadir');
                         return { pId: String(p.id), nama: p.nama, jawatan: p.jawatan, status: st, catatan: '' };
                     });
@@ -26379,15 +26505,55 @@ eksPasangButang_();
             };
             return {
                 pengawas: pengawas, kehadiranLog: kehadiran, kesalahan: kesalahan, tambahan: tambahan,
+                // Akaun contoh meniru sistem sebenar: ada medan password (hash), wajibTukarKL & klSendiri.
+                //  * lama      -> kata laluan kelihatan kepada Admin (akaun sebelum ciri Tukar KL)
+                //  * baharu    -> "Belum tukar KL" (kata laluan sementara kelihatan kepada Admin)
+                //  * sendiri   -> sudah ditukar pengguna (tidak boleh dilihat Admin)
                 teachers: [
-                    { id: 9901, username: 'admin.latihan', nama: 'Admin Latihan', peranan: 'Penyelaras (Admin)', jawatan: 'Penyelaras (Admin)' },
-                    { id: 9902, username: 'guru.latihan', nama: 'Cikgu Latihan', peranan: 'Guru Pengawas', jawatan: 'Guru Pengawas' }
+                    { id: 9901, username: 'admin.latihan', nama: 'Admin Latihan', peranan: 'Penyelaras (Admin)', jawatan: 'Penyelaras (Admin)', password: ML_HASH_, wajibTukarKL: false, klSendiri: false },
+                    { id: 9902, username: 'guru.latihan', nama: 'Cikgu Latihan', peranan: 'Guru Pengawas', jawatan: 'Guru Pengawas', password: ML_HASH_, wajibTukarKL: false, klSendiri: false },
+                    { id: 9903, username: 'guru.baharu', nama: 'Cikgu Baharu', peranan: 'Guru Pengawas', jawatan: 'Guru Pengawas', password: ML_HASH_, wajibTukarKL: true, klSendiri: false },
+                    { id: 9904, username: 'guru.sendiri', nama: 'Cikgu Sendiri', peranan: 'Guru Pengawas', jawatan: 'Guru Pengawas', password: ML_HASH_, wajibTukarKL: false, klSendiri: true }
                 ],
-                studentAccounts: [{ id: 'ml-a1', username: 'pengawas.latihan', prefectId: 9001, pId: 9001 }],
+                studentAccounts: [
+                    { id: 'ml-a1', username: 'pengawas.latihan', prefectId: 9001, pId: 9001, password: ML_HASH_, wajibTukarKL: false, klSendiri: false },
+                    { id: 'ml-a2', username: 'pengawas.baharu', prefectId: 9002, pId: 9002, password: ML_HASH_, wajibTukarKL: true, klSendiri: false },
+                    { id: 'ml-a3', username: 'pengawas.sendiri', prefectId: 9003, pId: 9003, password: ML_HASH_, wajibTukarKL: false, klSendiri: true }
+                ],
+                pendaftaranGuru: [
+                    { id: 9901, nama: 'Admin Latihan', ic: '', tel: '', emel: '', peranan: 'Penyelaras (Admin)', perananTambahan: 'Guru Pengawas', sesi: 'Petang', catatan: 'Data contoh' },
+                    { id: 9902, nama: 'Cikgu Latihan', ic: '', tel: '', emel: '', peranan: 'Guru Pengawas', perananTambahan: '', sesi: 'Petang', catatan: 'Data contoh' },
+                    { id: 9903, nama: 'Cikgu Baharu', ic: '', tel: '', emel: '', peranan: 'Guru Pengawas', perananTambahan: '', sesi: 'Pagi', catatan: 'Data contoh' },
+                    { id: 9904, nama: 'Cikgu Sendiri', ic: '', tel: '', emel: '', peranan: 'Guru Pengawas', perananTambahan: '', sesi: 'Pagi', catatan: 'Data contoh' }
+                ],
                 pengumumanLog: [{ id: 'ml-p1', tajuk: 'Selamat datang ke Mod Latihan', isi: 'Ini data contoh. Anda boleh cuba semua fungsi tanpa menjejaskan data sebenar sekolah.', sasaran: 'semua', jawatan: '', penting: true, tarikhMula: mlTarikh_(-1), tarikhTamat: '', oleh: 'Admin Latihan', masa: new Date().toISOString() }],
                 kalendarSekolah: [{ id: 'ml-c1', jenis: 'Cuti Lain', nama: 'Hari Sukan (contoh)', mula: mlTarikh_(2), tamat: mlTarikh_(2), sesi: 'Semua', catatan: '' }],
                 suratTunjukSebabLog: [{ id: 'ml-t1', tarikh: mlTarikh_(-4), pengirimGuruId: 9902, pId: 9003, tajuk: 'Datang lewat berulang', tarikhInsiden: mlTarikh_(-6), masaInsiden: '', lokasi: 'Pintu pagar', butiranKesalahan: 'Contoh', kesanKesalahan: 'Contoh', tarikhAkhirJawapan: mlTarikh_(1), masaAkhirJawapan: '', akibatTindakan: 'Contoh' }]
             };
+        }
+        // Kata laluan semasa SEMUA akaun contoh dalam Mod Latihan (utk menguji "Tukar Kata Laluan").
+        const ML_KATA_LALUAN_ = 'latihan123';
+        const ML_HASH_ = 'ml-hash'; // pemegang tempat -- bukan hash sebenar
+        // Pelayan tiruan (tiada rangkaian): jawapan setara pelayan sebenar bagi aksi berkaitan kata laluan;
+        // aksi lain dijawab "berjaya" tanpa menghantar apa-apa.
+        function mlJawabPelayan_(opt) {
+            let b = {};
+            try { b = JSON.parse((opt && opt.body) || '{}'); } catch (e) { b = {}; }
+            if (b.action === 'tukarKataLaluanSendiri') {
+                if (String(b.passwordLama) !== ML_KATA_LALUAN_) return { status: 'error', salahInput: true, message: 'Kata laluan semasa tidak betul. (Mod Latihan: kata laluan semasa ialah ' + ML_KATA_LALUAN_ + ')' };
+                const lemah = kataLaluanLemahMesej_(b.passwordBaharu, state.currentTeacherUsername || state.currentPrefectUsername || '');
+                if (lemah) return { status: 'error', salahInput: true, message: lemah };
+                if (String(b.passwordBaharu) === ML_KATA_LALUAN_) return { status: 'error', salahInput: true, message: 'Kata laluan baharu mesti berbeza daripada kata laluan sebelumnya.' };
+                return { status: 'success', message: 'Kata laluan berjaya ditukar. (Mod Latihan: tiada apa disimpan)' };
+            }
+            if (b.action === 'wajibkanSemuaTukarKL') {
+                if (state.currentUser !== 'admin') return { status: 'error', message: 'Akses ditolak: hanya Admin (Penyelaras) dibenarkan.' };
+                let g = 0, p = 0;
+                (state.teachers || []).forEach(function(a) { if (a.peranan !== 'Penyelaras (Admin)' && !a.wajibTukarKL && !a.klSendiri) { a.wajibTukarKL = true; g++; } });
+                (state.studentAccounts || []).forEach(function(a) { if (!a.wajibTukarKL && !a.klSendiri) { a.wajibTukarKL = true; p++; } });
+                return { status: 'success', guru: g, pengawas: p };
+            }
+            return { status: 'success', message: 'Mod Latihan: tiada data dihantar ke pelayan.' };
         }
         function mlMasuk(peranan, jawatanAjk, sesiAjk) {
             if (window.__MOD_LATIHAN__) return;
@@ -26395,15 +26561,17 @@ eksPasangButang_();
             // 1) Bekukan semua simpanan & rangkaian SEBELUM menyentuh state (data sebenar dalam localStorage kekal utuh)
             window._bekukanSimpanTempatan = true;
             try { Storage.prototype.setItem = function() { }; Storage.prototype.removeItem = function() { }; } catch (e) { ralatDiam_('mlMasuk', e); }
-            window.fetch = function() { return Promise.resolve(new Response(JSON.stringify({ status: 'success', message: 'Mod Latihan: tiada data dihantar ke pelayan.' }), { status: 200 })); };
+            window.fetch = function(url, opt) { return Promise.resolve(new Response(JSON.stringify(mlJawabPelayan_(opt)), { status: 200 })); };
             // 2) Gantikan state dengan data contoh
             const d = mlBinaData_(jawatanAjk, sesiAjk);
             Object.keys(d).forEach(function(k) { if (k !== 'tambahan') state[k] = d[k]; });
-            ['minit', 'suratLog', 'laporanLog', 'profilDisiplinCatatan', 'pendaftaranGuru', 'mingguSettings', 'jadualRehat', 'kemenjadianLog', 'penilaianPrestasiLog', 'perhimpunanLog', 'bilikDisiplinLog', 'auditLog', 'permohonanPengawas', 'kewanganTransaksi', 'yuranPengawas', 'borangKenaikan', 'dokumenPengawasLog'].forEach(function(k) { state[k] = []; });
+            ['minit', 'suratLog', 'laporanLog', 'profilDisiplinCatatan', 'mingguSettings', 'jadualRehat', 'kemenjadianLog', 'penilaianPrestasiLog', 'perhimpunanLog', 'bilikDisiplinLog', 'auditLog', 'permohonanPengawas', 'kewanganTransaksi', 'yuranPengawas', 'borangKenaikan', 'dokumenPengawasLog'].forEach(function(k) { state[k] = []; });
             Object.keys(d.tambahan).forEach(function(k) { state[k] = d.tambahan[k]; });
             state.settings.scriptUrl = ''; state.settings.autoPushEnabled = false;
             state.pendingDeltas = []; state.needsFullSync = false; state.hasUnsyncedChanges = false;
             state.sessionToken = 'mod-latihan';
+            // Admin melihat kata laluan sementara/akaun lama sahaja (seperti sistem sebenar); akaun klSendiri tidak kelihatan.
+            state._petaKataLaluanAdmin = { 'admin.latihan': ML_KATA_LALUAN_, 'guru.latihan': ML_KATA_LALUAN_, 'guru.baharu': 'Sementara123', 'pengawas.latihan': ML_KATA_LALUAN_, 'pengawas.baharu': 'Sementara456' };
             const p = peranan === 'admin' ? d.teachers[0] : d.teachers[1];
             if (peranan === 'prefect') {
                 state.currentUser = 'prefect'; state.currentTeacherUsername = null; state.currentPrefectId = d.pengawas[0].id; state.currentPrefectUsername = 'pengawas.latihan';
@@ -26427,6 +26595,60 @@ eksPasangButang_();
             updateUIRoles(); switchTab('dashboard'); renderAll(); updateDashboard();
         }
         function mlKeluar() { window.onbeforeunload = null; window.removeEventListener('beforeunload', flushSimpanTempatan); location.reload(); }
+
+        // ---------- 5. Tetapan akaun Mod Latihan (Admin) -- disimpan di pelayan (kata laluan di-hash) ----------
+        async function latihanPanggil_(tindakan, tambahan) {
+            const res = await fetch(state.settings.scriptUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(Object.assign({ action: tindakan, token: state.sessionToken }, tambahan || {}))
+            });
+            return res.json();
+        }
+        function latihanIsiBorang_(akaun) {
+            const peta = { admin: 'admin', guru: 'guru', prefect: 'pengawas' };
+            document.querySelectorAll('#latihan-baris [data-peranan]').forEach(function(baris) {
+                const a = (akaun || []).filter(function(x) { return peta[x.peranan] === baris.dataset.peranan; })[0];
+                baris.querySelector('[data-medan="id"]').value = a ? a.id : '';
+                baris.querySelector('[data-medan="kataLaluan"]').value = '';
+                baris.querySelector('[data-medan="kataLaluan"]').placeholder = a ? '(kekal; taip untuk tukar)' : '';
+                const j = baris.querySelector('[data-medan="jawatan"]'); if (j && a && a.jawatan) j.value = a.jawatan;
+                const s = baris.querySelector('[data-medan="sesi"]'); if (s && a && a.sesi) s.value = a.sesi;
+            });
+        }
+        async function latihanMuatTetapan() {
+            if (state.currentUser !== 'admin' || !state.sessionToken || !state.settings.scriptUrl || window.__MOD_LATIHAN__) return;
+            const mesej = document.getElementById('latihan-mesej');
+            try {
+                const h = await latihanPanggil_('bacaAkaunLatihan');
+                if (h.status === 'success') { latihanIsiBorang_(h.akaun); if (mesej) mesej.textContent = ''; }
+                else if (mesej) mesej.textContent = h.message || 'Gagal memuatkan.';
+            } catch (e) { if (mesej) mesej.textContent = 'Ralat sambungan.'; }
+        }
+        async function latihanSimpanTetapan() {
+            const mesej = document.getElementById('latihan-mesej');
+            if (state.currentUser !== 'admin' || !state.sessionToken) { showCustomAlert('Hanya Admin boleh menetapkan akaun latihan.', 'error'); return; }
+            const baris = [];
+            document.querySelectorAll('#latihan-baris [data-peranan]').forEach(function(b) {
+                const v = function(m) { const e = b.querySelector('[data-medan="' + m + '"]'); return e ? e.value.trim() : ''; };
+                baris.push({ peranan: b.dataset.peranan, id: v('id'), kataLaluan: v('kataLaluan'), jawatan: v('jawatan'), sesi: v('sesi') });
+            });
+            if (mesej) mesej.textContent = 'Menyimpan...';
+            try {
+                const h = await latihanPanggil_('simpanAkaunLatihan', { akaun: baris });
+                if (h.status === 'success') {
+                    latihanIsiBorang_(h.akaun);
+                    if (mesej) mesej.textContent = '';
+                    showCustomAlert('Akaun latihan disimpan (' + h.akaun.length + ' akaun aktif).', 'success');
+                } else {
+                    if (mesej) mesej.textContent = '';
+                    showCustomAlert(h.message || 'Gagal menyimpan.', 'error');
+                }
+            } catch (e) {
+                if (mesej) mesej.textContent = '';
+                showCustomAlert('Ralat sambungan: ' + e.message, 'error');
+            }
+        }
         // =====================================================================
         //  X. KEBOLEHCAPAIAN: beri nama boleh-akses kepada kawalan yang dijana secara dinamik
         //     (butang ikon sahaja, input/select tanpa label, imej tanpa alt) untuk pembaca skrin.
@@ -26483,7 +26705,7 @@ eksPasangButang_();
         //     dan amaran Admin (saiz pangkalan data, sandaran, versi tidak sepadan) dalam Tindakan Perlu.
         // =========================================================================
         // Label keluaran disuntik semasa bina (src/VERSI). Mesti sama dengan VERSI_BACKEND_ dalam Code_GS.txt.
-        const VERSI_FRONTEND_ = '2026.11.20';
+        const VERSI_FRONTEND_ = '2026.11.20d';
         window._kesihatanItems_ = [];
         let _kesihatanMasa_ = 0;
         let _storanKekal_ = null; // true / false / null (tidak diketahui)
